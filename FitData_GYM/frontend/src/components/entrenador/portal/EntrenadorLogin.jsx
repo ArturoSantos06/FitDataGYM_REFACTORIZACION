@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Lock, LogIn, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import { loginUser, getUser, getUserByEmail, logoutUser } from '../../../firebase';
+import { loginUser, getUserByAuthUid, getUserByEmail, logoutUser } from '../../../firebase';
 
 function EntrenadorLogin() {
   const navigate = useNavigate();
@@ -12,9 +12,11 @@ function EntrenadorLogin() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    localStorage.removeItem('trainer_token');
-    localStorage.removeItem('trainer_username');
-  }, []);
+    const trainerToken = localStorage.getItem('trainer_token');
+    if (trainerToken) {
+      navigate('/entrenador', { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,15 +26,15 @@ function EntrenadorLogin() {
     try {
       const result = await loginUser(email, password);
       if (!result.success) {
-        throw new Error(result.error || 'Correo o contrasena incorrectos');
+        throw new Error(result.error || 'Correo o contraseña incorrectos');
       }
 
       const firebaseUser = result.user;
 
       let role = null;
-      const byUid = await getUser(firebaseUser.uid);
-      if (byUid.success) {
-        role = String(byUid.data?.role || '').toLowerCase();
+      const byAuthUid = await getUserByAuthUid(firebaseUser.uid);
+      if (byAuthUid.success) {
+        role = String(byAuthUid.data?.role || '').toLowerCase();
       }
 
       if (!role) {
@@ -49,10 +51,10 @@ function EntrenadorLogin() {
         throw new Error('Tu cuenta no tiene permisos de entrenador');
       }
 
-      const idToken = await firebaseUser.getIdToken();
+      const idToken = await firebaseUser.getIdToken(true);
       localStorage.setItem('trainer_token', idToken);
       localStorage.setItem('trainer_username', firebaseUser.email || email);
-      navigate('/entrenador');
+      navigate('/entrenador', { replace: true });
     } catch (err) {
       const msg = String(err?.message || '');
       const friendlyError =
