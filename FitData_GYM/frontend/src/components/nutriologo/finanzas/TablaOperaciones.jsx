@@ -1,6 +1,6 @@
 import React from 'react';
-import useTablaOperaciones from './hooks/useTablaOperaciones';
-import FilaTablaOperaciones from './ui/FilaTablaOperaciones';
+import useTablaOperaciones from '../hooks/useTablaOperaciones';
+import FilaTablaOperaciones from '../ui/FilaTablaOperaciones';
 
 export default function TablaOperaciones({ appointments = [], planSales = [] }) {
   const { filas, formatearMoneda, formatearFecha } = useTablaOperaciones(planSales);
