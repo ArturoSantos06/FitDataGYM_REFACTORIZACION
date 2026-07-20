@@ -1,36 +1,9 @@
 import React from 'react';
-
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('es-MX', {
-    style: 'currency',
-    currency: 'MXN',
-    maximumFractionDigits: 2
-  }).format(Number(value || 0));
-};
-
-const toDateLabel = (value) => {
-  if (!value) return 'Sin fecha';
-  const date = typeof value?.toDate === 'function' ? value.toDate() : new Date(value);
-  if (Number.isNaN(date.getTime())) return 'Sin fecha';
-  return date.toLocaleDateString('es-MX', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  });
-};
+import useTablaOperaciones from './hooks/useTablaOperaciones';
+import FilaTablaOperaciones from './ui/FilaTablaOperaciones';
 
 export default function TablaOperaciones({ appointments = [], planSales = [] }) {
-  const saleRows = planSales.map((item) => ({
-    id: `venta-${item.id}`,
-    type: 'Cobro',
-    concept: item.tipo_venta || 'Plan nutricional',
-    amount: Number(item.total || 0),
-    date: item.createdAt || item.fecha || item.fechaRegistro
-  }));
-
-  const rows = [...saleRows]
-    .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0))
-    .slice(0, 20);
+  const { filas, formatearMoneda, formatearFecha } = useTablaOperaciones(planSales);
 
   return (
     <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">
@@ -49,26 +22,21 @@ export default function TablaOperaciones({ appointments = [], planSales = [] }) 
             </tr>
           </thead>
           <tbody>
-            {rows.length === 0 && (
+            {filas.length === 0 && (
               <tr>
                 <td colSpan="4" className="py-6 text-center text-sm text-slate-500">
                   No hay movimientos para mostrar.
                 </td>
               </tr>
             )}
-            {rows.map((row) => (
-              <tr key={row.id} className="border-b border-slate-800/60 text-sm text-slate-200">
-                <td className="py-3">
-                  <span
-                    className="rounded-full bg-indigo-500/20 px-2 py-1 text-[11px] font-bold text-indigo-300"
-                  >
-                    {row.type}
-                  </span>
-                </td>
-                <td className="py-3">{row.concept}</td>
-                <td className="py-3 text-slate-400">{toDateLabel(row.date)}</td>
-                <td className="py-3 text-right font-semibold text-emerald-300">{formatCurrency(row.amount)}</td>
-              </tr>
+            {filas.map((fila) => (
+              <FilaTablaOperaciones
+                key={fila.id}
+                tipo={fila.tipo}
+                concepto={fila.concepto}
+                fechaFormateada={formatearFecha(fila.fecha)}
+                montoFormateado={formatearMoneda(fila.monto)}
+              />
             ))}
           </tbody>
         </table>
