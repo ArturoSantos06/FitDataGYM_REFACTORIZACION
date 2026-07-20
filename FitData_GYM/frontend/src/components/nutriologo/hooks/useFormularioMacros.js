@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
-import { calculateMacroTargets } from '../../utils/nutritionCalculations'; // (Ajusta la ruta si decides mover el archivo a tu utils local)
-
+import { calculateMacroTargets } from '../utils/nutritionCalculations';
 const defaultForm = {
   sex: 'hombre',
   age: '',

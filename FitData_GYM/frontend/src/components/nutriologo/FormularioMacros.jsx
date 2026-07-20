@@ -1,6 +1,6 @@
 import React from 'react';
 import TarjetaResultadosMacros from './TarjetaResultadosMacros';
-import { nutritionFormulaInfo } from '../../utils/nutritionCalculations';
+import { nutritionFormulaInfo } from './utils/nutritionCalculations';
 import { useFormularioMacros } from './hooks/useFormularioMacros';
 
 function FormularioMacros() {
