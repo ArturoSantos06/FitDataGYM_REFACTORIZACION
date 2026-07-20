@@ -20,7 +20,7 @@ export function useGestionEntrenadores() {
   const [cargando, setCargando] = useState(true);
   const [terminoBusqueda, setTerminoBusqueda] = useState('');
   const [filtroEstado, setFiltroEstado] = useState('todos');
-  const [ordenarPor, setOrdenarPor] = useState('diasRestantes');
+  const [ordenarPor, setOrdenarPor] = useState('fechaAsignacion');
   const [pestanaActiva, setPestanaActiva] = useState('clientes');
   
   // Estados de control y acción
@@ -118,23 +118,40 @@ export function useGestionEntrenadores() {
     if (accionPendiente?.tipo === 'completarVenta') ejecutarCompletarVentaServicio();
   };
 
-  // Filtrar servicios según búsqueda y estado
+  // Filtrar y ordenar servicios según búsqueda, estado y criterio seleccionado.
   const serviciosFiltrados = useMemo(() => {
     const busqueda = normalizarClaveBusqueda(terminoBusqueda);
 
-    return serviciosEntrenamiento.filter((servicio) => {
-      const nombreCliente = normalizarClaveBusqueda(
-        servicio.clientName || servicio.clientEmail
-      );
+    const servicios = serviciosEntrenamiento.filter((servicio) => {
       const estado = normalizarEstadoServicio(servicio);
+      const textoBuscable = [
+        servicio.clientName,
+        servicio.clientEmail,
+        servicio.trainerName,
+        servicio.trainerEmail,
+        servicio.serviceType,
+        servicio.serviceLabel,
+      ].map(normalizarClaveBusqueda).join(' ');
 
-      if (busqueda && !nombreCliente.includes(busqueda)) return false;
+      if (busqueda && !textoBuscable.includes(busqueda)) return false;
       if (filtroEstado === 'activo' && !['active', 'activo'].includes(estado)) return false;
       if (filtroEstado === 'vencido' && !['expired', 'vencido', 'inactive', 'inactivo'].includes(estado)) return false;
 
       return true;
     });
-  }, [serviciosEntrenamiento, terminoBusqueda, filtroEstado]);
+
+    return [...servicios].sort((a, b) => {
+      if (ordenarPor === 'nombreCliente') {
+        return normalizarClaveBusqueda(a.clientName).localeCompare(normalizarClaveBusqueda(b.clientName));
+      }
+
+      if (ordenarPor === 'entrenador') {
+        return normalizarClaveBusqueda(a.trainerName).localeCompare(normalizarClaveBusqueda(b.trainerName));
+      }
+
+      return aMs(a.assignedAt || a.createdAt || a.updatedAt) - aMs(b.assignedAt || b.createdAt || b.updatedAt);
+    });
+  }, [serviciosEntrenamiento, terminoBusqueda, filtroEstado, ordenarPor, normalizarClaveBusqueda, aMs]);
 
   const estadisticas = useMemo(() => ({
     totalEntrenadores: entrenadores.length,

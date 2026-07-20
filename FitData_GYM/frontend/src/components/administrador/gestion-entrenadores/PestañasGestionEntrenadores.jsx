@@ -30,6 +30,7 @@ function PestanasGestionEntrenadores({ gestion, obtenerEtiquetaEstado }) {
           ordenarPor={gestion.ordenarPor}
           setOrdenarPor={gestion.setOrdenarPor}
           serviciosFiltrados={gestion.serviciosFiltrados}
+          serviciosEntrenamiento={gestion.serviciosEntrenamiento}
           ventasServiciosEntrenador={gestion.ventasServiciosEntrenador}
           obtenerEtiquetaEstado={obtenerEtiquetaEstado}
           onDesvincularCliente={gestion.manejarDesvincularCliente}
