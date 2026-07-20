@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import BitacoraEntrenador from '../seguimiento/BitacoraEntrenador';
 import PerfilesClientes from './PerfilesClientes';
@@ -9,15 +9,21 @@ import DesvinculacionClientesEntrenador from './DesvinculacionClientesEntrenador
 function VistaSecundariaGestion({ vistaActual, onVolver }) {
   return (
     <div className="w-full animate-fade-in">
-      <button onClick={onVolver} className="mb-6 flex items-center gap-2 text-slate-400 hover:text-white transition-colors">
-        <ArrowLeft size={20} />
+      <button
+        type="button"
+        onClick={onVolver}
+        className="mb-6 flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
+      >
+        <ArrowLeft size={20} aria-hidden="true" />
         <span className="font-bold">Volver a Gestión</span>
       </button>
 
       {vistaActual === 'historial' && <PerfilesClientes />}
       {vistaActual === 'bitacora' && <BitacoraEntrenador embedded />}
       {vistaActual === 'rutinas' && <PanelGestionRutinas />}
-      {vistaActual === 'desvinculacion' && <DesvinculacionClientesEntrenador />}
+      {vistaActual === 'desvinculacion' && (
+        <DesvinculacionClientesEntrenador />
+      )}
     </div>
   );
 }
@@ -25,11 +31,20 @@ function VistaSecundariaGestion({ vistaActual, onVolver }) {
 function GestionEntrenador() {
   const [vistaActual, setVistaActual] = useState('menu');
 
-  if (vistaActual !== 'menu') {
-    return <VistaSecundariaGestion vistaActual={vistaActual} onVolver={() => setVistaActual('menu')} />;
+  const volverAlMenu = () => {
+    setVistaActual('menu');
+  };
+
+  if (vistaActual === 'menu') {
+    return <MenuGestionEntrenador onCambiarVista={setVistaActual} />;
   }
 
-  return <MenuGestionEntrenador onCambiarVista={setVistaActual} />;
+  return (
+    <VistaSecundariaGestion
+      vistaActual={vistaActual}
+      onVolver={volverAlMenu}
+    />
+  );
 }
 
 export default GestionEntrenador;
