@@ -1,4 +1,5 @@
 import React from 'react';
+import TarjetaInformativa from './ui/TarjetaInformativa';
 
 function InicioNutri() {
   return (
@@ -21,23 +22,18 @@ function InicioNutri() {
 
       {/* Tarjetas de Misión y Visión */}
       <div className="grid md:grid-cols-2 gap-10 max-w-5xl w-full">
-        {/* Tarjeta Misión */}
-        <div className="bg-slate-800 p-8 rounded-xl shadow-xl border border-emerald-800/40 hover:shadow-2xl hover:shadow-emerald-900/20 transition-all duration-300 transform hover:-translate-y-1">
-          <p className="text-sm uppercase tracking-[0.2em] text-emerald-300 font-bold mb-2">Misión</p>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Nuestro Propósito</h2>
-          <p className="text-gray-300 leading-relaxed text-lg">
-            Guiar a cada paciente hacia sus objetivos de bienestar mediante planes de alimentación personalizados, basados en evidencia científica y adaptados a su estilo de vida.
-          </p>
-        </div>
-
-        {/* Tarjeta Visión */}
-        <div className="bg-slate-800 p-8 rounded-xl shadow-xl border border-teal-800/40 hover:shadow-2xl hover:shadow-teal-900/20 transition-all duration-300 transform hover:-translate-y-1">
-          <p className="text-sm uppercase tracking-[0.2em] text-teal-300 font-bold mb-2">Visión</p>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Nuestra Meta</h2>
-          <p className="text-gray-300 leading-relaxed text-lg">
-            Ser el laboratorio de nutrición referente en FitData GYM, destacando por la educación nutricional, el seguimiento preciso y la salud integral a largo plazo.
-          </p>
-        </div>
+        <TarjetaInformativa 
+          tema="esmeralda"
+          etiqueta="Misión"
+          titulo="Nuestro Propósito"
+          descripcion="Guiar a cada paciente hacia sus objetivos de bienestar mediante planes de alimentación personalizados, basados en evidencia científica y adaptados a su estilo de vida."
+        />
+        <TarjetaInformativa 
+          tema="teal"
+          etiqueta="Visión"
+          titulo="Nuestra Meta"
+          descripcion="Ser el laboratorio de nutrición referente en FitData GYM, destacando por la educación nutricional, el seguimiento preciso y la salud integral a largo plazo."
+        />
       </div>
       
     </div>
