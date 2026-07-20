@@ -1,8 +1,8 @@
 import React from 'react';
 import TarjetaPacienteLista from './ui/TarjetaPacienteLista';
-import EntradaTexto from './ui/EntradaTexto';
-import MensajeEstadoLista from './ui/MensajeEstadoLista';
-import MensajeVacio from './ui/MensajeVacio';
+import { EntradaTexto } from './ui/EntradaTexto';
+import { MensajeEstadoLista } from './ui/MensajeEstadoLista';
+import { MensajeVacio } from './ui/MensajeVacio';
 
 const maxSearchLength = 80;
 
