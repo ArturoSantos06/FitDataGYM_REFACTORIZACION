@@ -1,10 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   archivarClienteDesvinculacion,
   eliminarClienteDesvinculacion,
   obtenerClientesDesvinculacion,
 } from '../../../backend/clientesDesvinculacionServicio';
-import { filtrarClientesOcultos, ocultarClienteLocalmente } from '../../../backend/visibilidadClientes';
+import {
+  filtrarClientesOcultos,
+  ocultarClienteLocalmente,
+} from '../../../backend/visibilidadClientes';
 import FiltrosDesvinculacion from './FiltrosDesvinculacion';
 import TablaDesvinculacionClientes from './TablaDesvinculacionClientes';
 
@@ -15,84 +18,120 @@ function DesvinculacionClientesEntrenador() {
   const [mostrandoArchivados, setMostrandoArchivados] = useState(false);
 
   useEffect(() => {
-    const cargar = async () => {
+    async function cargarClientes() {
       try {
-        setCargando(true);
         const clientesServidor = await obtenerClientesDesvinculacion();
         setClientes(filtrarClientesOcultos(clientesServidor));
       } catch (error) {
-        console.error('Error al cargar clientes para desvinculación:', error);
+        console.error(
+          'Error al cargar clientes para desvinculación:',
+          error,
+        );
       } finally {
         setCargando(false);
       }
-    };
+    }
 
-    cargar();
+    cargarClientes();
   }, []);
 
   const clientesFiltrados = useMemo(() => {
+    const busqueda = terminoBusqueda.trim().toLowerCase();
+
     return clientes.filter((cliente) => {
-      const coincideBusqueda = String(cliente.nombre || '').toLowerCase().includes(terminoBusqueda.toLowerCase());
-      const coincideEstado = mostrandoArchivados ? cliente.archivado : !cliente.archivado;
+      const nombre = String(cliente.nombre ?? '').toLowerCase();
+      const coincideBusqueda = nombre.includes(busqueda);
+      const coincideEstado = mostrandoArchivados
+        ? cliente.archivado
+        : !cliente.archivado;
+
       return coincideBusqueda && coincideEstado && !cliente.eliminado;
     });
-  }, [clientes, mostrandoArchivados, terminoBusqueda]);
+  }, [clientes, terminoBusqueda, mostrandoArchivados]);
 
-  const actualizarVisibilidad = (idCliente, cambios) => {
-    setClientes((prev) => prev.map((item) => (item.id === idCliente ? { ...item, ...cambios } : item)));
+  const actualizarCliente = (idCliente, cambios) => {
+    setClientes((clientesActuales) =>
+      clientesActuales.map((cliente) =>
+        cliente.id === idCliente
+          ? { ...cliente, ...cambios }
+          : cliente,
+      ),
+    );
   };
 
   const alternarArchivado = async (idCliente) => {
-    const clienteActual = clientes.find((item) => item.id === idCliente);
-    const archivadoNuevo = !clienteActual?.archivado;
+    const cliente = clientes.find((item) => item.id === idCliente);
 
-    actualizarVisibilidad(idCliente, { archivado: archivadoNuevo });
+    if (!cliente) return;
+
+    const nuevoEstado = !cliente.archivado;
+    actualizarCliente(idCliente, { archivado: nuevoEstado });
 
     try {
-      const result = await archivarClienteDesvinculacion(idCliente, archivadoNuevo);
-      if (!result?.success) {
-        console.warn('No se pudo sincronizar archivado con backend:', result?.error || 'sin detalle');
+      const resultado = await archivarClienteDesvinculacion(
+        idCliente,
+        nuevoEstado,
+      );
+
+      if (!resultado?.success) {
+        console.warn(
+          'No se pudo sincronizar el archivado:',
+          resultado?.error || 'sin detalle',
+        );
       }
     } catch (error) {
-      console.warn('Fallback local aplicado para archivar:', error);
+      console.warn('Se mantuvo el cambio local de archivado:', error);
     }
   };
 
-  const eliminarLogico = async (idCliente) => {
-    if (!window.confirm('¿Estás seguro de eliminar este cliente? Desaparecerá de tu lista')) return;
+  const eliminarCliente = async (idCliente) => {
+    const confirmado = window.confirm(
+      '¿Estás seguro de eliminar este cliente? Desaparecerá de tu lista',
+    );
 
-    const clienteActual = clientes.find((item) => item.id === idCliente) || { id: idCliente };
+    if (!confirmado) return;
 
-    ocultarClienteLocalmente(clienteActual);
+    const cliente = clientes.find((item) => item.id === idCliente) ?? {
+      id: idCliente,
+    };
 
-    actualizarVisibilidad(idCliente, { eliminado: true });
+    ocultarClienteLocalmente(cliente);
+    actualizarCliente(idCliente, { eliminado: true });
 
     try {
-      const result = await eliminarClienteDesvinculacion(idCliente);
-      if (!result?.success) {
-        console.warn('No se pudo sincronizar eliminación con backend:', result?.error || 'sin detalle');
+      const resultado = await eliminarClienteDesvinculacion(idCliente);
+
+      if (!resultado?.success) {
+        console.warn(
+          'No se pudo sincronizar la eliminación:',
+          resultado?.error || 'sin detalle',
+        );
       }
     } catch (error) {
-      console.warn('Fallback local aplicado para eliminar:', error);
+      console.warn('Se mantuvo la eliminación local:', error);
     }
   };
 
   return (
-    <div className="bg-gray-800 p-6 rounded-xl shadow-xl mt-6 border-t-4 border-teal-500 text-gray-100 font-sans">
-      <h2 className="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-br from-teal-400 to-green-400">Desvinculación y Pagos</h2>
+    <div className="mt-6 rounded-xl border-t-4 border-teal-500 bg-gray-800 p-6 font-sans text-gray-100 shadow-xl">
+      <h2 className="bg-linear-to-br from-teal-400 to-green-400 bg-clip-text text-2xl font-bold text-transparent">
+        Desvinculación y Pagos
+      </h2>
 
       <FiltrosDesvinculacion
         terminoBusqueda={terminoBusqueda}
         onCambiarBusqueda={setTerminoBusqueda}
         mostrandoArchivados={mostrandoArchivados}
-        onAlternarArchivados={() => setMostrandoArchivados((prev) => !prev)}
+        onAlternarArchivados={() =>
+          setMostrandoArchivados((estado) => !estado)
+        }
       />
 
       <TablaDesvinculacionClientes
         clientes={clientesFiltrados}
         cargando={cargando}
         onArchivar={alternarArchivado}
-        onEliminar={eliminarLogico}
+        onEliminar={eliminarCliente}
       />
     </div>
   );
