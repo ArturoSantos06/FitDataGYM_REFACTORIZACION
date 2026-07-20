@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { auth } from '../firebase/config';
-import { getMemberByAuthUid, getMemberByUserId, ensureUserClaim, waitForAuthReady } from '../firebase/firestore';
+import { getMemberByAuthUid, getMemberByUserId, waitForAuthReady } from '../firebase/firestore';
+import { ensureUserClaim } from '../firebase/auth';
 
 /** aqui maestro esta la logica de la rutina */
 export function useRutinaClienteLogica() {
