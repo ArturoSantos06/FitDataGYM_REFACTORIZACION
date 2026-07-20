@@ -10,7 +10,7 @@ import { DIAS_SEMANA, PARTES_CUERPO, TRADUCCIONES_ETIQUETAS } from '../../../bac
 
 function RutinaEntrenador() {
   /** pos esto funciona para toda la logica de editar rutina */
-  const { navigate, memberName, rutinaCarga, guardado } = useRutinaEntrenador();
+  const { navegar: navigate, nombreMiembro: memberName, rutinaCarga, guardado } = useRutinaEntrenador();
   const inputSm = 'bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder-slate-600 outline-none focus:ring-1 focus:ring-blue-500 transition-all';
 
   return (

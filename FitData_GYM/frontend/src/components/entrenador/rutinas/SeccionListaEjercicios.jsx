@@ -22,7 +22,8 @@ export default function SeccionListaEjercicios({
     LABEL_TRANSLATIONS,
     inputSm,
 }) {
-    /** pos esto funciona para la seccion de ejercicios */
+    /** Convierte una etiqueta técnica a texto en español usando las traducciones recibidas */
+    const toSpanishLabel = (label) => (LABEL_TRANSLATIONS && LABEL_TRANSLATIONS[label]) ? LABEL_TRANSLATIONS[label] : label;
     const { ejerciciosDiaActivo } = useSeccionListaEjercicios(activeDay, exercisesByDay);
 
     return (

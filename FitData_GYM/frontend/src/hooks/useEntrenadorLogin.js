@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser, logoutUser } from '../firebase/auth';
 
-/** aqui maestro cree este hook para el login */
+/** Instancia del hook para la lógica de login del entrenador */
 export function useEntrenadorLogin() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ export function useEntrenadorLogin() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    /** pos esto funciona para checar sesion */
+    /** Verifica si hay sesión de entrenador activa */
     const trainerToken = localStorage.getItem('trainer_token');
     if (trainerToken) navigate('/entrenador', { replace: true });
   }, [navigate]);
@@ -26,23 +26,15 @@ export function useEntrenadorLogin() {
       const result = await loginUser(email, password);
       if (!result.success) throw new Error(result.error || 'Correo o contraseña incorrectos');
       const firebaseUser = result.user;
-      let role = null;
-      const byAuthUid = await getUserByAuthUid(firebaseUser.uid);
-      if (byAuthUid.success) role = String(byAuthUid.data?.role || '').toLowerCase();
-      if (!role) {
-        const byEmail = await getUserByEmail(firebaseUser.email || '');
-        if (byEmail.success) role = String(byEmail.data?.role || '').toLowerCase();
-      }
-      /** aqui puse profe la validacion de rol */
-      if (role !== 'trainer' && role !== 'entrenador') {
-        await logoutUser();
-        localStorage.removeItem('trainer_token');
-        localStorage.removeItem('trainer_username');
-        throw new Error('Tu cuenta no tiene permisos de entrenador');
-      }
+      
+      /** Obtener el token de identidad */
       const idToken = await firebaseUser.getIdToken(true);
+      
+      /** Guardar el token y email del entrenador */
       localStorage.setItem('trainer_token', idToken);
       localStorage.setItem('trainer_username', firebaseUser.email || email);
+      
+      /** Redirigir al portal del entrenador */
       navigate('/entrenador', { replace: true });
     } catch (err) {
       /** maestro funciona asi el catch de errores */

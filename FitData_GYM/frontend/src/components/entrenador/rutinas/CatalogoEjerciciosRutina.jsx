@@ -5,7 +5,7 @@ import TarjetaCatalogoEjercicio from '../../TarjetaCatalogoEjercicio';
 
 function CatalogoEjerciciosRutina(props) {
   /** pos esto funciona para el catalogo */
-  const { diaActivo, partesCuerpo, parteCuerpoSeleccionada, cargandoCatalogo, ejercicios, seleccionarParte, agregarEjercicio } = useCatalogoEjerciciosRutina(props.activeDay, props.bodyParts, props.catalogBodyPart, props.isCatalogLoading, props.catalogExercises, props.onFetchCatalog, props.onAddExercise);
+  const { diaActivoLocal: diaActivo, partesDelCuerpo: partesCuerpo, parteCuerpoSeleccionada, cargandoCatalogo, ejercicios, seleccionarParte, agregarEjercicio } = useCatalogoEjerciciosRutina(props.activeDay, props.bodyParts, props.catalogBodyPart, props.isCatalogLoading, props.catalogExercises, props.onFetchCatalog, props.onAddExercise);
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col">
