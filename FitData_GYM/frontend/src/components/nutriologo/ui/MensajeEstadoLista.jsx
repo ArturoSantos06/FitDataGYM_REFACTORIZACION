@@ -1,4 +1,3 @@
-// Ruta: src/components/nutriologo/ui/MensajeEstadoLista.jsx
 import React from 'react';
 
 export function MensajeEstadoLista({ mensaje }) {
