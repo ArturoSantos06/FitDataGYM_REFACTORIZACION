@@ -1,40 +1,21 @@
-import React, { useState } from 'react';
-import { db } from "../../../firebase/config"; 
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import React from 'react';
 import { Trash2, Edit3, Save, X, ClipboardList, CalendarClock } from 'lucide-react';
-import DialogoSistemaNutri from '../DialogoSistemaNutri';
+import DialogoSistemaNutri from '../DialogoSistemaNutri'; 
+import { useModalDetalleNutri } from '../hooks/useModalDetalleNutri';
+import { BotonAccionModal } from '../ui/BotonAccionModal';
 
 const ModalDetalleNutri = ({ cita, onClose }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(cita.nota || '');
-  const [dialogConfig, setDialogConfig] = useState(null);
+  const {
+    isEditing,
+    
+    setIsEditing,
+    editContent,
+    setEditContent,
+    dialogConfig,
+    handleUpdate,
+    confirmDelete
+  } = useModalDetalleNutri(cita, onClose);
 
-  const handleUpdate = async () => {
-    try {
-      const citaRef = doc(db, "citas", cita.id);
-      await updateDoc(citaRef, { nota: editContent });
-      setIsEditing(false);
-    } catch (err) {
-      console.error(err);
-      setDialogConfig({ type: 'danger', title: 'Error', message: 'No se pudo actualizar la nota.', onConfirm: () => setDialogConfig(null) });
-    }
-  };
-
-  const confirmDelete = () => {
-    setDialogConfig({
-      type: 'danger',
-      title: 'Eliminar Cita',
-      message: '¿Estás seguro de que deseas borrar este registro? Esta acción no se puede deshacer.',
-      onConfirm: async () => {
-        await deleteDoc(doc(db, "citas", cita.id));
-        setDialogConfig(null);
-        onClose();
-      },
-      onCancel: () => setDialogConfig(null)
-    });
-  };
-
-  // Formateo manual para evitar "Invalid Date"
   const fechaFormateada = `${cita.fecha} | ${cita.horaInicio} - ${cita.horaFin}`;
 
   return (
@@ -42,6 +23,8 @@ const ModalDetalleNutri = ({ cita, onClose }) => {
       {dialogConfig && <DialogoSistemaNutri {...dialogConfig} />}
 
       <div className="bg-[#1e293b] border border-purple-500/40 p-8 rounded-[2.5rem] shadow-2xl w-full max-w-md relative overflow-hidden">
+        
+        {/* Header */}
         <div className="flex justify-between items-start mb-6">
             <div>
                 <h3 className="text-2xl font-black italic uppercase text-purple-400 tracking-tighter leading-none">
@@ -56,8 +39,12 @@ const ModalDetalleNutri = ({ cita, onClose }) => {
             </button>
         </div>
 
+        {/* Content Area */}
         <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Observaciones del Especialista</label>
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+             Observaciones del Especialista
+          </label>
+          
           {isEditing ? (
             <textarea 
               className="w-full bg-[#0f172a] border border-purple-500/50 rounded-2xl p-5 text-white focus:ring-2 focus:ring-purple-500 outline-none resize-none min-h-[180px] text-sm font-medium"
@@ -74,23 +61,24 @@ const ModalDetalleNutri = ({ cita, onClose }) => {
           )}
         </div>
 
+        {/* Actions */}
         <div className="flex gap-3 mt-8">
-          <button onClick={confirmDelete} className="flex-1 py-4 rounded-2xl bg-red-600/10 text-red-500 border border-red-500/20 font-black text-[10px] uppercase hover:bg-red-600 hover:text-white transition-all">
+          <BotonAccionModal tipo="peligro" onClick={confirmDelete}>
             Borrar
-          </button>
+          </BotonAccionModal>
           
           {isEditing ? (
-            <button onClick={handleUpdate} className="flex-[1.5] py-4 rounded-2xl bg-purple-600 text-white font-black text-[10px] uppercase shadow-lg shadow-purple-900/20">
+            <BotonAccionModal tipo="primario" onClick={handleUpdate}>
               Guardar
-            </button>
+            </BotonAccionModal>
           ) : (
-            <button onClick={() => setIsEditing(true)} className="flex-[1.5] py-4 rounded-2xl bg-slate-700 text-white font-black text-[10px] uppercase hover:bg-slate-600 transition-colors">
+            <BotonAccionModal tipo="secundario" onClick={() => setIsEditing(true)}>
               Editar Notas
-            </button>
+            </BotonAccionModal>
           )}
         </div>
 
-        {/* Footer de fecha corregido y más visible */}
+        {/* Footer */}
         <div className="mt-6 pt-5 border-t border-slate-800/50 flex flex-col items-center">
             <div className="flex items-center gap-2 text-cyan-400 font-black text-[11px] uppercase tracking-tighter bg-cyan-400/10 px-4 py-2 rounded-full border border-cyan-400/20 shadow-lg shadow-cyan-900/10">
                 <CalendarClock size={14} />
