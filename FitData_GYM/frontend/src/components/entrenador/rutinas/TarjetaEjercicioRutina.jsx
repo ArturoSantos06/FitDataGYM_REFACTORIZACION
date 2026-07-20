@@ -1,5 +1,6 @@
 import React from 'react';
 import { Trash2 } from 'lucide-react';
+import { useTarjetaEjercicioRutina } from '../../../hooks/useTarjetaEjercicioRutina';
 
 function TarjetaEjercicioRutina({
   ejercicio,
@@ -12,6 +13,9 @@ function TarjetaEjercicioRutina({
   onActualizar,
   onMover,
 }) {
+  /** maestro funciona asi este hook */
+  const { moverEjercicio, eliminarEjercicio } = useTarjetaEjercicioRutina(diaActivo, ejercicio, onMover, onEliminar, onActualizar);
+
   return (
     <div className="flex gap-3 bg-slate-950 border border-slate-800 rounded-xl p-3 hover:border-slate-700 transition-colors">
       {ejercicio.gifUrl ? (
@@ -47,12 +51,7 @@ function TarjetaEjercicioRutina({
             {diasActivos.filter((dia) => dia !== diaActivo).length > 0 && (
               <select
                 defaultValue=""
-                onChange={(e) => {
-                  if (e.target.value) {
-                    onMover(diaActivo, ejercicio.id, e.target.value);
-                    e.target.value = '';
-                  }
-                }}
+                onChange={moverEjercicio}
                 className="text-xs bg-slate-800 border border-slate-700 text-slate-300 rounded-lg px-2 py-1 outline-none cursor-pointer"
               >
                 <option value="" disabled>Mover a…</option>
@@ -65,7 +64,7 @@ function TarjetaEjercicioRutina({
             )}
             <button
               type="button"
-              onClick={() => onEliminar(diaActivo, ejercicio.id)}
+              onClick={eliminarEjercicio}
               className="p-1.5 text-red-400 hover:text-red-300 hover:bg-red-950 rounded-lg transition-colors"
               title="Eliminar ejercicio"
             >

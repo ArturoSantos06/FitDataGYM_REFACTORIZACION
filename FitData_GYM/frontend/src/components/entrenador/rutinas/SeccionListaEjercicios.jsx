@@ -2,12 +2,7 @@ import React from 'react';
 import BuscadorEjerciciosRapido from './BuscadorEjerciciosRapido';
 import PestanasDiasRutina from './PestanasDiasRutina';
 import TarjetaEjercicioRutina from './TarjetaEjercicioRutina';
-
-const toSpanishLabel = (LABEL_TRANSLATIONS, value) => {
-    if (!value) return '';
-    const key = String(value).trim().toLowerCase();
-    return LABEL_TRANSLATIONS[key] || value;
-};
+import { useSeccionListaEjercicios } from '../../../hooks/useSeccionListaEjercicios';
 
 export default function SeccionListaEjercicios({
     activeDay,
@@ -27,14 +22,15 @@ export default function SeccionListaEjercicios({
     LABEL_TRANSLATIONS,
     inputSm,
 }) {
-    const ejerciciosDiaActivo = exercisesByDay[activeDay] || [];
+    /** pos esto funciona para la seccion de ejercicios */
+    const { ejerciciosDiaActivo } = useSeccionListaEjercicios(activeDay, exercisesByDay);
 
     return (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col">
             <PestanasDiasRutina diaActivo={activeDay} diasActivos={activeDays} ejerciciosPorDia={exercisesByDay} onCambiarDia={onSetActiveDay} />
 
             {/* Lista de ejercicios */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[540px]">
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-128">
                 {formError && (
                     <div className="bg-red-950 border border-red-700 rounded-lg px-3 py-2 text-xs text-red-300">
                         {formError}

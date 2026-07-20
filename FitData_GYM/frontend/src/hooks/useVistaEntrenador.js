@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllMembers, logoutUser, ensureUserClaim } from '../../firebase/firestore';
+import { getAllMembers, ensureUserClaim } from '../firebase/firestore';
+import { logoutUser } from '../firebase/auth';
 
 /** aqui maestro extraje toda la data de la vista */
 export function useVistaEntrenador() {

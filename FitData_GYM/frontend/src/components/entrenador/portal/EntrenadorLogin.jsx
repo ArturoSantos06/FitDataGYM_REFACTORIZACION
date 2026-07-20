@@ -1,10 +1,10 @@
 import React from 'react';
 import { LogIn, ArrowLeft } from 'lucide-react';
 import { useEntrenadorLogin } from '../../../hooks/useEntrenadorLogin';
-import { InputEmail, InputPassword } from './reutilizables/InputsLogin';
+import { InputCorreo, InputContraseña } from '../../InputsLogin';
 
 function EntrenadorLogin() {
-  /** aqui maestro instancie el hook */
+  /** Instancia del hook para la lógica de login del entrenador */
   const { email, setEmail, password, setPassword, showPassword, setShowPassword, error, isLoading, handleSubmit } = useEntrenadorLogin();
 
   return (
@@ -18,8 +18,8 @@ function EntrenadorLogin() {
 
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <InputEmail email={email} setEmail={setEmail} />
-            <InputPassword password={password} setPassword={setPassword} showPassword={showPassword} setShowPassword={setShowPassword} isLoading={isLoading} />
+            <InputCorreo correo={email} establecerCorreo={setEmail} />
+            <InputContraseña contraseña={password} establecerContraseña={setPassword} mostrarContraseña={showPassword} establecerMostrarContraseña={setShowPassword} estaCargando={isLoading} />
 
             {error && (
               <div className="bg-red-900/20 border border-red-500 rounded-lg p-3">

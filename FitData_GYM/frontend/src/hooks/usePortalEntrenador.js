@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../firebase/auth';
+import { logoutUser } from '../firebase/auth';
 
 /** aqui maestro esta la logica del portal */
 export function usePortalEntrenador() {

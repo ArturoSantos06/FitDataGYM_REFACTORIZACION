@@ -1,10 +1,10 @@
 import React from 'react';
 import { Users, ArrowLeft, LogOut, CalendarDays, NotebookPen } from 'lucide-react';
 import { useVistaEntrenador } from '../../../hooks/useVistaEntrenador';
-import { InputBuscador } from './reutilizables/InputBuscador';
+import { InputBuscador } from '../../InputBuscador';
 
 function VistaEntrenador() {
-  /** pos esto funciona para toda la logica de la vista */
+  /** Lógica completa para la vista del entrenador con gestión de alumnos */
   const { searchTerm, setSearchTerm, isLoading, error, assignedMembers, handleLogout, handleNavigate } = useVistaEntrenador();
 
   return (
@@ -21,7 +21,7 @@ function VistaEntrenador() {
           </div>
         </div>
 
-        <InputBuscador searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <InputBuscador terminoBusqueda={searchTerm} establecerTerminoBusqueda={setSearchTerm} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <button type="button" onClick={() => handleNavigate('/entrenador/citas')} className="rounded-2xl border border-cyan-800/40 bg-linear-to-r from-slate-900 to-[#10253b] p-5 text-left hover:border-cyan-500/50 transition-all">

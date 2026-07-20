@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser, getUserByAuthUid, getUserByEmail, logoutUser } from '../../firebase/auth';
+import { loginUser, logoutUser } from '../firebase/auth';
 
 /** aqui maestro cree este hook para el login */
 export function useEntrenadorLogin() {
