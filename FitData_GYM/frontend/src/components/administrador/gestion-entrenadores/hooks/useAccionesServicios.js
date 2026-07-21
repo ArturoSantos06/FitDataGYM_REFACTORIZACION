@@ -45,9 +45,8 @@ export function useAccionesServicios({
   }, [servicioPendienteDesvincular, setIdClienteDesvinculando, setModalError, setModalExito, setServiciosEntrenamiento, setServicioPendienteDesvincular]);
 
   const manejarCompletarVentaServicio = useCallback((venta) => {
-    setIdVentaServicioCompletando(venta.id);
     setAccionPendiente({ tipo: 'completarVenta', venta });
-  }, [setAccionPendiente, setIdVentaServicioCompletando]);
+  }, [setAccionPendiente]);
 
   const ejecutarCompletarVentaServicio = useCallback(async () => {
     const venta = accionPendiente?.venta;
@@ -57,7 +56,11 @@ export function useAccionesServicios({
     }
 
     try {
-      await completeTrainerServicePayment(venta.id);
+      setIdVentaServicioCompletando(venta.id);
+      const result = await completeTrainerServicePayment(venta.id);
+      if (!result?.success) {
+        throw new Error(result?.error || 'No se pudo completar');
+      }
       setVentasServiciosEntrenador((prev) => prev.map((actual) => (
         actual.id === venta.id ? { ...actual, status: 'completed' } : actual
       )));

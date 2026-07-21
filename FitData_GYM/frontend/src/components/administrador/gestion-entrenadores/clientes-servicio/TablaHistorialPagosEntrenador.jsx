@@ -1,6 +1,6 @@
 import { ReceiptText } from 'lucide-react';
 import { useMemo } from 'react';
-import { obtenerEstadoVenta, obtenerMetodoPagoVenta, obtenerMontoVenta } from './utilidadesGestionEntrenadores';
+import { obtenerEstadoVenta, obtenerMetodoPagoVenta, obtenerMontoVenta } from '../utilidadesGestionEntrenadores';
 
 function formatearFecha(value) {
   if (!value) return 'Sin fecha';

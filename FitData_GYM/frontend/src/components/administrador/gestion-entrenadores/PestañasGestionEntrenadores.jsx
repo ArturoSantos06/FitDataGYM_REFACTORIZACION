@@ -1,5 +1,5 @@
-import ClientesConServicioEntrenador from './ClientesConServicioEntrenador';
-import EntrenadoresYPagos from './EntrenadoresYPagos';
+import ClientesConServicioEntrenador from './clientes-servicio/ClientesConServicioEntrenador';
+import EntrenadoresYPagos from './entrenadores-pagos/EntrenadoresYPagos';
 
 function PestanasGestionEntrenadores({ gestion, obtenerEtiquetaEstado }) {
   const mostrarClientes = gestion.pestanaActiva === 'clientes';

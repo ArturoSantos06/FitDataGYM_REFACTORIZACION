@@ -7,10 +7,16 @@ const ESTADO_MODAL_INICIAL = { isOpen: false, title: '', message: '', subMessage
 
 function ModalesGestionEntrenadores({ gestion }) {
   const cerrarAccion = () => {
-    if (!gestion.idEntrenadorDesactivando && !gestion.idEntrenadorReactivando) {
+    if (!gestion.idEntrenadorDesactivando && !gestion.idEntrenadorReactivando && !gestion.idVentaServicioCompletando) {
       gestion.setAccionPendiente(null);
     }
   };
+
+  const tipoAccion = gestion.accionPendiente?.tipo;
+  const esCompletarVenta = tipoAccion === 'completarVenta';
+  const esDesactivar = tipoAccion === 'desactivar';
+  const venta = gestion.accionPendiente?.venta;
+  const nombreCliente = venta?.clientName || venta?.clienteNombre || 'este cliente';
 
   return (
     <>
@@ -18,11 +24,17 @@ function ModalesGestionEntrenadores({ gestion }) {
         isOpen={Boolean(gestion.accionPendiente)}
         onClose={cerrarAccion}
         onConfirm={gestion.manejarConfirmarAccionPendiente}
-        title={gestion.accionPendiente?.tipo === 'desactivar' ? 'Confirmar descontratación' : 'Confirmar recontratación'}
-        message={gestion.accionPendiente?.entrenador
-          ? `${gestion.accionPendiente.tipo === 'desactivar' ? 'Se desactivará' : 'Se reactivará'} a ${gestion.accionPendiente.entrenador.name}.`
-          : ''}
-        confirmLabel={gestion.accionPendiente?.tipo === 'desactivar' ? 'Sí, Descontratar' : 'Sí, Recontratar'}
+        title={esCompletarVenta ? 'Confirmar pago completado' : esDesactivar ? 'Confirmar descontratación' : 'Confirmar recontratación'}
+        message={esCompletarVenta
+          ? `Se marcará como completado el pago de ${nombreCliente}.`
+          : gestion.accionPendiente?.entrenador
+            ? `${esDesactivar ? 'Se desactivará' : 'Se reactivará'} a ${gestion.accionPendiente.entrenador.name}.`
+            : ''}
+        confirmLabel={esCompletarVenta
+          ? (gestion.idVentaServicioCompletando ? 'Completando...' : 'Sí, marcar completado')
+          : esDesactivar ? 'Sí, Descontratar' : 'Sí, Recontratar'}
+        disabled={Boolean(gestion.idVentaServicioCompletando)}
+        variant={esCompletarVenta ? 'primary' : 'danger'}
       />
 
       <ModalConfirmacion

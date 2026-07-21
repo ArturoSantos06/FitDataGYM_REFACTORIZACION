@@ -1,5 +1,5 @@
 import { AlertCircle, Unlink } from 'lucide-react';
-import { normalizarEtiquetaTipoServicio } from './utilidadesGestionEntrenadores';
+import { normalizarEtiquetaTipoServicio } from '../utilidadesGestionEntrenadores';
 
 function formatearFecha(value) {
   if (!value) return 'N/A';
