@@ -73,3 +73,7 @@ staticfiles/
 Thumbs.db
 **/firebase-service-account.json
 node_modules/
+
+# Scripts y herramientas
+frontend/scripts/
+.claude/
