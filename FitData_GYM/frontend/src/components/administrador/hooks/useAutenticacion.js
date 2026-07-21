@@ -13,6 +13,8 @@ const AUTH_ERROR_MESSAGES = {
 const getLoginErrorMessage = (error) =>
   AUTH_ERROR_MESSAGES[error?.code] || error?.message || 'Ocurrió un error al iniciar sesión';
 
+// SEC-03: escribe role:'admin' desde el cliente. Se queda hasta que el backfill
+// de custom claims (equipo de reglas) corra; ver memoria fitdata-escalada-privilegios.
 async function asegurarPerfilAdmin(user, email) {
   const perfilAdmin = {
     email: user.email,
