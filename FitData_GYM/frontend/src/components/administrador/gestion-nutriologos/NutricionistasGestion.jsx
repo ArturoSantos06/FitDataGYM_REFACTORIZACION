@@ -6,8 +6,8 @@ function NutricionistasGestion({
   nutriologosInactivos,
   idNutriologoDesactivando,
   idNutriologoReactivando,
-  onDesactivarNutriologodescrip,
-  onReactivarNutriologodescrip,
+  onDesactivarNutriologo,
+  onReactivarNutriologo,
 }) {
   return (
     <>
@@ -46,7 +46,7 @@ function NutricionistasGestion({
                     <td className="py-4 px-6 text-cyan-300 font-bold text-lg">{nutritionist.clientsCount || 0}</td>
                     <td className="py-4 px-6">
                       <button
-                        onClick={() => onDesactivarNutriologodescrip(nutritionist)}
+                        onClick={() => onDesactivarNutriologo(nutritionist)}
                         disabled={idNutriologoDesactivando === nutritionist.id}
                         className="px-4 py-2 rounded-lg font-semibold text-sm transition-all bg-red-600 hover:bg-red-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                       >
@@ -94,7 +94,7 @@ function NutricionistasGestion({
                     <td className="py-4 px-6 text-blue-300 text-sm">{nutritionist.specialty || 'Nutrición general'}</td>
                     <td className="py-4 px-6">
                       <button
-                        onClick={() => onReactivarNutriologodescrip(nutritionist)}
+                        onClick={() => onReactivarNutriologo(nutritionist)}
                         disabled={idNutriologoReactivando === nutritionist.id}
                         className="px-4 py-2 rounded-lg font-semibold text-sm transition-all bg-emerald-600 hover:bg-emerald-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
                       >

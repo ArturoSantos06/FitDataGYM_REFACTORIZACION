@@ -1,6 +1,58 @@
-import { useCallback, useEffect, useState } from 'react';
-import { collection, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db, getUsers, removeNutritionistFromClient, updateUser } from '../../../firebase';
+
+const ROLES_NUTRIOLOGO = [
+  'nutritionist',
+  'nutriologo',
+  'nutriologa',
+  'nutriologo/a',
+  'nutricionista',
+  'nutri',
+];
+
+const ROLES_NUTRIOLOGO_INACTIVO = ['inactive_nutritionist', ...ROLES_NUTRIOLOGO];
+
+const normalizeLookupKey = (value) => String(value || '').trim().toLowerCase();
+
+const getDisplayName = (user = {}, fallback = 'Cliente') => {
+  const fullName = `${user.firstName || user.first_name || ''} ${user.lastName || user.last_name || ''}`.trim();
+  return user.displayName || fullName || user.username || user.nombre || user.email || fallback;
+};
+
+const registerLookupKeys = (map, keys, value) => {
+  keys.forEach((key) => {
+    const normalizedKey = normalizeLookupKey(key);
+    if (normalizedKey) map.set(normalizedKey, value);
+  });
+};
+
+const isNutritionistUser = (user = {}) => {
+  const role = String(user.role || user.user_type || '').toLowerCase();
+  return Boolean(
+    user.isActive !== false
+    && user.nutritionistStatus !== 'inactive'
+    && ROLES_NUTRIOLOGO.includes(role)
+  );
+};
+
+const isInactiveNutritionistUser = (user = {}) => {
+  const role = String(user.role || user.user_type || '').toLowerCase();
+  const looksNutritionist =
+    ROLES_NUTRIOLOGO_INACTIVO.includes(role)
+    || user.nutritionist === true
+    || user.especialidad
+    || user.specialty;
+
+  const isInactive =
+    user.isActive === false
+    || user.nutritionistActive === false
+    || String(user.nutritionistStatus || '').toLowerCase() === 'inactive'
+    || String(user.contractStatus || '').toLowerCase() === 'inactive'
+    || role === 'inactive_nutritionist';
+
+  return Boolean(looksNutritionist && isInactive);
+};
 
 export const useGestionNutriologos = () => {
   const [loading, setLoading] = useState(true);
@@ -15,60 +67,14 @@ export const useGestionNutriologos = () => {
   const [errorModal, setErrorModal] = useState({ isOpen: false, title: '', message: '' });
   const [successModal, setSuccessModal] = useState({ isOpen: false, title: '', message: '', subMessage: '' });
 
-  const normalizeLookupKey = (value) => String(value || '').trim().toLowerCase();
-
-  const getDisplayName = (user = {}, fallback = 'Cliente') => {
-    const fullName = `${user.firstName || user.first_name || ''} ${user.lastName || user.last_name || ''}`.trim();
-    return user.displayName || fullName || user.username || user.nombre || user.email || fallback;
-  };
-
-  const registerLookupKeys = (map, keys, value) => {
-    keys.forEach((key) => {
-      const normalizedKey = normalizeLookupKey(key);
-      if (normalizedKey) {
-        map.set(normalizedKey, value);
-      }
-    });
-  };
-
-  const isNutritionistUser = (user = {}) => {
-    const role = String(user.role || user.user_type || '').toLowerCase();
-    return Boolean(
-      user.isActive !== false
-      && user.nutritionistStatus !== 'inactive'
-      && ['nutritionist', 'nutriologo', 'nutriologa', 'nutriologo/a', 'nutricionista', 'nutri'].includes(role)
-    );
-  };
-
-  const isInactiveNutritionistUser = (user = {}) => {
-    const role = String(user.role || user.user_type || '').toLowerCase();
-    const looksNutritionist =
-      ['inactive_nutritionist', 'nutritionist', 'nutriologo', 'nutriologa', 'nutriologo/a', 'nutricionista', 'nutri'].includes(role)
-      || user.nutritionist === true
-      || user.especialidad
-      || user.specialty;
-
-    const isInactive =
-      user.isActive === false
-      || user.nutritionistActive === false
-      || String(user.nutritionistStatus || '').toLowerCase() === 'inactive'
-      || String(user.contractStatus || '').toLowerCase() === 'inactive'
-      || role === 'inactive_nutritionist';
-
-    return Boolean(looksNutritionist && isInactive);
-  };
-
-  const loadNutritionData = useCallback(async () => {
+  const loadNutritionData = useCallback(async (assignmentsSnapshot) => {
     try {
       setLoading(true);
 
-      const [usersResult, nutritionistAssignmentsSnap] = await Promise.all([
-        getUsers(),
-        getDocs(collection(db, 'client_nutritionist_assignments')),
-      ]);
+      const usersResult = await getUsers();
 
       const users = usersResult.success ? usersResult.data : [];
-      const nutritionistAssignments = nutritionistAssignmentsSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+      const nutritionistAssignments = assignmentsSnapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
 
       const userMap = new Map();
       users.forEach((user) => {
@@ -198,18 +204,24 @@ export const useGestionNutriologos = () => {
   }, []);
 
   useEffect(() => {
-    loadNutritionData();
-  }, [loadNutritionData]);
-
-  useEffect(() => {
     const nutritionistAssignmentsQuery = query(
       collection(db, 'client_nutritionist_assignments'),
       orderBy('updatedAt', 'desc')
     );
 
-    const unsubscribe = onSnapshot(nutritionistAssignmentsQuery, () => {
-      loadNutritionData();
-    });
+    const unsubscribe = onSnapshot(
+      nutritionistAssignmentsQuery,
+      (snapshot) => loadNutritionData(snapshot),
+      (error) => {
+        console.error('Error al escuchar asignaciones de nutriólogos:', error);
+        setLoading(false);
+        setErrorModal({
+          isOpen: true,
+          title: 'Error al cargar datos',
+          message: 'No se pudieron actualizar las asignaciones de nutriólogos.',
+        });
+      }
+    );
 
     return () => unsubscribe();
   }, [loadNutritionData]);
@@ -336,11 +348,21 @@ export const useGestionNutriologos = () => {
     await executeReactivateNutritionist(pendingAction.nutritionist);
   };
 
-  const stats = {
-    totalClients: nutritionistServices.length,
-    activeServices: nutritionistServices.filter((s) => String(s.status || '').toLowerCase() === 'active').length,
+  const stats = useMemo(() => ({
+    totalClients: new Set(nutritionistServices.map((service) => service.clientId).filter(Boolean)).size,
+    activeServices: nutritionistServices.filter((service) => String(service.status || '').toLowerCase() === 'active').length,
     totalNutritionists: nutritionists.length,
-  };
+  }), [nutritionistServices, nutritionists.length]);
+
+  const closePendingAction = useCallback(() => {
+    if (!deactivatingNutritionistId && !reactivatingNutritionistId) {
+      setPendingAction(null);
+    }
+  }, [deactivatingNutritionistId, reactivatingNutritionistId]);
+
+  const closePendingUnlink = useCallback(() => {
+    if (!unlinkingClientId) setPendingUnlinkService(null);
+  }, [unlinkingClientId]);
 
   return {
     cargando: loading,
@@ -359,9 +381,10 @@ export const useGestionNutriologos = () => {
     setModalExito: setSuccessModal,
     manejarDesvincularCliente: handleUnlinkClient,
     ejecutarDesvincularCliente: executeUnlinkClient,
-    manejarDesactivarNutriologodescrip: handleDeactivateNutritionist,
-    manejarReactivarNutriologodescrip: handleReactivateNutritionist,
+    manejarDesactivarNutriologo: handleDeactivateNutritionist,
+    manejarReactivarNutriologo: handleReactivateNutritionist,
     manejarConfirmarAccionPendiente: handleConfirmPendingAction,
-    setDesvinculacionPendiente: setPendingUnlinkService,
+    cerrarAccionPendiente: closePendingAction,
+    cerrarDesvinculacionPendiente: closePendingUnlink,
   };
 };
