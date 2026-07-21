@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 // Componentes existentes (Admin)
 import Login from './components/administrador/IniciarSesion';
 import Navbar from './components/administrador/Navegacion/BarraNavegacion';
-import Home from './components/administrador/Inicio'; // El Dashboard del Admin
+import Home from './components/administrador/Inicio/Inicio'; // El Dashboard del Admin
 import RegisterUser from './components/administrador/registros/RegistrarUsuario';
 import AssignMembership from './components/administrador/AsignarMembresia';
 import UserMembershipList from './components/administrador/ListaMembresiasUsuario';
