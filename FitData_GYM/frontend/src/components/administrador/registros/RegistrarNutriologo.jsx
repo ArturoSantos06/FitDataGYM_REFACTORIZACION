@@ -1,17 +1,39 @@
 import React, { useState } from 'react';
 import ErrorModal from '../../modales/ErrorModal';
 import ModalExito from '../../modales/ModalExito';
+import EncabezadoRegistro from './EncabezadoRegistro';
+import FormularioNutriologo from './FormularioNutriologo';
+import SelectorTipoRegistro from './SelectorTipoRegistro';
 import { registerNutriologoByAdmin } from '../../../firebase';
 
+const INITIAL_FORM_DATA = {
+  email: '',
+  password: '',
+  confirm_password: '',
+  first_name: '',
+  last_name: '',
+  especialidad: 'Nutrición Deportiva',
+};
+
+const LETTERS_WITH_SPACES_REGEX = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+const VALID_EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const getFirebaseErrorMessage = (error) => {
+  const normalizedMessage = String(error || '').toLowerCase();
+
+  if (
+    normalizedMessage.includes('email-already-in-use') ||
+    normalizedMessage.includes('email address is already in use') ||
+    normalizedMessage.includes('already in use by another account')
+  ) return 'Este correo ya está registrado';
+  if (normalizedMessage.includes('weak-password')) return 'La contraseña debe tener al menos 6 caracteres';
+  if (normalizedMessage.includes('invalid-email')) return 'El correo electrónico no es válido';
+
+  return error || 'Error al crear usuario';
+};
+
 function RegistrarNutriologo({ onUserRegistered, tipoRegistro = 'nutriologo', onTipoRegistroChange = null }) {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirm_password: '',
-    first_name: '',
-    last_name: '',
-    especialidad: 'Nutrición Deportiva',
-  });
+  const [formData, setFormData] = useState(INITIAL_FORM_DATA);
 
   const [mostrarModalError, setMostrarModalError] = useState(false);
   const [mensajeError, setMensajeError] = useState('');
@@ -22,27 +44,25 @@ function RegistrarNutriologo({ onUserRegistered, tipoRegistro = 'nutriologo', on
   const [cargando, setCargando] = useState(false);
 
   const manejarCambio = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((currentFormData) => ({ ...currentFormData, [name]: value }));
   };
-
-  const letrasConEspaciosRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-  const emailValidoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const validarNutriologo = () => {
     const firstName = formData.first_name.trim();
     const lastName = formData.last_name.trim();
     const email = formData.email.trim();
 
-    if (!letrasConEspaciosRegex.test(firstName)) {
+    if (!LETTERS_WITH_SPACES_REGEX.test(firstName)) {
       return 'El nombre debe contener solo letras y/o espacios.';
     }
-    if (!letrasConEspaciosRegex.test(lastName)) {
+    if (!LETTERS_WITH_SPACES_REGEX.test(lastName)) {
       return 'El apellido debe contener solo letras y/o espacios.';
     }
     if (/\s/.test(email) || /\.\s|\s\./.test(email)) {
       return 'El correo no debe tener espacios en blanco.';
     }
-    if (!emailValidoRegex.test(email)) {
+    if (!VALID_EMAIL_REGEX.test(email)) {
       return 'Ingresa un correo electrónico válido.';
     }
     if (!formData.password) {
@@ -66,6 +86,8 @@ function RegistrarNutriologo({ onUserRegistered, tipoRegistro = 'nutriologo', on
   const manejarEnvio = async (e) => {
     e.preventDefault();
 
+    if (cargando) return;
+
     const validationError = validarNutriologo();
     if (validationError) {
       setTituloError('Validación de Registro');
@@ -76,33 +98,22 @@ function RegistrarNutriologo({ onUserRegistered, tipoRegistro = 'nutriologo', on
 
     setCargando(true);
     try {
+      const firstName = formData.first_name.trim();
+      const lastName = formData.last_name.trim();
+      const email = formData.email.trim().toLowerCase();
+      const especialidad = formData.especialidad.trim();
+
       const registerResult = await registerNutriologoByAdmin({
-        email: formData.email,
+        email,
         password: formData.password,
-        firstName: formData.first_name,
-        lastName: formData.last_name,
-        especialidad: formData.especialidad,
+        firstName,
+        lastName,
+        especialidad,
       });
 
       if (!registerResult.success) {
-        let mensaje = registerResult.error || 'Error al crear usuario';
-        const normalizedMessage = String(mensaje).toLowerCase();
-
-        if (
-          normalizedMessage.includes('email-already-in-use') ||
-          normalizedMessage.includes('auth/email-already-in-use') ||
-          normalizedMessage.includes('email address is already in use') ||
-          normalizedMessage.includes('already in use by another account')
-        ) {
-          mensaje = 'Este correo ya está registrado';
-        } else if (normalizedMessage.includes('weak-password')) {
-          mensaje = 'La contraseña debe tener al menos 6 caracteres';
-        } else if (normalizedMessage.includes('invalid-email')) {
-          mensaje = 'El correo electrónico no es válido';
-        }
-
         setTituloError('Error de Registro');
-        setMensajeError(mensaje);
+        setMensajeError(getFirebaseErrorMessage(registerResult.error));
         setMostrarModalError(true);
         return;
       }
@@ -111,28 +122,17 @@ function RegistrarNutriologo({ onUserRegistered, tipoRegistro = 'nutriologo', on
       setMensajeSubExito('✅ El especialista ya aparecerá en la lista de los clientes.');
       setMostrarModalExito(true);
 
-      setFormData({
-        email: '',
-        password: '',
-        confirm_password: '',
-        first_name: '',
-        last_name: '',
-        especialidad: 'Nutrición Deportiva',
-      });
+      setFormData(INITIAL_FORM_DATA);
 
-      if (onUserRegistered) onUserRegistered();
+      onUserRegistered?.();
     } catch (err) {
       setTituloError('Error de Registro');
-      setMensajeError(err.message);
+      setMensajeError(getFirebaseErrorMessage(err?.message));
       setMostrarModalError(true);
     } finally {
       setCargando(false);
     }
   };
-
-  const fieldClass = 'w-full bg-slate-950/70 border border-slate-600/80 rounded-lg px-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/60 focus:border-cyan-400/50 transition-all';
-  const labelClass = 'block text-xs tracking-wide uppercase font-semibold text-slate-300 mb-1.5';
-  const cardClass = 'rounded-xl bg-slate-900/30 p-4 md:p-5 border-b border-slate-700/40';
 
   return (
     <div className="relative mb-6">
@@ -150,99 +150,21 @@ function RegistrarNutriologo({ onUserRegistered, tipoRegistro = 'nutriologo', on
           subMessage={mensajeSubExito}
         />
 
-        <div className="mb-8 relative">
-          <div className="absolute -top-8 left-0 w-96 h-24 bg-linear-to-r from-blue-500/20 via-cyan-500/20 to-blue-500/20 blur-3xl rounded-full" />
-          <div className="relative">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-wide text-blue-400">
-              Registro
-            </h2>
-          </div>
-          <p className="text-slate-400 text-sm mt-3 tracking-wide">Crea una nueva cuenta de nutriólogo en FitData GYM</p>
-        </div>
+        <EncabezadoRegistro
+          descripcion="Crea una nueva cuenta de nutriólogo en FitData GYM"
+        />
 
-        {onTipoRegistroChange ? (
-          <section className={`${cardClass} mb-4`}>
-            <label className={labelClass}>Tipo de registro</label>
-            <select
-              value={tipoRegistro}
-              onChange={(e) => onTipoRegistroChange(e.target.value)}
-              className={fieldClass}
-            >
-              <option value="cliente">Cliente</option>
-              <option value="entrenador">Entrenador</option>
-              <option value="nutriologo">Nutriólogo</option>
-            </select>
-          </section>
-        ) : null}
+        <SelectorTipoRegistro
+          tipoRegistro={tipoRegistro}
+          onTipoRegistroChange={onTipoRegistroChange}
+        />
 
-        <form onSubmit={manejarEnvio} className="grid grid-cols-12 gap-4 md:gap-5">
-          <section className={`${cardClass} col-span-12`}>
-            <h3 className="text-sm font-bold text-slate-200 mb-3">Datos personales</h3>
-            <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-12 md:col-span-6">
-                <label className={labelClass}>Correo Electrónico</label>
-                <input type="email" name="email" value={formData.email} onChange={manejarCambio} className={fieldClass} required />
-              </div>
-
-              <div className="col-span-12 md:col-span-6">
-                <label className={labelClass}>Nombre(s)</label>
-                <input type="text" name="first_name" value={formData.first_name} onChange={manejarCambio} className={fieldClass} required />
-              </div>
-
-              <div className="col-span-12 md:col-span-6">
-                <label className={labelClass}>Apellidos</label>
-                <input type="text" name="last_name" value={formData.last_name} onChange={manejarCambio} className={fieldClass} required />
-              </div>
-
-              <div className="col-span-12 md:col-span-6">
-                <label className={labelClass}>Especialidad</label>
-                <input
-                  type="text"
-                  name="especialidad"
-                  value={formData.especialidad}
-                  onChange={manejarCambio}
-                  className={fieldClass}
-                  placeholder="Ej: Nutrición Deportiva"
-                  required
-                />
-              </div>
-            </div>
-          </section>
-
-          <section className={`${cardClass} col-span-12`}>
-            <h3 className="text-sm font-bold text-slate-200 mb-3">Acceso</h3>
-            <div className="grid grid-cols-12 gap-4">
-              <div className="col-span-12 md:col-span-6">
-                <label className={labelClass}>Contraseña</label>
-                <input type="password" name="password" value={formData.password} onChange={manejarCambio} className={fieldClass} required />
-              </div>
-              <div className="col-span-12 md:col-span-6">
-                <label className={labelClass}>Confirmar Contraseña</label>
-                <input type="password" name="confirm_password" value={formData.confirm_password} onChange={manejarCambio} className={fieldClass} required />
-              </div>
-            </div>
-          </section>
-
-          <div className="col-span-12 mt-1">
-            <button
-              type="submit"
-              disabled={cargando}
-              className={`w-full rounded-lg bg-linear-to-r from-fuchsia-600 via-violet-600 to-cyan-600 px-5 py-3.5 text-white font-black tracking-wide shadow-xl transition-all hover:brightness-110 active:scale-[0.99] flex justify-center items-center gap-2 ${cargando ? 'opacity-70 cursor-not-allowed' : ''}`}
-            >
-              {cargando ? (
-                <>
-                  <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  <span>Procesando...</span>
-                </>
-              ) : (
-                'Registrar Nutriólogo'
-              )}
-            </button>
-          </div>
-        </form>
+        <FormularioNutriologo
+          formData={formData}
+          onChange={manejarCambio}
+          onSubmit={manejarEnvio}
+          cargando={cargando}
+        />
       </div>
     </div>
   );
