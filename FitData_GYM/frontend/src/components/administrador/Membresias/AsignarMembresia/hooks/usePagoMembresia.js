@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// Seleccion de tipo de membresia + campos de pago y su calculo derivado.
 export function usePagoMembresia(tiposMembresia) {
   const [membresiaSeleccionada, setMembresiaSeleccionada] = useState(null);
   const [metodoPago, setMetodoPago] = useState('EFECTIVO');

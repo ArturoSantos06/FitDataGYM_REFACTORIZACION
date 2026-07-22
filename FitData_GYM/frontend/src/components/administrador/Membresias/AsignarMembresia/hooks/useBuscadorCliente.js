@@ -7,8 +7,6 @@ const construirNombreCompleto = (cliente) => {
   return `${nombre} ${apellido}`.trim();
 };
 
-// Buscar y seleccionar cliente. Recibe la lista completa de clientes ya
-// cargada por useCatalogoMembresias.
 export function useBuscadorCliente(clientes) {
   const [clienteSeleccionado, setClienteSeleccionado] = useState('');
   const [busquedaCliente, setBusquedaCliente] = useState('');

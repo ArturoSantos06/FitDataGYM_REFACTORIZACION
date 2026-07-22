@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { asignarMembresia } from '../../../../backend/membresias';
 
-// El envio en si: validacion, llamada al backend, conflicto de renovacion y
-// modal de exito. No sabe nada del buscador ni del catalogo, solo recibe los
-// valores que necesita para armar la peticion.
 export function useEnvioAsignacion({
   clienteSeleccionado,
   membresiaSeleccionada,

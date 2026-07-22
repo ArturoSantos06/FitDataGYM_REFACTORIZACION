@@ -6,9 +6,9 @@ import Login from './components/administrador/IniciarSesion';
 import Navbar from './components/administrador/Navegacion/BarraNavegacion';
 import Home from './components/administrador/Inicio/Inicio'; // El Dashboard del Admin
 import RegisterUser from './components/administrador/registros/RegistrarUsuario';
-import AssignMembership from './components/administrador/AsignarMembresia/AsignarMembresia';
-import UserMembershipList from './components/administrador/ListaMembresiasUsuario/ListaMembresiasUsuario';
-import MembershipAdmin from './components/administrador/AdministrarMembresias';
+import AssignMembership from './components/administrador/Membresias/AsignarMembresia/AsignarMembresia';
+import UserMembershipList from './components/administrador/Membresias/ListaMembresiasUsuario/ListaMembresiasUsuario';
+import MembershipAdmin from './components/administrador/Membresias/AdministrarMembresias/AdministrarMembresias';
 import PuntoDeVenta from './components/administrador/PuntoDeVenta';
 import Inventario from './components/administrador/Inventario';
 import CheckInOut from './components/administrador/CheckInOut';

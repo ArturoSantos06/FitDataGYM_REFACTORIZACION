@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { listarClientes, listarTiposMembresia } from '../../../../backend/membresias';
 
-// Carga inicial de clientes y tipos de membresia. Sin logica de UI.
 export function useCatalogoMembresias() {
   const [clientes, setClientes] = useState([]);
   const [tiposMembresia, setTiposMembresia] = useState([]);

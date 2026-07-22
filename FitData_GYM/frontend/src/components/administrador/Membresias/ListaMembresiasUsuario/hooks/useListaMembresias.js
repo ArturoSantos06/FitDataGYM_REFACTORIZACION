@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { listarTodasAsignaciones, listarClientes } from '../../../../backend/membresias';
+import { listarTodasAsignaciones, listarClientes } from '../../../../../backend/membresias';
 
 const esMembresiaActiva = (item) => {
   if (!item?.endDate) return false;

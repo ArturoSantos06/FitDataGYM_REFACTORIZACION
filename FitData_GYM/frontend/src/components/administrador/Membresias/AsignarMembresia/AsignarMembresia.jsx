@@ -1,4 +1,4 @@
-import ModalExito from '../../modales/ModalExito';
+import ModalExito from '../../../modales/ModalExito';
 import { useAsignarMembresia } from './hooks/useAsignarMembresia';
 import BuscadorClienteVista from './partes/BuscadorClienteVista';
 import SelectorMembresiaVista from './partes/SelectorMembresiaVista';
