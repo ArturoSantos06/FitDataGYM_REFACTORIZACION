@@ -12,7 +12,7 @@ import MembershipAdmin from './components/administrador/Membresias/AdministrarMe
 import PuntoDeVenta from './components/administrador/PuntoDeVenta';
 import Inventario from './components/administrador/Inventario';
 import CheckInOut from './components/administrador/CheckInOut/CheckInOut';
-import HealthProfilesAdmin from './components/administrador/PerfilesSaludAdmin';
+import HealthProfilesAdmin from './components/administrador/PerfilesSaludAdmin/PerfilesSaludAdmin';
 import BitacoraEntrenador from './components/entrenador/seguimiento/BitacoraEntrenador';
 import GestionEntrenadores from './components/administrador/gestion-entrenadores/GestionEntrenadores';
 import GestionNutriologos from './components/administrador/gestion-nutriologos/GestionNutriologos';
