@@ -1,13 +1,8 @@
 import { Users } from 'lucide-react';
 import ServicioNutricionRow from './ServicioNutricionRow';
+import TablaGestion from './TablaGestion';
 
-const COLUMN_HEADERS = [
-  'Cliente',
-  'Nutriólogo',
-  'Estado',
-  'Fecha de asignación',
-  'Acciones',
-];
+const COLUMN_HEADERS = ['Cliente', 'Nutriólogo', 'Estado', 'Fecha de asignación', 'Acciones'];
 
 function ClientesConServicioNutricionista({
   serviciosNutricion = [],
@@ -23,37 +18,20 @@ function ClientesConServicioNutricionista({
         </h2>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-gray-900/80">
-            <tr>
-              {COLUMN_HEADERS.map((header) => (
-                <th key={header} scope="col" className="text-left py-4 px-6 text-gray-300 font-semibold text-sm">
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-700">
-            {serviciosNutricion.length === 0 ? (
-              <tr>
-                <td colSpan={COLUMN_HEADERS.length} className="text-center py-8 text-gray-400">
-                  No hay clientes con servicio de nutriólogo.
-                </td>
-              </tr>
-            ) : (
-              serviciosNutricion.map((servicio) => (
-                <ServicioNutricionRow
-                  key={servicio.id}
-                  servicio={servicio}
-                  idClienteDesvinculando={idClienteDesvinculando}
-                  onDesvincularCliente={onDesvincularCliente}
-                />
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      <TablaGestion
+        caption="Clientes con Servicio de Nutriólogo"
+        columnHeaders={COLUMN_HEADERS}
+        rows={serviciosNutricion}
+        emptyMessage="No hay clientes con servicio de nutriólogo."
+        renderRow={(servicio) => (
+          <ServicioNutricionRow
+            key={servicio.id}
+            servicio={servicio}
+            idClienteDesvinculando={idClienteDesvinculando}
+            onDesvincularCliente={onDesvincularCliente}
+          />
+        )}
+      />
     </section>
   );
 }
