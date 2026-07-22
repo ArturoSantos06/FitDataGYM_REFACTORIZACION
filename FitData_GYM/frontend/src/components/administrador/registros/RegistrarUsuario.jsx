@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ErrorModal from "../../modales/ErrorModal";
 import ModalExito from "../../modales/ModalExito";
-import FormularioSaludAdmin from "./FormularioSaludAdmin";
+import FormularioSaludAdmin from "./FormularioSaludAdmin/FormularioSaludAdmin";
 import RegistrarEntrenador from "./RegistrarEntrenador";
 import RegistrarNutriologo from "./RegistrarNutriologo";
 import { registerClientByAdmin, createMembershipSale, getSaleByFolio } from "../../../firebase";

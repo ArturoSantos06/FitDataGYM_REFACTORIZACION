@@ -1,11 +1,5 @@
 import { memo } from 'react';
-
-const Dato = ({ etiqueta, children }) => (
-  <div className="bg-slate-800 rounded-lg p-3">
-    <p className="text-slate-400 text-xs">{etiqueta}</p>
-    <p className="text-white font-semibold">{children}</p>
-  </div>
-);
+import Dato from './DatoVista';
 
 function ModalDetallePerfilVista({ perfil, onCerrar }) {
   return (
