@@ -12,7 +12,7 @@ Rama `feature/william` desde `main`. 22 fases, una por componente, 22 commits �
 6. ✅ `AdministrarMembresias.jsx`
 7. ✅ `CheckInOut.jsx`
 8. ✅ `PerfilesSaludAdmin.jsx`
-9. `src/components/administrador/ReportesFacturacion.jsx`
+9. ✅ `ReportesFacturacion.jsx`
 10. `src/components/administrador/registros/FormularioSaludAdmin.jsx`
 11. `src/components/administrador/registros/RegistrarUsuario.jsx`
 12. `src/components/administrador/registros/RegistrarEntrenador.jsx`
