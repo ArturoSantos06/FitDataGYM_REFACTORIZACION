@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { listarTiposMembresia } from '../../../backend/membresias';
+import { listarTiposMembresia } from '../../../../../backend/membresias';
 
 export function useCatalogoMembresias() {
   const [tiposMembresia, setTiposMembresia] = useState([]);

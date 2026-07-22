@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import Boton from '../../../../partes/reutilizables/Boton';
+import Boton from '../../../partes/reutilizables/Boton';
 
 function CampoFormulario({ etiqueta, className, ...props }) {
   return (

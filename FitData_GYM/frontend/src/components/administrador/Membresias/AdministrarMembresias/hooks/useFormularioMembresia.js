@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { subirImagenMembresia } from '../../../../../backend/firebase';
+import { subirImagenMembresia } from '../../../../../backend/almacenamiento';
 
 const CAMPOS_INICIALES = {
   nombre: '',

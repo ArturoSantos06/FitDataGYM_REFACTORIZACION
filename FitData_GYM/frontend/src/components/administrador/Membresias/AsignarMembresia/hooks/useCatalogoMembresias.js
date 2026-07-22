@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { listarClientes, listarTiposMembresia } from '../../../../backend/membresias';
+import { listarClientes, listarTiposMembresia } from '../../../../../backend/membresias';
 
 export function useCatalogoMembresias() {
   const [clientes, setClientes] = useState([]);

@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import ContenedorModal from '../../partes/reutilizables/ContenedorModal';
-import BotonAccionModal from '../../partes/reutilizables/BotonAccionModal';
+import ContenedorModal from '../../../partes/reutilizables/ContenedorModal';
+import BotonAccionModal from '../../../partes/reutilizables/BotonAccionModal';
 
 function ModalRenovacionVista({ datos, onConfirmar, onCancelar }) {
   return (

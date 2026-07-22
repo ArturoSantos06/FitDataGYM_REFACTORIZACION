@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { asignarMembresia } from '../../../../backend/membresias';
+import { asignarMembresia } from '../../../../../backend/membresias';
 
 export function useEnvioAsignacion({
   clienteSeleccionado,

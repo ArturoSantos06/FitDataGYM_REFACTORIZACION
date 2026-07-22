@@ -11,7 +11,7 @@ import UserMembershipList from './components/administrador/Membresias/ListaMembr
 import MembershipAdmin from './components/administrador/Membresias/AdministrarMembresias/AdministrarMembresias';
 import PuntoDeVenta from './components/administrador/PuntoDeVenta';
 import Inventario from './components/administrador/Inventario';
-import CheckInOut from './components/administrador/CheckInOut';
+import CheckInOut from './components/administrador/CheckInOut/CheckInOut';
 import HealthProfilesAdmin from './components/administrador/PerfilesSaludAdmin';
 import BitacoraEntrenador from './components/entrenador/seguimiento/BitacoraEntrenador';
 import GestionEntrenadores from './components/administrador/gestion-entrenadores/GestionEntrenadores';

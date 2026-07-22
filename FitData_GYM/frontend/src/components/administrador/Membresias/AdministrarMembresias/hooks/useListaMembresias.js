@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { listarTiposMembresia, crearTipoMembresia, actualizarTipoMembresia, eliminarTipoMembresia, subirImagenMembresia } from '../../../backend/membresias';
+import { listarTiposMembresia, crearTipoMembresia, actualizarTipoMembresia, eliminarTipoMembresia } from '../../../../../backend/membresias';
+import { subirImagenMembresia } from '../../../../../backend/almacenamiento';
 
 export function useListaMembresias() {
   const [membresias, setMembresias] = useState([]);
