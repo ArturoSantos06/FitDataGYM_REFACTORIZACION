@@ -21,7 +21,7 @@ import CitasEntrenador from './components/entrenador/gestion/CitasEntrenador';
 import LandingPage from './components/pagina principal/InicioPublico/InicioPublico';
 import Portal from './components/cliente/principal/Portal';
 import Sesion from './components/cliente/principal/Sesion';
-import AboutTeam from './components/pagina principal/SobreEquipo';
+import AboutTeam from './components/pagina principal/SobreEquipo/SobreEquipo';
 import RutinaEntrenador from './components/entrenador/rutinas/RutinaEntrenador';
 import EntrenadorLogin from './components/entrenador/portal/EntrenadorLogin';
 import IniciarSesionNutri from './components/nutriologo/IniciarSesionNutri';
