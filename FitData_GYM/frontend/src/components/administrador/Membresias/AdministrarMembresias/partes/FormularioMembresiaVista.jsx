@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import Boton from '../../../partes/reutilizables/Boton';
-import CampoFormulario from './CampoFormulario';
+import CampoFormulario from '../../../partes/reutilizables/CampoFormulario';
 
 function FormularioMembresiaVista({
   esEdicion,

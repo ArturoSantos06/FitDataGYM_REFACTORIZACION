@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/administrador/IniciarSesion';
 import Navbar from './components/administrador/Navegacion/BarraNavegacion';
 import Home from './components/administrador/Inicio/Inicio'; // El Dashboard del Admin
-import RegisterUser from './components/administrador/registros/RegistrarUsuario';
+import RegisterUser from './components/administrador/registros/Registro/Registro';
 import AssignMembership from './components/administrador/Membresias/AsignarMembresia/AsignarMembresia';
 import UserMembershipList from './components/administrador/Membresias/ListaMembresiasUsuario/ListaMembresiasUsuario';
 import MembershipAdmin from './components/administrador/Membresias/AdministrarMembresias/AdministrarMembresias';
