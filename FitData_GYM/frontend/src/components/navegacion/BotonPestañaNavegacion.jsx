@@ -1,4 +1,4 @@
-function NavTabButton({ tab, isActive, isMobile = false, onSelect }) {
+function BotonPestañaNavegacion({ tab, isActive, isMobile = false, onSelect }) {
   const Icon = tab.icon;
 
   const desktopClasses = isActive
@@ -37,4 +37,4 @@ function NavTabButton({ tab, isActive, isMobile = false, onSelect }) {
   );
 }
 
-export default NavTabButton;
+export default BotonPestañaNavegacion;

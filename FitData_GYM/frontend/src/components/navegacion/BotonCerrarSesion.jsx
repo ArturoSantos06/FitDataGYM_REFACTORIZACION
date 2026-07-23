@@ -2,7 +2,7 @@ import { LogOut } from 'lucide-react';
 
 const LOGOUT_LABEL = 'Salir';
 
-function LogoutButton({ onLogout, isMobile = false }) {
+function BotonCerrarSesion({ onLogout, isMobile = false }) {
   return (
     <button
       type="button"
@@ -26,4 +26,4 @@ function LogoutButton({ onLogout, isMobile = false }) {
   );
 }
 
-export default LogoutButton;
+export default BotonCerrarSesion;

@@ -5,9 +5,9 @@ import {
   ShoppingBag,
   User,
 } from 'lucide-react';
-import NavbarBrand from '../../shared/navigation/NavbarBrand';
-import NavTabButton from '../../shared/navigation/NavTabButton';
-import LogoutButton from '../../shared/navigation/LogoutButton';
+import MarcaNavegacion from '../../navegacion/MarcaNavegacion';
+import BotonPestañaNavegacion from '../../navegacion/BotonPestañaNavegacion';
+import BotonCerrarSesion from '../../navegacion/BotonCerrarSesion';
 
 const CLIENT_TABS = [
   { id: 'inicio', label: 'Inicio', icon: QrCode },
@@ -22,11 +22,11 @@ function Navbar({ activeTab, setActiveTab, onLogout }) {
     <>
       <header className="fixed left-0 right-0 top-0 z-50 hidden h-20 items-center justify-center border-b border-slate-800 bg-slate-900 px-8 shadow-2xl md:flex">
         <div className="flex items-center gap-5">
-          <NavbarBrand />
+          <MarcaNavegacion />
 
           <nav aria-label="Navegación principal" className="flex items-center gap-5">
             {CLIENT_TABS.map((tab) => (
-              <NavTabButton
+              <BotonPestañaNavegacion
                 key={tab.id}
                 tab={tab}
                 isActive={activeTab === tab.id}
@@ -37,7 +37,7 @@ function Navbar({ activeTab, setActiveTab, onLogout }) {
         </div>
 
         <div className="border-l border-slate-800/50 pl-8">
-          <LogoutButton onLogout={onLogout} />
+              <BotonCerrarSesion onLogout={onLogout} />
         </div>
       </header>
 
@@ -47,7 +47,7 @@ function Navbar({ activeTab, setActiveTab, onLogout }) {
       >
         <div className="grid h-full grid-cols-6">
           {CLIENT_TABS.map((tab) => (
-            <NavTabButton
+            <BotonPestañaNavegacion
               key={tab.id}
               tab={tab}
               isActive={activeTab === tab.id}
@@ -56,7 +56,7 @@ function Navbar({ activeTab, setActiveTab, onLogout }) {
             />
           ))}
 
-          <LogoutButton onLogout={onLogout} isMobile />
+          <BotonCerrarSesion onLogout={onLogout} isMobile />
         </div>
       </nav>
     </>
