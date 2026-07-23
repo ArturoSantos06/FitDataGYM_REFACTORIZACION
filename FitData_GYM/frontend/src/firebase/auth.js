@@ -238,3 +238,18 @@ export const registerNutriologoByAdmin = async (payload) => {
     };
   }
 };
+
+export const updateClientEmail = async (newEmail, userId) => {
+  try {
+    const fn = httpsCallable(functions, 'updateClientEmail');
+    const result = await fn({ newEmail, userId });
+    return { success: true, data: result.data };
+  } catch (error) {
+    console.error('Error actualizando correo:', error);
+    return {
+      success: false,
+      error: error?.details || error?.message || 'No se pudo actualizar el correo',
+      code: error?.code || null,
+    };
+  }
+};
