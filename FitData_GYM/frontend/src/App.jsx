@@ -18,7 +18,7 @@ import GestionEntrenadores from './components/administrador/gestion-entrenadores
 import GestionNutriologos from './components/administrador/gestion-nutriologos/GestionNutriologos';
 import CitasEntrenador from './components/entrenador/gestion/CitasEntrenador';
 // Nuevos Componentes Públicos
-import LandingPage from './components/pagina principal/InicioPublico';
+import LandingPage from './components/pagina principal/InicioPublico/InicioPublico';
 import Portal from './components/cliente/principal/Portal';
 import Sesion from './components/cliente/principal/Sesion';
 import AboutTeam from './components/pagina principal/SobreEquipo';
