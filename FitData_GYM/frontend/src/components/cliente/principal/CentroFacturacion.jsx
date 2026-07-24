@@ -3,6 +3,7 @@ import { FileText, Download, Loader, AlertCircle } from 'lucide-react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../../firebase/config';
 import { getSales, getCurrentUser } from '../../../firebase';
+import { parseProductDetails } from './tiendaUtils';
 
 function CentroFacturacion({ ventasIniciales = [] }) {
   const [ventas, setVentas] = useState(ventasIniciales);
@@ -15,12 +16,25 @@ function CentroFacturacion({ ventasIniciales = [] }) {
   const currentUser = getCurrentUser();
 
   const refreshVentas = async () => {
-    const result = await getSales();
-    if (result.success) {
-      setVentas(result.data || []);
-      return result.data || [];
-    }
-    return [];
+    if (!currentUser) return [];
+
+    const filters = [
+      currentUser.uid ? { userId: currentUser.uid } : null,
+      currentUser.email ? { userEmail: currentUser.email } : null,
+    ].filter(Boolean);
+    const results = await Promise.allSettled(filters.map((filter) => getSales(filter)));
+    const salesById = new Map();
+
+    results.forEach((result) => {
+      if (result.status !== 'fulfilled' || !result.value?.success) return;
+      (result.value.data || []).forEach((sale) => {
+        if (sale?.id) salesById.set(sale.id, sale);
+      });
+    });
+
+    const userSales = Array.from(salesById.values());
+    setVentas(userSales);
+    return userSales;
   };
 
   useEffect(() => {
@@ -71,9 +85,7 @@ function CentroFacturacion({ ventasIniciales = [] }) {
       let generated = false;
       for (let attempt = 0; attempt < 5; attempt += 1) {
         // Espera breve mientras la Cloud Function procesa la solicitud
-        // eslint-disable-next-line no-await-in-loop
         await new Promise((resolve) => setTimeout(resolve, 1800));
-        // eslint-disable-next-line no-await-in-loop
         const updatedSales = await refreshVentas();
         const target = updatedSales.find((sale) => String(sale.id) === String(ventaId));
         if (target?.factura_estado === 'generada' && target?.factura_url) {
@@ -206,21 +218,19 @@ function CentroFacturacion({ ventasIniciales = [] }) {
                     ) : venta.producto ? (
                       <div>{venta.producto}</div>
                     ) : venta.detalle_productos ? (
-                      <div className="space-y-1">
-                        {(() => {
-                          try {
-                            const parsed = JSON.parse(String(venta.detalle_productos || '[]').replace(/'/g, '"'));
-                            if (Array.isArray(parsed)) {
-                              return parsed.map((item, idx) => (
-                                <div key={idx}>
-                                  {item.nombre || 'Producto'} x{item.cantidad || 1} - ${((item.cantidad || 1) * (item.precio || 0)).toFixed(2)}
-                                </div>
-                              ));
-                            }
-                          } catch { }
-                          return <div>Compra</div>;
-                        })()}
-                      </div>
+                      (() => {
+                        const details = parseProductDetails(venta.detalle_productos);
+                        return (
+                          <div className="space-y-1">
+                            {details.map((item, index) => (
+                              <div key={`${venta.id}-${item.id || item.nombre || index}`}>
+                                {item.nombre || 'Producto'} x{item.cantidad || 1} - ${((item.cantidad || 1) * (item.precio || 0)).toFixed(2)}
+                              </div>
+                            ))}
+                            {!details.length && <div>Compra</div>}
+                          </div>
+                        );
+                      })()
                     ) : (
                       <div>Compra</div>
                     )}
