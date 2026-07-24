@@ -27,7 +27,7 @@ import EntrenadorLogin from './components/entrenador/portal/EntrenadorLogin';
 import IniciarSesionNutri from './components/nutriologo/IniciarSesionNutri';
 import NutriPortal from './components/nutriologo/NutriPortal';
 import ReportesFacturacion from './components/administrador/ReportesFacturacion/ReportesFacturacion';
-import PortalMantenimiento from './components/mantenimiento/PortalMantenimiento';
+import PortalMantenimiento from './components/mantenimiento/PortalMantenimiento/PortalMantenimiento';
 import { logoutUser, getCurrentUser, onAuthChanged, getUserByAuthUid, getUserByEmail } from './firebase';
 import { AssistantProvider } from './components/asistente/ContextoAsistente';
 import AssistantAdminConfig from './components/asistente/ConfiguracionAsistenteAdmin';
