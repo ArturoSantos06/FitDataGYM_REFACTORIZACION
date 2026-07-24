@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TarjetaProducto from './TarjetaProducto';
-import CentroFacturacion from './CentroFacturacion';
+import CentroFacturacion from './facturacion/CentroFacturacion';
 import HistorialCompras from './HistorialCompras';
 import { useTiendaData } from './useTiendaData';
 
