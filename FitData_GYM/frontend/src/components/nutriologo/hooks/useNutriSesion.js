@@ -1,4 +1,3 @@
-// Ruta: src/components/nutriologo/hooks/useNutriSesion.js
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser, getUser, getUserByEmail } from '../../../firebase';
