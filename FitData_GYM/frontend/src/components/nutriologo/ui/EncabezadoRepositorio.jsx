@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function EncabezadoRepositorio({ totalPacientes, totalArchivos }) {
   return (
     <section className="rounded-3xl border border-slate-700/70 bg-linear-to-br from-slate-900 via-slate-850 to-slate-900 p-6 shadow-2xl shadow-cyan-950/20">
