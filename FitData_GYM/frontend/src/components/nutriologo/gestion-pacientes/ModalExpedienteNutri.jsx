@@ -6,7 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 // Importaciones Modulares (Ajusta rutas según necesites)
 import ModalAgendarNutri from '../../modales/ModalAgendarNutri';
 import ModalDetalleNutri from './ModalDetalleNutri';
-import DialogoSistemaNutri from '../DialogoSistemaNutri';
+import DialogoSistemaNutri from '../ui/DialogoSistemaNutri';
 import { useModalExpediente } from '../hooks/useModalExpediente';
 import { PanelLateralPaciente } from '../ui/PanelLateralPaciente';
 import { EstilosCalendario } from '../ui/EstilosCalendario';

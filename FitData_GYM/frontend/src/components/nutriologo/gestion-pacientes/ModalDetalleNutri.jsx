@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trash2, Edit3, Save, X, ClipboardList, CalendarClock } from 'lucide-react';
-import DialogoSistemaNutri from '../DialogoSistemaNutri'; 
+import DialogoSistemaNutri from '../ui/DialogoSistemaNutri'; 
 import { useModalDetalleNutri } from '../hooks/useModalDetalleNutri';
 import { BotonAccionModal } from '../ui/BotonAccionModal';
 
