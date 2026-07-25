@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getUser, getUserByEmail, loginUser, logoutUser } from '../../../firebase';
+import {
+  getUser as obtenerUsuario,
+  getUserByEmail as obtenerUsuarioPorCorreo,
+  loginUser as iniciarSesionFirebase,
+  logoutUser as cerrarSesionFirebase,
+} from '../../../../firebase';
 
 const CLAVES_SESION = ['trainer_token', 'trainer_username'];
 
@@ -23,11 +28,11 @@ const obtenerMensajeError = (error) => {
 };
 
 const obtenerRolEntrenador = async (usuario) => {
-  const usuarioPorUid = await getUser(usuario.uid);
+  const usuarioPorUid = await obtenerUsuario(usuario.uid);
   const rolPorUid = usuarioPorUid.success ? usuarioPorUid.data?.role : null;
   if (rolPorUid) return rolPorUid;
 
-  const usuarioPorCorreo = await getUserByEmail(usuario.email || '');
+  const usuarioPorCorreo = await obtenerUsuarioPorCorreo(usuario.email || '');
   return usuarioPorCorreo.success ? usuarioPorCorreo.data?.role : null;
 };
 
@@ -47,12 +52,12 @@ function useInicioSesionEntrenador() {
     establecerCargando(true);
 
     try {
-      const resultado = await loginUser(correo, contrasena);
+      const resultado = await iniciarSesionFirebase(correo, contrasena);
       if (!resultado.success) throw new Error(resultado.error || 'Credenciales inválidas');
 
       const rol = String(await obtenerRolEntrenador(resultado.user) || '').toLowerCase();
       if (!['trainer', 'entrenador'].includes(rol)) {
-        await logoutUser();
+        await cerrarSesionFirebase();
         throw new Error('Tu cuenta no tiene permisos de entrenador');
       }
 

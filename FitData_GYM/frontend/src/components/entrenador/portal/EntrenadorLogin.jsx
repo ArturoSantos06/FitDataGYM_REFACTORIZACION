@@ -1,7 +1,7 @@
 import FormularioInicioSesionEntrenador from './FormularioInicioSesionEntrenador';
-import useInicioSesionEntrenador from './useInicioSesionEntrenador';
+import useInicioSesionEntrenador from './hooks/useInicioSesionEntrenador';
 
-function EntrenadorLogin() {
+function InicioSesionEntrenador() {
   const estadoInicioSesion = useInicioSesionEntrenador();
 
   return (
@@ -21,4 +21,4 @@ function EntrenadorLogin() {
   );
 }
 
-export default EntrenadorLogin;
+export default InicioSesionEntrenador;
