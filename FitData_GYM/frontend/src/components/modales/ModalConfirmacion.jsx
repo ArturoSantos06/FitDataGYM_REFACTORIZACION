@@ -6,6 +6,7 @@ const ModalConfirmacion = ({
   isOpen,
   onClose,
   onConfirm,
+  disabled = false,
   title,
   message,
   confirmLabel = 'Sí, Eliminar',
@@ -40,13 +41,15 @@ const ModalConfirmacion = ({
         <div className="flex gap-3 justify-center">
           <button 
             onClick={onClose} 
+            disabled={disabled}
             className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition-colors w-full"
           >
             Cancelar
           </button>
           <button 
             onClick={onConfirm} 
-            className={`px-4 py-2 text-white rounded-lg font-bold transition-colors w-full shadow-lg ${confirmButtonClass}`}
+            disabled={disabled}
+            className={`px-4 py-2 text-white rounded-lg font-bold transition-colors w-full shadow-lg ${confirmButtonClass} disabled:opacity-50 disabled:cursor-not-allowed`}
           >
             {confirmLabel}
           </button>
