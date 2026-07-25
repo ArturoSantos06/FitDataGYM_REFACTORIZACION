@@ -1,13 +1,13 @@
-import BarraNavegacionNutri from './BarraNavegacionNutri';
-import InicioNutri from './InicioNutri';
-import FormularioMacros from './FormularioMacros';
+import BandejaProfesionales from '../chat/BandejaProfesionales';
+import AsistenteNutricional from './asistente/AsistenteNutricional';
+import FormularioMacros from './calculadora/FormularioMacros';
 import PanelFinanzas from './finanzas/PanelFinanzas';
 import CitasNutri from './gestion-pacientes/CitasNutri';
-import DietaRepositorio from './DietaRepositorio';
-import AsistenteNutricional from './AsistenteNutricional';
-import BandejaProfesionales from '../chat/BandejaProfesionales';
-import PerfilNutriologo from './PerfilNutriologo';
 import usePortalNutriologo from './hooks/usePortalNutriologo';
+import InicioNutri from './inicio/InicioNutri';
+import PerfilNutriologo from './perfil/PerfilNutriologo';
+import DietaRepositorio from './repositorio/DietaRepositorio';
+import BarraNavegacionNutri from './ui/BarraNavegacionNutri';
 
 export default function NutriPortal() {
   const {

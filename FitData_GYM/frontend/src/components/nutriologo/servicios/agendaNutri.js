@@ -1,42 +1,10 @@
 import { collection, onSnapshot, query } from 'firebase/firestore';
-import {
-  getCurrentUser,
-  getUser,
-  getUserByAuthUid,
-  getUserByEmail,
-} from '../../../firebase';
 import { db } from '../../../firebase/config';
+import { obtenerClaseColorAvatar } from '../utils/agendaNutri';
 import {
-  normalizarClaveAgenda,
-  obtenerClaseColorAvatar,
-} from '../utils/agendaNutri';
-
-const resolverClavesNutriologo = async () => {
-  const usuario = getCurrentUser();
-  if (!usuario) return new Set();
-
-  const [porUid, porId, porCorreo] = await Promise.all([
-    getUserByAuthUid(usuario.uid),
-    getUser(usuario.uid),
-    usuario.email
-      ? getUserByEmail(usuario.email, usuario.uid)
-      : Promise.resolve({ success: false }),
-  ]);
-  const claves = new Set(
-    [usuario.uid, usuario.email].map(normalizarClaveAgenda).filter(Boolean),
-  );
-
-  [porUid, porId, porCorreo]
-    .filter((resultado) => resultado?.success && resultado?.data)
-    .forEach(({ data }) => {
-      [data.id, data.authUid, data.legacyId, data.email].forEach((valor) => {
-        const clave = normalizarClaveAgenda(valor);
-        if (clave) claves.add(clave);
-      });
-    });
-
-  return claves;
-};
+  extraerClavesClientesAsignados,
+  resolverClavesNutriologo,
+} from './asignacionesNutriologo';
 
 const obtenerEdadMiembro = (miembro, perfilesPorClave) => {
   const perfil = perfilesPorClave[miembro.id]
@@ -55,20 +23,12 @@ export async function suscribirAsignacionesNutriologo(alActualizar, alFallar) {
   return onSnapshot(
     query(collection(db, 'client_nutritionist_assignments')),
     (instantanea) => {
-      const idsClientes = new Set();
-      instantanea.docs.forEach((documento) => {
-        const asignacion = documento.data() || {};
-        const activa = String(asignacion.status || 'active').toLowerCase() === 'active';
-        const coincide = [
-          asignacion.nutritionistId,
-          asignacion.nutritionistEmail,
-        ].some((valor) => clavesNutriologo.has(normalizarClaveAgenda(valor)));
-        if (!activa || !coincide) return;
-
-        const idCliente = asignacion.clientId || asignacion.memberId || documento.id;
-        if (idCliente) idsClientes.add(String(idCliente));
-      });
-      alActualizar([...idsClientes]);
+      alActualizar([
+        ...extraerClavesClientesAsignados(
+          instantanea.docs,
+          clavesNutriologo,
+        ),
+      ]);
     },
     alFallar,
   );

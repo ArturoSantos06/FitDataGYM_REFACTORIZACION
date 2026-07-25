@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { createMembershipSale, getCurrentUser } from '../../../firebase';
-import { consultarClientesAsignados } from '../servicios/clientesCobro';
 import {
-  filtrarYOrdenarClientes,
-  obtenerNombreCompleto,
-} from '../utils/utilidadesCobros';
+  consultarClientesAsignados,
+  registrarCobroNutricional,
+} from '../servicios/clientesCobro';
+import { filtrarYOrdenarClientes } from '../utils/utilidadesCobros';
 import useValorDemorado from './useValorDemorado';
 
 const MONTO_PREDETERMINADO = '500';
@@ -75,29 +74,11 @@ export default function usePanelCobros(alCrearCobro) {
     setMensaje(MENSAJE_INICIAL);
 
     try {
-      const usuarioActual = getCurrentUser();
-      const correoVendedor = usuarioActual?.email
-        || localStorage.getItem('nutritionist_username')
-        || '';
-      const resultado = await createMembershipSale({
-        cliente_id: String(clienteSeleccionado.userId || '').trim() || null,
-        metodo_pago: metodoPago,
+      const resultado = await registrarCobroNutricional({
+        cliente: clienteSeleccionado,
+        metodoPago,
         total,
-        monto_recibido: total,
-        membership_name: 'Plan Nutricional',
-        tipo_venta: 'PLAN_NUTRICIONAL',
-        sellerId: usuarioActual?.uid || '',
-        sellerEmail: correoVendedor,
-        vendedorId: usuarioActual?.uid || '',
-        vendedorEmail: correoVendedor,
-        cliente_auth_uid: clienteSeleccionado.authUid || '',
-        cliente_nombre_override: obtenerNombreCompleto(clienteSeleccionado),
-        cliente_email_override: clienteSeleccionado.email || '',
       });
-
-      if (!resultado.success) {
-        throw new Error(resultado.error || 'No se pudo registrar el cobro.');
-      }
 
       setMensaje({
         texto: `Cobro registrado correctamente. Folio: ${resultado.folio}`,

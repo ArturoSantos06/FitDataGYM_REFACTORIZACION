@@ -1,4 +1,4 @@
-import { collection, getDocs, Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 import {
   createDietFileRecord,
   deleteDietFileRecord,
@@ -7,16 +7,11 @@ import {
   getAllDietFiles,
   getAllMembers,
   getCurrentUser,
-  getUser,
-  getUserByAuthUid,
-  getUserByEmail,
   subirDocumentoDieta,
 } from '../../../firebase';
-import { db } from '../../../firebase/config';
 import {
   esErrorPermisos,
   esRolNutriologo,
-  normalizarClave,
 } from '../utils/repositorioDietas';
 import {
   asegurarAccesoRepositorioDietas,
@@ -24,6 +19,10 @@ import {
   esperarUsuarioFirebase,
   prepararTokenFirebase,
 } from './accesoRepositorioDietas';
+import {
+  consultarClavesClientesAsignados,
+  normalizarClaveAsignacion,
+} from './asignacionesNutriologo';
 
 const consultarDatosBase = async () => {
   let resultados = await Promise.all([getAllMembers(), getAllDietFiles()]);
@@ -48,59 +47,18 @@ const consultarDatosBase = async () => {
   };
 };
 
-const obtenerClavesAsignadas = async (usuario) => {
-  const [asignaciones, porUid, porId, porCorreo] = await Promise.all([
-    getDocs(collection(db, 'client_nutritionist_assignments')),
-    getUserByAuthUid(usuario?.uid || ''),
-    getUser(usuario?.uid || ''),
-    usuario?.email
-      ? getUserByEmail(usuario.email, usuario.uid)
-      : Promise.resolve({ success: false }),
-  ]);
-  const clavesNutriologo = new Set(
-    [usuario?.uid, usuario?.email].map(normalizarClave).filter(Boolean),
-  );
-
-  [porUid, porId, porCorreo]
-    .filter((resultado) => resultado?.success && resultado?.data)
-    .forEach(({ data }) => {
-      [data.id, data.authUid, data.legacyId, data.email].forEach((valor) => {
-        const clave = normalizarClave(valor);
-        if (clave) clavesNutriologo.add(clave);
-      });
-    });
-
-  const clavesPacientes = new Set();
-  asignaciones.docs.forEach((documento) => {
-    const asignacion = documento.data() || {};
-    const activa = String(asignacion.status || 'active').toLowerCase() === 'active';
-    const coincide = [
-      asignacion.nutritionistId,
-      asignacion.nutritionistEmail,
-    ].some((valor) => clavesNutriologo.has(normalizarClave(valor)));
-    if (!activa || !coincide) return;
-
-    [asignacion.clientId, asignacion.memberId, documento.id].forEach((valor) => {
-      const clave = normalizarClave(valor);
-      if (clave) clavesPacientes.add(clave);
-    });
-  });
-
-  return clavesPacientes;
-};
-
 const filtrarPorAsignaciones = async (miembros, archivos, usuario) => {
-  const clavesAsignadas = await obtenerClavesAsignadas(usuario);
+  const clavesAsignadas = await consultarClavesClientesAsignados(usuario);
   const miembrosAsignados = miembros.filter((miembro) =>
     [miembro.id, miembro.userId, miembro.authUid, miembro.email]
-      .map(normalizarClave)
+      .map(normalizarClaveAsignacion)
       .filter(Boolean)
       .some((clave) => clavesAsignadas.has(clave)));
   const clavesPermitidas = new Set();
 
   miembrosAsignados.forEach((miembro) => {
     [miembro.id, miembro.userId, miembro.authUid, miembro.email].forEach((valor) => {
-      const clave = normalizarClave(valor);
+      const clave = normalizarClaveAsignacion(valor);
       if (clave) clavesPermitidas.add(clave);
     });
   });
@@ -112,7 +70,7 @@ const filtrarPorAsignaciones = async (miembros, archivos, usuario) => {
       archivo.memberAuthUid,
       archivo.memberEmail,
     ]
-      .map(normalizarClave)
+      .map(normalizarClaveAsignacion)
       .filter(Boolean)
       .some((clave) => clavesPermitidas.has(clave)));
 

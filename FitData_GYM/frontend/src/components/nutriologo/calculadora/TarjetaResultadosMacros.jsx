@@ -1,5 +1,5 @@
-import { FilaNutriente } from './ui/FilaNutriente';
-import { MensajeVacio } from './ui/MensajeVacio';
+import { FilaNutriente } from '../ui/FilaNutriente';
+import { MensajeVacio } from '../ui/MensajeVacio';
 
 function TarjetaResultadosMacros({ resultado }) {
   if (!resultado) {

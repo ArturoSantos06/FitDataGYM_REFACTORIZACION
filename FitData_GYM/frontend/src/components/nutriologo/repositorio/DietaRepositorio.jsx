@@ -1,9 +1,9 @@
-import useRepositorioDietas from './hooks/useRepositorioDietas';
-import EncabezadoRepositorio from './ui/EncabezadoRepositorio';
-import FormularioArchivoDieta from './repositorio/FormularioArchivoDieta';
-import ListaArchivosDieta from './repositorio/ListaArchivosDieta';
-import ListaPacientesRepositorio from './repositorio/ListaPacientesRepositorio';
-import ModalesRepositorioDietas from './repositorio/ModalesRepositorioDietas';
+import useRepositorioDietas from '../hooks/useRepositorioDietas';
+import EncabezadoRepositorio from '../ui/EncabezadoRepositorio';
+import FormularioArchivoDieta from './FormularioArchivoDieta';
+import ListaArchivosDieta from './ListaArchivosDieta';
+import ListaPacientesRepositorio from './ListaPacientesRepositorio';
+import ModalesRepositorioDietas from './ModalesRepositorioDietas';
 
 export default function DietaRepositorio() {
   const repositorio = useRepositorioDietas();

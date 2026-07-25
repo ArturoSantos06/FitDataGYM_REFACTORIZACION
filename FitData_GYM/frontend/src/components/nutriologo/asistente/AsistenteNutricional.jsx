@@ -1,6 +1,6 @@
 import { ChefHat, X } from 'lucide-react';
-import PanelAsistenteMenu from './asistente/PanelAsistenteMenu';
-import useAsistenteNutricional from './hooks/useAsistenteNutricional';
+import useAsistenteNutricional from '../hooks/useAsistenteNutricional';
+import PanelAsistenteMenu from './PanelAsistenteMenu';
 
 export default function AsistenteNutricional() {
   const {

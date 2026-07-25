@@ -1,8 +1,8 @@
-import ModalExito from '../modales/ModalExito';
-import usePerfilNutriologo from './hooks/usePerfilNutriologo';
-import FormularioCambioContrasena from './perfil/FormularioCambioContrasena';
-import FormularioDatosPersonales from './perfil/FormularioDatosPersonales';
-import MenuPerfil from './perfil/MenuPerfil';
+import ModalExito from '../../modales/ModalExito';
+import usePerfilNutriologo from '../hooks/usePerfilNutriologo';
+import FormularioCambioContrasena from './FormularioCambioContrasena';
+import FormularioDatosPersonales from './FormularioDatosPersonales';
+import MenuPerfil from './MenuPerfil';
 
 export default function PerfilNutriologo() {
   const {

@@ -1,4 +1,4 @@
-import TarjetaInformativa from './inicio/TarjetaInformativa';
+import TarjetaInformativa from './TarjetaInformativa';
 
 export default function InicioNutri() {
   return (

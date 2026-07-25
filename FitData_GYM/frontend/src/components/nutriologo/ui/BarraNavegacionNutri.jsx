@@ -8,8 +8,8 @@ import {
   Stethoscope,
   UserCircle2,
 } from 'lucide-react';
-import { ElementoNavegacionEscritorio } from './ui/ElementoNavegacionEscritorio';
-import { ElementoNavegacionMovil } from './ui/ElementoNavegacionMovil';
+import { ElementoNavegacionEscritorio } from './ElementoNavegacionEscritorio';
+import { ElementoNavegacionMovil } from './ElementoNavegacionMovil';
 
 const PESTANAS = [
   { identificador: 'inicio', etiqueta: 'Inicio', Icono: Home },

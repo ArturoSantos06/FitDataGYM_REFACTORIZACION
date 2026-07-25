@@ -1,19 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  createHealthProfile,
-  getHealthProfileByMemberId,
-} from '../../../firebase';
+  consultarPerfilSaludPaciente,
+  guardarObjetivoCalorico,
+} from '../servicios/asistenteNutricional';
 import { consultarClientesAsignados } from '../servicios/clientesCobro';
-import { generarMenuLocal } from '../utils/generadorMenu';
+import useGeneradorMenuAsistente from './useGeneradorMenuAsistente';
 
 const CALORIAS_PREDETERMINADAS = '2000';
 
 export default function useAsistenteNutricional() {
   const [abierto, setAbierto] = useState(false);
   const [caloriasObjetivo, setCaloriasObjetivo] = useState(CALORIAS_PREDETERMINADAS);
-  const [comidasSugeridas, setComidasSugeridas] = useState([]);
-  const [nutrientesDiarios, setNutrientesDiarios] = useState(null);
-  const [cargandoMenu, setCargandoMenu] = useState(false);
   const [error, setError] = useState('');
   const [pacientes, setPacientes] = useState([]);
   const [idPacienteSeleccionado, setIdPacienteSeleccionado] = useState('');
@@ -22,52 +19,84 @@ export default function useAsistenteNutricional() {
   const [guardandoCalorias, setGuardandoCalorias] = useState(false);
   const [mensajeGuardado, setMensajeGuardado] = useState('');
   const consultaIniciada = useRef(false);
-  const temporizadorMenu = useRef(null);
   const temporizadorMensaje = useRef(null);
+  const solicitudPerfil = useRef(0);
+  const {
+    cargandoMenu,
+    comidasSugeridas,
+    generarSugerencias,
+    nutrientesDiarios,
+  } = useGeneradorMenuAsistente(caloriasObjetivo, setError);
 
   useEffect(() => {
     if (!abierto || consultaIniciada.current) return;
     consultaIniciada.current = true;
+    setCargandoPacientes(true);
+    let activo = true;
+    let consultaFinalizada = false;
 
     consultarClientesAsignados()
-      .then(setPacientes)
+      .then((clientes) => {
+        consultaFinalizada = true;
+        if (activo) setPacientes(clientes);
+      })
       .catch((fallo) => {
+        consultaFinalizada = true;
+        consultaIniciada.current = false;
+        if (!activo) return;
         setPacientes([]);
         setError(fallo?.message || 'No se pudieron cargar los pacientes asignados.');
       })
-      .finally(() => setCargandoPacientes(false));
+      .finally(() => {
+        if (activo) setCargandoPacientes(false);
+      });
+
+    return () => {
+      activo = false;
+      if (!consultaFinalizada) consultaIniciada.current = false;
+    };
   }, [abierto]);
 
   useEffect(() => () => {
-    clearTimeout(temporizadorMenu.current);
     clearTimeout(temporizadorMensaje.current);
   }, []);
 
   const seleccionarPaciente = useCallback(async (idPaciente) => {
+    const numeroSolicitud = solicitudPerfil.current + 1;
+    solicitudPerfil.current = numeroSolicitud;
     setIdPacienteSeleccionado(idPaciente);
     setPerfilPaciente(null);
     setMensajeGuardado('');
     setError('');
     setCaloriasObjetivo(CALORIAS_PREDETERMINADAS);
-    if (!idPaciente) return;
+    if (!idPaciente) {
+      setCargandoPacientes(false);
+      return;
+    }
 
     setCargandoPacientes(true);
     try {
-      const resultado = await getHealthProfileByMemberId(idPaciente);
-      if (resultado.success && resultado.data) {
-        setPerfilPaciente(resultado.data);
-        if (resultado.data.targetCalories) {
-          setCaloriasObjetivo(String(resultado.data.targetCalories));
+      const perfil = await consultarPerfilSaludPaciente(idPaciente);
+      if (solicitudPerfil.current !== numeroSolicitud) return;
+      if (perfil) {
+        setPerfilPaciente(perfil);
+        if (perfil.targetCalories) {
+          setCaloriasObjetivo(String(perfil.targetCalories));
         }
       }
     } catch {
-      setError('No se pudo consultar el perfil de salud del paciente.');
+      if (solicitudPerfil.current === numeroSolicitud) {
+        setError('No se pudo consultar el perfil de salud del paciente.');
+      }
     } finally {
-      setCargandoPacientes(false);
+      if (solicitudPerfil.current === numeroSolicitud) {
+        setCargandoPacientes(false);
+      }
     }
   }, []);
 
   const guardarCaloriasPaciente = useCallback(async () => {
+    if (guardandoCalorias) return;
     const calorias = Number(caloriasObjetivo);
     if (!idPacienteSeleccionado || !Number.isFinite(calorias) || calorias <= 0) {
       setError('Selecciona un paciente e ingresa un objetivo calórico válido.');
@@ -80,19 +109,12 @@ export default function useAsistenteNutricional() {
     clearTimeout(temporizadorMensaje.current);
 
     try {
-      const { id: _idPerfil, ...datosPerfil } = perfilPaciente || {};
-      const resultado = await createHealthProfile({
-        ...datosPerfil,
-        memberId: idPacienteSeleccionado,
-        targetCalories: calorias,
+      const perfilActualizado = await guardarObjetivoCalorico({
+        idPaciente: idPacienteSeleccionado,
+        perfil: perfilPaciente,
+        calorias,
       });
-      if (!resultado.success) throw new Error(resultado.error);
-
-      setPerfilPaciente((actual) => ({
-        ...(actual || {}),
-        memberId: idPacienteSeleccionado,
-        targetCalories: calorias,
-      }));
+      setPerfilPaciente(perfilActualizado);
       setMensajeGuardado('Guardado en el expediente');
       temporizadorMensaje.current = setTimeout(() => setMensajeGuardado(''), 3000);
     } catch (fallo) {
@@ -101,25 +123,12 @@ export default function useAsistenteNutricional() {
     } finally {
       setGuardandoCalorias(false);
     }
-  }, [caloriasObjetivo, idPacienteSeleccionado, perfilPaciente]);
-
-  const generarSugerencias = useCallback(() => {
-    setCargandoMenu(true);
-    setError('');
-    clearTimeout(temporizadorMenu.current);
-
-    temporizadorMenu.current = setTimeout(() => {
-      try {
-        const resultado = generarMenuLocal(caloriasObjetivo);
-        setComidasSugeridas(resultado.comidas);
-        setNutrientesDiarios(resultado.nutrientes);
-      } catch (fallo) {
-        setError(fallo?.message || 'Ocurrió un error al generar el menú local.');
-      } finally {
-        setCargandoMenu(false);
-      }
-    }, 600);
-  }, [caloriasObjetivo]);
+  }, [
+    caloriasObjetivo,
+    guardandoCalorias,
+    idPacienteSeleccionado,
+    perfilPaciente,
+  ]);
 
   const cambiarCaloriasObjetivo = useCallback((valor) => {
     setCaloriasObjetivo(valor);

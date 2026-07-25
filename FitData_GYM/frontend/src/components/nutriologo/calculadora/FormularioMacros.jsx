@@ -1,6 +1,6 @@
-import FormularioDatosMacros from './calculadora/FormularioDatosMacros';
+import { useFormularioMacros } from '../hooks/useFormularioMacros';
+import FormularioDatosMacros from './FormularioDatosMacros';
 import TarjetaResultadosMacros from './TarjetaResultadosMacros';
-import { useFormularioMacros } from './hooks/useFormularioMacros';
 
 export default function FormularioMacros() {
   const {
