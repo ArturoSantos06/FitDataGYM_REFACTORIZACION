@@ -1,16 +1,15 @@
-import React from 'react';
-
 export default function TarjetaPacienteLista({
   id,
   nombre,
   correo,
   estaSeleccionado,
   cantidadArchivos,
-  alSeleccionar
+  alSeleccionar,
 }) {
   return (
     <button
       type="button"
+      aria-pressed={estaSeleccionado}
       onClick={(evento) => {
         evento.stopPropagation();
         alSeleccionar(id);
@@ -22,7 +21,7 @@ export default function TarjetaPacienteLista({
       } focus:outline-none focus:ring-0`}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="font-semibold text-white">{nombre}</p>
           <p className="mt-1 text-xs text-slate-400">
             {correo || 'Sin correo registrado'}
