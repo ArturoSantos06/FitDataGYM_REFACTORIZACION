@@ -46,7 +46,7 @@ export default function NutriFinancialDashboard() {
         plansCount={plansCount}
       />
 
-      <PanelCobros onChargeCreated={reloadData} />
+      <PanelCobros alCrearCobro={reloadData} />
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <GraficaMensual monthlyData={monthlyData} />
