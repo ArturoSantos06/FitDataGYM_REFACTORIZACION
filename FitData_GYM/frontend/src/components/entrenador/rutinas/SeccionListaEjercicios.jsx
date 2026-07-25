@@ -1,43 +1,42 @@
-import React from 'react';
 import BuscadorEjerciciosRapido from './BuscadorEjerciciosRapido';
 import PestanasDiasRutina from './PestanasDiasRutina';
 import TarjetaEjercicioRutina from './TarjetaEjercicioRutina';
 
-const toSpanishLabel = (LABEL_TRANSLATIONS, value) => {
-    if (!value) return '';
-    const key = String(value).trim().toLowerCase();
-    return LABEL_TRANSLATIONS[key] || value;
+const traducirEtiqueta = (traducciones, valor) => {
+    if (!valor) return '';
+    const clave = String(valor).trim().toLowerCase();
+    return traducciones[clave] || valor;
 };
 
-export default function SeccionListaEjercicios({
-    activeDay,
-    activeDays,
-    exercisesByDay,
-    formError,
-    searchQuery,
-    searchResults,
-    isSearching,
-    onSetActiveDay,
-    onRemoveExercise,
-    onUpdateExercise,
-    onMoveExercise,
-    onSearch,
-    onClearSearch,
-    onAddExercise,
-    LABEL_TRANSLATIONS,
-    inputSm,
+export default function ListaEjerciciosRutina({
+    activeDay: diaActivo,
+    activeDays: diasActivos,
+    exercisesByDay: ejerciciosPorDia,
+    formError: errorFormulario,
+    searchQuery: consultaBusqueda,
+    searchResults: resultadosBusqueda,
+    isSearching: buscando,
+    onSetActiveDay: alEstablecerDiaActivo,
+    onRemoveExercise: alEliminarEjercicio,
+    onUpdateExercise: alActualizarEjercicio,
+    onMoveExercise: alMoverEjercicio,
+    onSearch: alBuscar,
+    onClearSearch: alLimpiarBusqueda,
+    onAddExercise: alAgregarEjercicio,
+    LABEL_TRANSLATIONS: traduccionesEtiquetas,
+    inputSm: claseEntrada,
 }) {
-    const ejerciciosDiaActivo = exercisesByDay[activeDay] || [];
+    const ejerciciosDiaActivo = ejerciciosPorDia?.[diaActivo] || [];
 
     return (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col">
-            <PestanasDiasRutina diaActivo={activeDay} diasActivos={activeDays} ejerciciosPorDia={exercisesByDay} onCambiarDia={onSetActiveDay} />
+            <PestanasDiasRutina diaActivo={diaActivo} diasActivos={diasActivos} ejerciciosPorDia={ejerciciosPorDia} onCambiarDia={alEstablecerDiaActivo} />
 
             {/* Lista de ejercicios */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 max-h-[540px]">
-                {formError && (
+                {errorFormulario && (
                     <div className="bg-red-950 border border-red-700 rounded-lg px-3 py-2 text-xs text-red-300">
-                        {formError}
+                        {errorFormulario}
                     </div>
                 )}
                 {ejerciciosDiaActivo.length === 0 ? (
@@ -53,28 +52,28 @@ export default function SeccionListaEjercicios({
                         <TarjetaEjercicioRutina
                             key={ex.id}
                             ejercicio={ex}
-                            diaActivo={activeDay}
-                            diasActivos={activeDays}
-                            inputSm={inputSm}
-                            traduccionesEtiquetas={LABEL_TRANSLATIONS}
-                            convertirEtiqueta={toSpanishLabel}
-                            onEliminar={onRemoveExercise}
-                            onActualizar={onUpdateExercise}
-                            onMover={onMoveExercise}
+                            diaActivo={diaActivo}
+                            diasActivos={diasActivos}
+                            inputSm={claseEntrada}
+                            traduccionesEtiquetas={traduccionesEtiquetas}
+                            convertirEtiqueta={traducirEtiqueta}
+                            onEliminar={alEliminarEjercicio}
+                            onActualizar={alActualizarEjercicio}
+                            onMover={alMoverEjercicio}
                         />
                     ))
                 )}
             </div>
 
             <BuscadorEjerciciosRapido
-                terminoBusqueda={searchQuery}
-                resultados={searchResults}
-                buscando={isSearching}
-                onBuscar={onSearch}
-                onLimpiar={onClearSearch}
-                onAgregar={onAddExercise}
-                traduccionesEtiquetas={LABEL_TRANSLATIONS}
-                convertirEtiqueta={toSpanishLabel}
+                terminoBusqueda={consultaBusqueda}
+                resultados={resultadosBusqueda}
+                buscando={buscando}
+                onBuscar={alBuscar}
+                onLimpiar={alLimpiarBusqueda}
+                onAgregar={alAgregarEjercicio}
+                traduccionesEtiquetas={traduccionesEtiquetas}
+                convertirEtiqueta={traducirEtiqueta}
             />
         </div>
     );
