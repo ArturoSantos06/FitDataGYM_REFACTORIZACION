@@ -1,28 +1,87 @@
-import React from 'react';
-import { CreditCard, Hash } from 'lucide-react';
+import {
+  CreditCard,
+  Hash,
+} from 'lucide-react';
 
-function SeccionFiscalBancariaPerfil({ form, inputClass, labelClass, onChange }) {
+function SeccionFiscalBancariaPerfil({
+  form = {},
+  inputClass = '',
+  labelClass = '',
+  onChange,
+}) {
   return (
-    <div className="border border-slate-800 rounded-xl p-4 bg-slate-950/30">
-      <h3 className="text-sm md:text-base font-semibold text-cyan-300 mb-4">Datos fiscales y bancarios</h3>
-      <div className="grid md:grid-cols-2 gap-6">
+    <section
+      aria-labelledby="titulo-datos-fiscales"
+      className="rounded-xl border border-slate-800 bg-slate-950/30 p-4"
+    >
+      <h3
+        id="titulo-datos-fiscales"
+        className="mb-4 text-sm font-semibold text-cyan-300 md:text-base"
+      >
+        Datos fiscales y bancarios
+      </h3>
+
+      <div className="grid gap-6 md:grid-cols-2">
         <div>
-          <label className={`${labelClass} text-emerald-300 font-semibold`}>RFC</label>
+          <label
+            htmlFor="rfc-entrenador"
+            className={`${labelClass} font-semibold text-emerald-300`}
+          >
+            RFC
+          </label>
+
           <div className="relative">
-            <Hash className="absolute left-3 top-3.5 text-emerald-400" size={18} />
-            <input type="text" name="rfc" value={form.rfc || ''} onChange={onChange} className={`${inputClass} border-emerald-500/30 focus:border-emerald-500 text-white bg-emerald-900/10 uppercase`} placeholder="Ej: XAXX010101000" maxLength={13} />
+            <Hash
+              size={18}
+              aria-hidden="true"
+              className="absolute left-3 top-3.5 text-emerald-400"
+            />
+
+            <input
+              id="rfc-entrenador"
+              type="text"
+              name="rfc"
+              value={form.rfc ?? ''}
+              onChange={onChange}
+              placeholder="Ej: XAXX010101000"
+              maxLength={13}
+              autoComplete="off"
+              className={`${inputClass} border-emerald-500/30 bg-emerald-900/10 uppercase text-white focus:border-emerald-500`}
+            />
           </div>
         </div>
 
         <div>
-          <label className={`${labelClass} text-fuchsia-300 font-semibold`}>CLABE</label>
+          <label
+            htmlFor="clabe-entrenador"
+            className={`${labelClass} font-semibold text-fuchsia-300`}
+          >
+            CLABE
+          </label>
+
           <div className="relative">
-            <CreditCard className="absolute left-3 top-3.5 text-fuchsia-400" size={18} />
-            <input type="text" name="clabe" value={form.clabe || ''} onChange={onChange} className={`${inputClass} border-fuchsia-500/30 focus:border-fuchsia-500 text-white bg-fuchsia-900/10`} placeholder="18 dígitos" inputMode="numeric" maxLength={18} />
+            <CreditCard
+              size={18}
+              aria-hidden="true"
+              className="absolute left-3 top-3.5 text-fuchsia-400"
+            />
+
+            <input
+              id="clabe-entrenador"
+              type="text"
+              name="clabe"
+              value={form.clabe ?? ''}
+              onChange={onChange}
+              placeholder="18 dígitos"
+              inputMode="numeric"
+              maxLength={18}
+              autoComplete="off"
+              className={`${inputClass} border-fuchsia-500/30 bg-fuchsia-900/10 text-white focus:border-fuchsia-500`}
+            />
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
