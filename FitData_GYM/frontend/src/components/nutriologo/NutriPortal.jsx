@@ -1,8 +1,4 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../firebase';
-import NutriNavbar from './NutriNavbar';
-
+import BarraNavegacionNutri from './BarraNavegacionNutri';
 import InicioNutri from './InicioNutri';
 import FormularioMacros from './FormularioMacros';
 import PanelFinanzas from './finanzas/PanelFinanzas';
@@ -11,45 +7,38 @@ import DietaRepositorio from './DietaRepositorio';
 import AsistenteNutricional from './AsistenteNutricional';
 import BandejaProfesionales from '../chat/BandejaProfesionales';
 import PerfilNutriologo from './PerfilNutriologo';
+import usePortalNutriologo from './hooks/usePortalNutriologo';
 
+export default function NutriPortal() {
+  const {
+    pestanaActiva,
+    cambiarPestana,
+    cerrarSesion,
+    cerrandoSesion,
+  } = usePortalNutriologo();
 
-function NutriPortal() {
-const [activeTab, setActiveTab] = useState('inicio');
-    const navigate = useNavigate();
+  return (
+    <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 p-4 text-white md:p-8">
+      <BarraNavegacionNutri
+        pestanaActiva={pestanaActiva}
+        alCambiarPestana={cambiarPestana}
+        alCerrarSesion={cerrarSesion}
+        cerrandoSesion={cerrandoSesion}
+      />
 
-    const handleLogOut = async () => {
-        try {
-            await logoutUser();
-            localStorage.removeItem('nutritionist_token');
-            localStorage.removeItem('nutritionist_username');
-        } catch (error) {
-            console.error("Error al cerrar sesión", error);
-        }
-        navigate('/nutriologo/login');
-    };
+      <div className="h-20 md:h-24" />
 
-    return (
-        <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-4 md:p-8">
-            <NutriNavbar activeTab={activeTab} setActiveTab={setActiveTab} onLogOut={handleLogOut} />            
-            
-            {/* Espaciador para que el navbar no tape el contenido */}
-            <div className="h-20 md:h-24"/>
-            
-            <div className="max-w-7xl mx-auto pt-2 md:pt-4 pb-20 md:pb-0 animate-fade-in">
-                {/* Renderizado de las vistas según el clic */}
-                {activeTab === 'inicio' && <InicioNutri />}
-                {activeTab === 'citas' && <CitasNutri embedded />}
-                {activeTab === 'calculadora' && <FormularioMacros />}
-                {activeTab === 'dietas' && <DietaRepositorio />}
-                {activeTab === 'financiero' && <PanelFinanzas />}
-                {activeTab === 'mensajes' && <BandejaProfesionales role="nutritionist" />}
-                {activeTab === 'perfil' && <PerfilNutriologo />}
-            </div>
+      <main className="mx-auto max-w-7xl animate-fade-in pt-2 pb-20 md:pt-4 md:pb-0">
+        {pestanaActiva === 'inicio' && <InicioNutri />}
+        {pestanaActiva === 'citas' && <CitasNutri embedded />}
+        {pestanaActiva === 'calculadora' && <FormularioMacros />}
+        {pestanaActiva === 'dietas' && <DietaRepositorio />}
+        {pestanaActiva === 'financiero' && <PanelFinanzas />}
+        {pestanaActiva === 'mensajes' && <BandejaProfesionales role="nutritionist" />}
+        {pestanaActiva === 'perfil' && <PerfilNutriologo />}
+      </main>
 
-            {/* El asistente solo es visible en la pestaña de calculadora */}
-            {activeTab === 'calculadora' && <AsistenteNutricional />}
-        </div>
-    );
-};
-
-export default NutriPortal;
+      {pestanaActiva === 'calculadora' && <AsistenteNutricional />}
+    </div>
+  );
+}
