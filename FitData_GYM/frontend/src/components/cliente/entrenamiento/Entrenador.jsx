@@ -1,12 +1,67 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AlertTriangle, XCircle, CheckCircle2 } from 'lucide-react';
-import { useEntrenadorClienteLogica } from '../../../hooks/useEntrenadorClienteLogica';
-import { ModalReutilizableBotonera } from '../../ModalReutilizableBotonera';
+import { getCurrentUser, waitForAuthReady, getClientTrainerAssignment, removeTrainerFromClient } from '../../../firebase';
 
 const Entrenador= () => {
     // Estados a utilizar //
-    /** pos esto funciona para el componente cliente entrenador */
-    const { isModalOpen, setIsModalOpen, serviceStatus, loading, clienteId, handleCancelService } = useEntrenadorClienteLogica();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [serviceStatus, setServiceStatus] = useState('active');
+    const [loading, setLoading] = useState(true);
+    const [clienteId, setClienteId] = useState(null);
+
+    useEffect(() => {
+        const initAuth = async () => {
+            const user = await waitForAuthReady();
+            if (user) {
+                setClienteId(user.uid);
+            } else {
+                setLoading(false);
+            }
+        };
+
+        initAuth();
+    }, []);
+
+    useEffect(() => {
+        const fetchMiEntrenador = async () => {
+            if (!clienteId) {
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const assignment = await getClientTrainerAssignment(clienteId);
+                if (assignment.success && assignment.data) {
+                    const estado = assignment.data.status === 'active' ? 'active' : 'cancelled';
+                    setServiceStatus(estado);
+                } else {
+                    setServiceStatus('cancelled');
+                }
+            } catch (error) {
+                console.error("Error al obtener datos del cliente:", error);
+                setServiceStatus('cancelled');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMiEntrenador();
+    }, [clienteId]);
+
+    const handleCancelService = async () => {
+        try {
+            const result = await removeTrainerFromClient(clienteId);
+            if (!result.success) {
+                throw new Error(result.error || 'No se pudo cancelar el servicio');
+            }
+
+            setServiceStatus('cancelled');
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error("Error al cancelar el servicio en Firebase:", error);
+            alert("Hubo un error al intentar cancelar el servicio.");
+        }
+    };
 
     if (loading) {
         return <div className="text-slate-400 text-center mt-10 font-medium flex flex-col items-center gap-3">
@@ -82,7 +137,35 @@ const Entrenador= () => {
                 </div>
 
                 {/* MODAL PARA CONFIRMAR CANCELACIÓN */}
-                <ModalReutilizableBotonera isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} handleCancelService={handleCancelService} />
+                {isModalOpen && (
+                    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+                        <div className="bg-gray-800 rounded-xl p-6 max-w-md w-full border border-gray-700 shadow-2xl animate-fade-in">
+                            <div className="flex items-center gap-3 text-red-400 mb-4">
+                                <AlertTriangle size={28} />
+                                <h3 className="text-xl font-bold">¿Detener Servicio?</h3>
+                            </div>
+                            <p className="text-gray-300 text-sm mb-6 leading-relaxed">
+                                Al confirmar, perderás el acceso a tus rutinas personalizadas y se cortará la comunicación con tu entrenador. 
+                                <br/><br/>
+                                <span className="text-slate-400 italic">Esta acción no puede deshacerse desde esta pantalla.</span>
+                            </p>
+                            <div className="flex flex-col-reverse sm:flex-row justify-end gap-3">
+                                <button 
+                                    onClick={() => setIsModalOpen(false)}
+                                    className="px-6 py-2.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-semibold transition-all w-full sm:w-auto"
+                                >
+                                    No, regresar
+                                </button>
+                                <button 
+                                    onClick={handleCancelService}
+                                    className="px-6 py-2.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-semibold transition-all shadow-lg shadow-red-900/50 w-full sm:w-auto"
+                                >
+                                    Sí, detener servicio
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

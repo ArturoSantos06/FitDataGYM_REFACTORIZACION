@@ -1,12 +1,95 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Activity, CalendarDays, ClipboardList, Clock, Download, Dumbbell,
-  FileText, Image as ImageIcon, IterationCcw, Layers, RefreshCw, User, Zap
+  Activity,
+  CalendarDays,
+  ClipboardList,
+  Clock,
+  Download,
+  Dumbbell,
+  FileText,
+  Image as ImageIcon,
+  IterationCcw,
+  Layers,
+  RefreshCw,
+  User,
+  Zap,
 } from 'lucide-react';
-import { useRutinaClienteLogica, formatDateTime, MUSCLE_TRANSLATIONS, toSpanishExerciseText, hasEnglishRemainder } from '../../../hooks/useRutinaClienteLogica';
-import { auth, getMemberByAuthUid, getUser, getUserByAuthUid, getMemberByUserId, subscribeTrainerRoutineByMember } from '../../../firebase';
-import { storage } from '../../../firebase';
-import { ref, getBlob, listAll, getDownloadURL } from 'firebase/storage';
+import {
+  auth,
+  getMemberByAuthUid,
+  getMemberByUserId,
+  storage,
+  getUser,
+  getUserByAuthUid,
+  subscribeTrainerRoutineByMember,
+} from '../../../firebase';
+import { getBlob, getDownloadURL, listAll, ref } from 'firebase/storage';
+
+function formatDateTime(value) {
+  if (!value) return 'Sin fecha';
+  try {
+    const dateValue = value?.toDate?.() || new Date(value);
+    if (Number.isNaN(dateValue.getTime())) return 'Sin fecha';
+    return dateValue.toLocaleString('es-MX', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return String(value);
+  }
+}
+
+const MUSCLE_TRANSLATIONS = {
+  pectorals: 'Pectorales',
+  delts: 'Deltoides',
+  biceps: 'Biceps',
+  triceps: 'Triceps',
+  lats: 'Dorsales',
+  glutes: 'Gluteos',
+  quads: 'Cuadriceps',
+  hamstrings: 'Isquiotibiales',
+  calves: 'Pantorrillas',
+  abs: 'Abdominales',
+  forearms: 'Antebrazos',
+  traps: 'Trapecios',
+};
+
+const EXERCISE_TEXT_REPLACEMENTS = [
+  [/\bone arm\b/gi, 'un brazo'],
+  [/\bshoulders\b/gi, 'deltoides'],
+  [/\bshoulder\b/gi, 'deltoides'],
+  [/\bshoulder-width\b/gi, 'ancho de hombros'],
+  [/\bpress\b/gi, 'press'],
+  [/\bstanding\b/gi, 'de pie'],
+  [/\bcable\b/gi, 'cable'],
+  [/\bexternal rotation\b/gi, 'rotacion externa'],
+  [/\bhold\b/gi, 'sostener'],
+  [/\braise\b/gi, 'elevacion'],
+  [/\bbench\b/gi, 'banco'],
+  [/\bdumbbell\b/gi, 'mancuerna'],
+  [/\bbarbell\b/gi, 'barra'],
+  [/\breps?\b/gi, 'repeticiones'],
+  [/\bsets?\b/gi, 'series'],
+  [/\brest\b/gi, 'descanso'],
+  [/\bStep\s*:?\s*(\d+)\b/gi, 'Paso $1'],
+];
+
+function toSpanishExerciseText(value) {
+  if (!value || typeof value !== 'string') return value || '';
+  let output = value;
+  EXERCISE_TEXT_REPLACEMENTS.forEach(([pattern, replacement]) => {
+    output = output.replace(pattern, replacement);
+  });
+  return output;
+}
+
+function hasEnglishRemainder(text) {
+  if (!text) return false;
+  return /\b(the|and|with|your|for|from|until|while|slowly|then|keep|repeat|start|starting|position|pause|moment|fully|extended|overhead|arm|hand|feet|width|facing|forward|apart|step)\b/i.test(text);
+}
 
 function toSpanishMuscle(value) {
   if (!value) return '';

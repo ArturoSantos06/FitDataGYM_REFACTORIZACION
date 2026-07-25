@@ -1,16 +1,83 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import BannerMensajesRutina from './BannerMensajesRutina';
 import CatalogoEjerciciosRutina from './CatalogoEjerciciosRutina';
 import SeccionArchivosRutina from './SeccionArchivosRutina';
 import SelectorDiasRutina from './SelectorDiasRutina';
 import SeccionListaEjercicios from './SeccionListaEjercicios';
-import { useRutinaEntrenador } from '../../../hooks/useRutinaEntrenador';
+import useGuardadoRutina from '../../../backend/useGuardadoRutina';
+import useRutinaCargaYEdicion from '../../../backend/useRutinaCargaYEdicion';
 import { DIAS_SEMANA, PARTES_CUERPO, TRADUCCIONES_ETIQUETAS } from '../../../backend/utilidadesRutinaEntrenador';
 
 function RutinaEntrenador() {
-  /** pos esto funciona para toda la logica de editar rutina */
-  const { navegar: navigate, nombreMiembro: memberName, rutinaCarga, guardado } = useRutinaEntrenador();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { memberId } = useParams();
+
+  const member = location.state?.member || null;
+  const memberName = useMemo(() => {
+    if (!member) return `Alumno #${memberId}`;
+    return `${member.nombre || ''} ${member.apellido || ''}`.trim() || `Alumno #${memberId}`;
+  }, [member, memberId]);
+
+  const {
+    routineName,
+    setRoutineName,
+    activeDays,
+    setActiveDays,
+    exercisesByDay,
+    setExercisesByDay,
+    activeDay,
+    setActiveDay,
+    searchQuery,
+    searchResults,
+    isSearching,
+    catalogBodyPart,
+    catalogExercises,
+    isCatalogLoading,
+    files,
+    setFiles,
+    isLoadingRoutine,
+    formErrors,
+    setFormErrors,
+    formSuccessMessage,
+    setFormSuccessMessage,
+    formWarningMessage,
+    setFormWarningMessage,
+    clearMessages,
+    toggleDay,
+    handleSearch,
+    clearSearch,
+    addExercise,
+    removeExercise,
+    updateExercise,
+    moveExercise,
+    fetchCatalog,
+    handleFileChange,
+  } = useRutinaCargaYEdicion(memberId);
+
+  const { isSaving, isDeleting, handleSubmit, handleDeleteRoutine } = useGuardadoRutina({
+    member,
+    memberId,
+    memberName,
+    routineName,
+    activeDays,
+    exercisesByDay,
+    files,
+    setFiles,
+    setRoutineName,
+    setActiveDays,
+    setExercisesByDay,
+    setActiveDay,
+    clearSearch,
+    isLoadingRoutine,
+    setFormErrors,
+    clearMessages,
+    setFormSuccessMessage,
+    setFormWarningMessage,
+  });
+
   const inputSm = 'bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder-slate-600 outline-none focus:ring-1 focus:ring-blue-500 transition-all';
 
   return (
@@ -31,90 +98,90 @@ function RutinaEntrenador() {
           </div>
         </div>
 
-        <form onSubmit={guardado.handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <BannerMensajesRutina
-            formSuccessMessage={rutinaCarga.formSuccessMessage}
-            formWarningMessage={rutinaCarga.formWarningMessage}
-            formErrors={rutinaCarga.formErrors}
-            isLoadingRoutine={rutinaCarga.isLoadingRoutine}
+            formSuccessMessage={formSuccessMessage}
+            formWarningMessage={formWarningMessage}
+            formErrors={formErrors}
+            isLoadingRoutine={isLoadingRoutine}
           />
 
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 md:p-6">
             <label className="block text-sm text-slate-300 mb-2">Nombre de la rutina</label>
             <input
               type="text"
-              value={rutinaCarga.routineName}
+              value={routineName}
               onChange={(e) => {
-                rutinaCarga.setRoutineName(e.target.value);
-                rutinaCarga.setFormErrors((prev) => ({ ...prev, routineName: '', save: '' }));
-                rutinaCarga.setFormSuccessMessage('');
+                setRoutineName(e.target.value);
+                setFormErrors((prev) => ({ ...prev, routineName: '', save: '' }));
+                setFormSuccessMessage('');
               }}
               placeholder="Ej. Fuerza Tren Superior – Semana 1"
               className="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
-              required={rutinaCarga.files.length === 0}
+              required={files.length === 0}
             />
-            {rutinaCarga.formErrors.routineName && <p className="text-red-400 text-xs mt-2">{rutinaCarga.formErrors.routineName}</p>}
+            {formErrors.routineName && <p className="text-red-400 text-xs mt-2">{formErrors.routineName}</p>}
           </div>
 
           <SelectorDiasRutina
             diasSemana={DIAS_SEMANA}
-            activeDays={rutinaCarga.activeDays}
-            toggleDay={rutinaCarga.toggleDay}
-            errorDias={rutinaCarga.formErrors.days}
+            activeDays={activeDays}
+            toggleDay={toggleDay}
+            errorDias={formErrors.days}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <SeccionListaEjercicios
-              activeDay={rutinaCarga.activeDay}
-              activeDays={rutinaCarga.activeDays}
-              exercisesByDay={rutinaCarga.exercisesByDay}
-              formError={rutinaCarga.formErrors.exercises}
-              searchQuery={rutinaCarga.searchQuery}
-              searchResults={rutinaCarga.searchResults}
-              isSearching={rutinaCarga.isSearching}
-              onSetActiveDay={rutinaCarga.setActiveDay}
-              onRemoveExercise={rutinaCarga.removeExercise}
-              onUpdateExercise={rutinaCarga.updateExercise}
-              onMoveExercise={rutinaCarga.moveExercise}
-              onSearch={rutinaCarga.handleSearch}
-              onClearSearch={rutinaCarga.clearSearch}
-              onAddExercise={rutinaCarga.addExercise}
+              activeDay={activeDay}
+              activeDays={activeDays}
+              exercisesByDay={exercisesByDay}
+              formError={formErrors.exercises}
+              searchQuery={searchQuery}
+              searchResults={searchResults}
+              isSearching={isSearching}
+              onSetActiveDay={setActiveDay}
+              onRemoveExercise={removeExercise}
+              onUpdateExercise={updateExercise}
+              onMoveExercise={moveExercise}
+              onSearch={handleSearch}
+              onClearSearch={clearSearch}
+              onAddExercise={addExercise}
               LABEL_TRANSLATIONS={TRADUCCIONES_ETIQUETAS}
               inputSm={inputSm}
             />
 
             <CatalogoEjerciciosRutina
-              activeDay={rutinaCarga.activeDay}
+              activeDay={activeDay}
               bodyParts={PARTES_CUERPO}
-              catalogBodyPart={rutinaCarga.catalogBodyPart}
-              catalogExercises={rutinaCarga.catalogExercises}
-              isCatalogLoading={rutinaCarga.isCatalogLoading}
-              onFetchCatalog={rutinaCarga.fetchCatalog}
-              onAddExercise={rutinaCarga.addExercise}
+              catalogBodyPart={catalogBodyPart}
+              catalogExercises={catalogExercises}
+              isCatalogLoading={isCatalogLoading}
+              onFetchCatalog={fetchCatalog}
+              onAddExercise={addExercise}
             />
           </div>
 
           <SeccionArchivosRutina
-            files={rutinaCarga.files}
-            onFileChange={rutinaCarga.handleFileChange}
-            onRemoveFile={(index) => rutinaCarga.setFiles((prev) => prev.filter((_, i) => i !== index))}
+            files={files}
+            onFileChange={handleFileChange}
+            onRemoveFile={(index) => setFiles((prev) => prev.filter((_, i) => i !== index))}
           />
 
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               type="submit"
-              disabled={guardado.isSaving || guardado.isDeleting || rutinaCarga.isLoadingRoutine}
+              disabled={isSaving || isDeleting || isLoadingRoutine}
               className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-bold transition-colors"
             >
-              {guardado.isSaving ? 'Guardando…' : 'Guardar rutina digital'}
+              {isSaving ? 'Guardando…' : 'Guardar rutina digital'}
             </button>
             <button
               type="button"
-              onClick={guardado.handleDeleteRoutine}
-              disabled={guardado.isSaving || guardado.isDeleting || rutinaCarga.isLoadingRoutine}
+              onClick={handleDeleteRoutine}
+              disabled={isSaving || isDeleting || isLoadingRoutine}
               className="w-full sm:w-auto px-6 py-3 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white font-bold transition-colors"
             >
-              {guardado.isDeleting ? 'Eliminando…' : 'Eliminar rutina'}
+              {isDeleting ? 'Eliminando…' : 'Eliminar rutina'}
             </button>
           </div>
         </form>
