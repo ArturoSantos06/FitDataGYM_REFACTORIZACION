@@ -1,35 +1,11 @@
-﻿import React from 'react';
-import ModalExito from '../../modales/ModalExito';
-import FormularioCambioContrasenaEntrenador from './FormularioCambioContrasenaEntrenador';
-import FormularioDatosPerfilEntrenador from './FormularioDatosPerfilEntrenador';
-import MenuPerfilEntrenador from './MenuPerfilEntrenador';
+﻿import ModalExito from '../../modales/ModalExito';
 import { usePerfilEntrenador } from '../../../backend/usePerfilEntrenador';
 
-function EstadoCargaPerfil() {
-  return (
-    <div className="w-full flex justify-center items-center min-h-[400px]">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto mb-4" />
-        <p className="text-slate-400">Cargando perfil...</p>
-      </div>
-    </div>
-  );
-}
+import EstadoCargaPerfil from './perfil-entrenador/EstadoCargaPerfil';
+import EstadoErrorPerfil from './perfil-entrenador/EstadoErrorPerfil';
+import VistaPerfilEntrenador from './perfil-entrenador/VistaPerfilEntrenador';
 
-function EstadoErrorPerfil({ error }) {
-  return (
-    <div className="w-full flex justify-center items-center min-h-[400px]">
-      <div className="bg-red-900/20 border border-red-500 rounded-lg p-6 text-center max-w-md">
-        <p className="text-red-400 mb-4">{error}</p>
-        <a href="/entrenador/login" className="inline-block bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-2 rounded-lg font-medium transition-all">
-          Iniciar sesión como entrenador
-        </a>
-      </div>
-    </div>
-  );
-}
-
-export default function PerfilEntrenador() {
+function PerfilEntrenador() {
   const {
     usuario,
     codigoEntrenador,
@@ -43,28 +19,42 @@ export default function PerfilEntrenador() {
     guardar,
   } = usePerfilEntrenador();
 
-  if (cargando) return <EstadoCargaPerfil />;
-  if (error) return <EstadoErrorPerfil error={error} />;
-  if (!usuario) return null;
+  if (cargando) {
+    return <EstadoCargaPerfil />;
+  }
+
+  if (error) {
+    return (
+      <EstadoErrorPerfil error={error} />
+    );
+  }
+
+  if (!usuario) {
+    return null;
+  }
+
+  const cerrarModalExito = () => {
+    setShowSuccessModal(false);
+  };
 
   return (
-    <div className="w-full flex justify-center">
-      <ModalExito isOpen={showSuccessModal} onClose={() => setShowSuccessModal(false)} title="Éxito" message={successMessage} />
+    <main className="flex w-full justify-center">
+      <ModalExito
+        isOpen={showSuccessModal}
+        onClose={cerrarModalExito}
+        title="Éxito"
+        message={successMessage}
+      />
 
-      {vistaActual === 'menu' && <MenuPerfilEntrenador usuario={usuario} onNavigate={setVistaActual} />}
-
-      {vistaActual === 'edit-personal' && (
-        <FormularioDatosPerfilEntrenador
-          usuario={usuario}
-          codigoEntrenador={codigoEntrenador}
-          onGuardar={guardar}
-          onVolver={() => setVistaActual('menu')}
-        />
-      )}
-
-      {vistaActual === 'change-password' && (
-        <FormularioCambioContrasenaEntrenador onBack={() => setVistaActual('menu')} />
-      )}
-    </div>
+      <VistaPerfilEntrenador
+        vistaActual={vistaActual}
+        usuario={usuario}
+        codigoEntrenador={codigoEntrenador}
+        onGuardar={guardar}
+        onCambiarVista={setVistaActual}
+      />
+    </main>
   );
 }
+
+export default PerfilEntrenador;

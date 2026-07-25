@@ -1,111 +1,150 @@
-import React, { useState } from 'react';
-import { db } from "../../../firebase/config"; 
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { Trash2, Edit3, Save, X, Zap, CalendarClock } from 'lucide-react';
+
+import {
+  CalendarClock,
+  X,
+  Zap,
+} from 'lucide-react';
+
 import DialogoSistemaNutri from '../../nutriologo/ui/DialogoSistemaNutri';
 
-const ModalDetalleEntrenador = ({ entreno, onClose }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(entreno.rutina || '');
-  const [dialogConfig, setDialogConfig] = useState(null);
+import AccionesDetalleEntrenamiento from './modal-detalle-entrenador/AccionesDetalleEntrenamiento';
+import EditorRutinaEntrenamiento from './modal-detalle-entrenador/EditorRutinaEntrenamiento';
+import useModalDetalleEntrenador from './modal-detalle-entrenador/useModalDetalleEntrenador';
 
-  const handleUpdate = async () => {
-    try {
-      const entrenoRef = doc(db, "entrenamientos", entreno.id);
-      await updateDoc(entrenoRef, { rutina: editContent });
-      setIsEditing(false);
-    } catch (err) {
-      console.error(err);
-      setDialogConfig({ type: 'danger', title: 'Error', message: 'No se pudo actualizar la rutina.', onConfirm: () => setDialogConfig(null) });
-    }
-  };
+import { crearFechaFormateada } from './modal-detalle-entrenador/modalDetalleEntrenadorUtils';
 
-  const confirmDelete = () => {
-    setDialogConfig({
-      type: 'danger',
-      title: 'Eliminar Sesión',
-      message: '¿Borrar este entrenamiento? Esta acción es irreversible.',
-      onConfirm: async () => {
-        await deleteDoc(doc(db, "entrenamientos", entreno.id));
-        setDialogConfig(null);
-        onClose();
-      },
-      onCancel: () => setDialogConfig(null)
-    });
-  };
+function ModalDetalleEntrenador({
+  entreno,
+  onClose,
+}) {
+  const {
+    estaEditando,
+    contenidoRutina,
+    guardando,
+    eliminando,
+    formularioBloqueado,
+    configuracionDialogo,
+    setContenidoRutina,
+    comenzarEdicion,
+    cancelarEdicion,
+    actualizarRutina,
+    solicitarEliminacion,
+    cerrarDesdeFondo,
+    cerrarModal,
+  } = useModalDetalleEntrenador({
+    entreno,
+    onClose,
+  });
 
-  const fechaFormateada = `${entreno.fecha} | ${entreno.horaInicio} - ${entreno.horaFin}`;
+  if (!entreno) {
+    return null;
+  }
+
+  const fechaFormateada =
+    crearFechaFormateada(entreno);
 
   return (
-    <div className="absolute inset-0 z-120 bg-slate-900/90 backdrop-blur-md flex items-center justify-center p-4">
-      {dialogConfig && <DialogoSistemaNutri {...dialogConfig} />}
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="titulo-detalle-entrenamiento"
+      onMouseDown={cerrarDesdeFondo}
+      className="fixed inset-0 z-120 flex items-center justify-center bg-slate-900/90 p-4 backdrop-blur-md"
+    >
+      {configuracionDialogo && (
+        <DialogoSistemaNutri
+          {...configuracionDialogo}
+        />
+      )}
 
-      <div className="bg-[#1e293b] border border-orange-500/40 p-8 rounded-[2.5rem] shadow-2xl w-full max-w-md relative overflow-hidden">
-        <div className="flex justify-between items-start mb-6">
-            <div>
-                <h3 className="text-2xl font-black italic uppercase text-orange-400 tracking-tighter leading-none">
-                    {entreno.title}
-                </h3>
-                <p className="text-[10px] text-slate-500 font-bold uppercase mt-2 tracking-widest flex items-center gap-2">
-                   <Zap size={12} className="text-orange-500" /> Plan de Entrenamiento
-                </p>
-                {entreno.horaInicio && entreno.horaFin && (
-                  <div className="mt-3 inline-flex items-center gap-2 bg-orange-500/15 border border-orange-500/30 rounded-full px-3 py-1">
-                    <CalendarClock size={12} className="text-orange-400" />
-                    <span className="text-orange-300 font-black text-xs tracking-widest">
-                      {entreno.horaInicio} – {entreno.horaFin}
-                    </span>
-                  </div>
-                )}
-            </div>
-            <button onClick={onClose} className="p-2 hover:bg-slate-800 rounded-xl text-slate-500 transition-colors">
-                <X size={20} />
-            </button>
-        </div>
+      <div className="relative w-full max-w-md overflow-hidden rounded-[2.5rem] border border-orange-500/40 bg-[#1e293b] p-8 shadow-2xl">
+        <header className="mb-6 flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h3
+              id="titulo-detalle-entrenamiento"
+              className="truncate text-2xl font-black uppercase italic leading-none tracking-tighter text-orange-400"
+            >
+              {entreno.title ||
+                'Sesión de entrenamiento'}
+            </h3>
 
-        <div className="space-y-2">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Detalles de la rutina</label>
-          {isEditing ? (
-            <textarea 
-              className="w-full bg-[#0f172a] border border-orange-500/50 rounded-2xl p-5 text-white focus:ring-2 focus:ring-orange-500 outline-none resize-none min-h-[180px] text-sm font-medium"
-              value={editContent} 
-              onChange={(e) => setEditContent(e.target.value)} 
-              autoFocus
+            <p className="mt-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <Zap
+                size={12}
+                aria-hidden="true"
+                className="text-orange-500"
+              />
+
+              Plan de entrenamiento
+            </p>
+
+            {(entreno.horaInicio ||
+              entreno.horaFin) && (
+              <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/15 px-3 py-1">
+                <CalendarClock
+                  size={12}
+                  aria-hidden="true"
+                  className="text-orange-400"
+                />
+
+                <span className="text-xs font-black tracking-widest text-orange-300">
+                  {entreno.horaInicio ||
+                    'Sin inicio'}
+
+                  {' – '}
+
+                  {entreno.horaFin ||
+                    'Sin término'}
+                </span>
+              </div>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={cerrarModal}
+            disabled={formularioBloqueado}
+            aria-label="Cerrar detalle"
+            className="rounded-xl p-2 text-slate-500 transition-colors hover:bg-slate-800 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <X
+              size={20}
+              aria-hidden="true"
             />
-          ) : (
-            <div className="bg-[#0f172a] p-6 rounded-2xl border border-slate-800 max-h-56 overflow-y-auto shadow-inner">
-                <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-line font-medium">
-                {entreno.rutina || "No se han definido ejercicios para esta sesión."}
-                </p>
-            </div>
-          )}
-        </div>
-
-        <div className="flex gap-3 mt-8">
-          <button onClick={confirmDelete} className="flex-1 py-4 rounded-2xl bg-red-600/10 text-red-500 border border-red-500/20 font-black text-[10px] uppercase hover:bg-red-600 hover:text-white transition-all">
-            Eliminar
           </button>
-          
-          {isEditing ? (
-            <button onClick={handleUpdate} className="flex-[1.5] py-4 rounded-2xl bg-orange-600 text-white font-black text-[10px] uppercase shadow-lg shadow-orange-900/20">
-              Guardar Rutina
-            </button>
-          ) : (
-            <button onClick={() => setIsEditing(true)} className="flex-[1.5] py-4 rounded-2xl bg-slate-700 text-white font-black text-[10px] uppercase hover:bg-slate-600 transition-colors">
-              Editar Plan
-            </button>
-          )}
-        </div>
+        </header>
 
-        <div className="mt-6 pt-5 border-t border-slate-800/50 flex flex-col items-center">
-            <div className="flex items-center gap-2 text-orange-400 font-black text-[11px] uppercase tracking-tighter bg-orange-400/10 px-4 py-2 rounded-full border border-orange-400/20 shadow-lg shadow-orange-900/10">
-                <CalendarClock size={14} />
-                {fechaFormateada}
-            </div>
-        </div>
+        <EditorRutinaEntrenamiento
+          estaEditando={estaEditando}
+          contenidoRutina={contenidoRutina}
+          bloqueado={formularioBloqueado}
+          onCambiarContenido={setContenidoRutina}
+        />
+
+        <AccionesDetalleEntrenamiento
+          estaEditando={estaEditando}
+          guardando={guardando}
+          eliminando={eliminando}
+          bloqueado={formularioBloqueado}
+          onEditar={comenzarEdicion}
+          onCancelar={cancelarEdicion}
+          onGuardar={actualizarRutina}
+          onEliminar={solicitarEliminacion}
+        />
+
+        <footer className="mt-6 flex flex-col items-center border-t border-slate-800/50 pt-5">
+          <div className="flex items-center gap-2 rounded-full border border-orange-400/20 bg-orange-400/10 px-4 py-2 text-[11px] font-black uppercase tracking-tighter text-orange-400 shadow-lg shadow-orange-900/10">
+            <CalendarClock
+              size={14}
+              aria-hidden="true"
+            />
+
+            {fechaFormateada}
+          </div>
+        </footer>
       </div>
     </div>
   );
-};
+}
 
 export default ModalDetalleEntrenador;
