@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { onAuthChanged } from '../../../firebase';
+import { logoutUser, onAuthChanged } from '../../../firebase';
 import Perfil from './Perfil';
 import Membresia from './Membresia';
 import Tienda from './Tienda';
@@ -9,14 +9,29 @@ import VistaPlan from './VistaPlan';
 import SoporteWhatsApp from '../../chat/SoporteWhatsApp';
 import AssistantWidget from '../../asistente/WidgetAsistente';
 
+const LOGIN_ROUTE = '/cliente/login';
+const INITIAL_TAB = 'inicio';
+
+const TAB_CONTENT = {
+  inicio: Membresia,
+  plan: VistaPlan,
+  tienda: Tienda,
+  mensajes: SoporteWhatsApp,
+  perfil: Perfil,
+};
+
 function Portal() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('inicio');
+  const [activeTab, setActiveTab] = useState(INITIAL_TAB);
   const [authReady, setAuthReady] = useState(false);
 
-  const handleLogout = () => {
-    localStorage.removeItem('firebaseUser');
-    window.location.href = '/cliente/login';
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } finally {
+      localStorage.removeItem('firebaseUser');
+      navigate(LOGIN_ROUTE, { replace: true });
+    }
   };
 
   useEffect(() => {
@@ -24,7 +39,7 @@ function Portal() {
       setAuthReady(true);
       if (!user) {
         localStorage.removeItem('firebaseUser');
-        navigate('/cliente/login');
+        navigate(LOGIN_ROUTE, { replace: true });
       }
     });
 
@@ -33,7 +48,11 @@ function Portal() {
 
   if (!authReady) {
     return (
-      <div className="text-white bg-gray-900 h-screen flex items-center justify-center">
+      <div
+        className="text-white bg-gray-900 h-screen flex items-center justify-center"
+        role="status"
+        aria-live="polite"
+      >
         <p>Cargando sesión...</p>
       </div>
     );
@@ -47,40 +66,20 @@ function Portal() {
       <div className="h-16 md:h-24" />
 
       {/* Contenido Principal */}
-      <div className="max-w-7xl mx-auto pt-2 md:pt-4">
+      <main className="max-w-7xl mx-auto pt-2 md:pt-4">
+        {(() => {
+          const ActiveContent = TAB_CONTENT[activeTab] ?? TAB_CONTENT[INITIAL_TAB];
+          const usesAnimation = activeTab !== 'mensajes';
 
-        {activeTab === 'inicio' && (
-          <div className="animate-fade-in">
-            <Membresia />
-          </div>
-        )}
-
-        {/* MI PLAN: El nuevo menú dividido por áreas */}
-        {activeTab === 'plan' && (
-          <div className="animate-fade-in">
-            <VistaPlan />
-          </div>
-        )}
-
-        {/* TIENDA: Agrupa catálogo y futuros servicios de pago */}
-        {activeTab === 'tienda' && (
-          <div className="animate-fade-in">
-            <Tienda />
-          </div>
-        )}
-
-        {/* MENSAJES: Centro de conversaciones y IA de rutinas */}
-        {activeTab === 'mensajes' && (
-          <SoporteWhatsApp />
-        )}
-
-        {activeTab === 'perfil' && (
-          <div className="animate-fade-in">
-            <Perfil />
-          </div>
-        )}
-
-      </div>
+          return usesAnimation ? (
+            <div className="animate-fade-in">
+              <ActiveContent />
+            </div>
+          ) : (
+            <ActiveContent />
+          );
+        })()}
+      </main>
 
       <AssistantWidget context="cliente" />
     </div>

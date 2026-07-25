@@ -1,0 +1,11 @@
+import { CheckCircle2, XCircle } from 'lucide-react';
+
+function EstadoServicioEntrenador({ estadoServicio, alAbrirModal, alReactivar }) {
+  const activo = estadoServicio === 'active';
+  return <div className="bg-slate-900 rounded-xl border border-slate-700 p-8 text-center flex flex-col items-center">
+    {activo ? <><div className="w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mb-4 border border-green-500/20"><CheckCircle2 size={40} className="text-green-500" /></div><h3 className="text-xl font-bold text-white mb-2">Servicio de Entrenador Activo</h3><p className="text-slate-400 text-sm max-w-sm mx-auto mb-8 leading-relaxed">Actualmente estás vinculado a un entrenador. Si decides detener el servicio, se notificará a la administración y no se te cobrará el próximo mes.</p><button onClick={alAbrirModal} className="w-full sm:w-auto px-8 py-3 rounded-xl bg-red-900/40 hover:bg-red-600 text-red-400 hover:text-white font-bold transition-all border border-red-700/50 hover:border-red-600 flex items-center justify-center gap-2"><XCircle size={20} />Detener Servicio</button></>
+      : <><div className="w-20 h-20 rounded-full bg-slate-800 flex items-center justify-center mb-4 border border-slate-600"><XCircle size={40} className="text-slate-500" /></div><h3 className="text-xl font-bold text-white mb-2">Servicio Detenido</h3><p className="text-slate-400 text-sm max-w-sm mx-auto mb-8 leading-relaxed">Actualmente no estás recibiendo el servicio de entrenamiento personalizado.</p><button onClick={alReactivar} className="w-full sm:w-auto px-8 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold transition-all border border-slate-600">Reactivar Servicio</button></>}
+  </div>;
+}
+
+export default EstadoServicioEntrenador;

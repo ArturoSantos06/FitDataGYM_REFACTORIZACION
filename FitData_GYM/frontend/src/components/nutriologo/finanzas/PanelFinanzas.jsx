@@ -1,4 +1,3 @@
-import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import ResumenFinanciero from './ResumenFinanciero';
 import GraficaMensual from './GraficaMensual';
@@ -6,22 +5,20 @@ import TablaOperaciones from './TablaOperaciones';
 import PanelCobros from './PanelCobros';
 import { useDatosFinancierosNutri } from '../../../backend/useDatosFinancierosNutri';
 
-export default function NutriFinancialDashboard() {
+export default function PanelFinanzas() {
   const {
-    loading,
+    loading: cargando,
     error,
-    consultationsTotal,
-    plansTotal,
-    grandTotal,
-    consultationsCount,
-    plansCount,
-    monthlyData,
-    appointments,
-    planSales,
-    reloadData
+    plansTotal: totalPlanes,
+    grandTotal: totalGeneral,
+    consultationsCount: cantidadConsultas,
+    plansCount: cantidadPlanes,
+    monthlyData: datosMensuales,
+    planSales: ventasPlanes,
+    reloadData: recargarDatos,
   } = useDatosFinancierosNutri();
 
-  if (loading) {
+  if (cargando) {
     return (
       <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-slate-300">
         Cargando panel financiero...
@@ -39,18 +36,17 @@ export default function NutriFinancialDashboard() {
       )}
 
       <ResumenFinanciero
-        consultationsTotal={consultationsTotal}
-        plansTotal={plansTotal}
-        grandTotal={grandTotal}
-        consultationsCount={consultationsCount}
-        plansCount={plansCount}
+        totalPlanes={totalPlanes}
+        totalGeneral={totalGeneral}
+        cantidadConsultas={cantidadConsultas}
+        cantidadPlanes={cantidadPlanes}
       />
 
-      <PanelCobros onChargeCreated={reloadData} />
+      <PanelCobros alCrearCobro={recargarDatos} />
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <GraficaMensual monthlyData={monthlyData} />
-        <TablaOperaciones appointments={appointments} planSales={planSales} />
+        <GraficaMensual datosMensuales={datosMensuales} />
+        <TablaOperaciones ventasPlanes={ventasPlanes} />
       </div>
     </div>
   );

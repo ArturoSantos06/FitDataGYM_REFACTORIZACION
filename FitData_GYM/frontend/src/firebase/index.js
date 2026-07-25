@@ -13,6 +13,7 @@ export {
   registerNutriologoByAdmin,
   ensureUserClaim,
   updateSelfProfile,
+  updateClientEmail,
   logoutUser,
   onAuthChanged,
   getCurrentUser

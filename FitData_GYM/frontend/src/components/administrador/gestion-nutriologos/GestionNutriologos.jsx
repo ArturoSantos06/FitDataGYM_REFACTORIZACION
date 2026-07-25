@@ -7,6 +7,55 @@ import ClientesConServicioNutricionista from './ClientesConServicioNutricionista
 import NutricionistasGestion from './NutricionistasGestion';
 import { useGestionNutriologos } from './useGestionNutriologos';
 
+const ESTADISTICAS = [
+  {
+    key: 'totalClients',
+    label: 'Clientes con Servicio',
+    cardClass: 'from-cyan-900/50 to-cyan-800/30 border-cyan-700/50',
+    labelClass: 'text-cyan-300',
+  },
+  {
+    key: 'activeServices',
+    label: 'Servicios Activos',
+    cardClass: 'from-emerald-900/50 to-emerald-800/30 border-emerald-700/50',
+    labelClass: 'text-emerald-300',
+  },
+  {
+    key: 'totalNutritionists',
+    label: 'Nutriólogos Contratados',
+    cardClass: 'from-blue-900/50 to-blue-800/30 border-blue-700/50',
+    labelClass: 'text-blue-300',
+  },
+];
+
+const CLASES_PESTANA = {
+  cyan: 'text-cyan-400 border-cyan-400',
+  blue: 'text-blue-400 border-blue-400',
+};
+
+function TarjetaEstadistica({ label, value, cardClass, labelClass }) {
+  return (
+    <div className={`bg-linear-to-br ${cardClass} p-6 rounded-xl border shadow-xl`}>
+      <p className={`${labelClass} text-sm font-medium mb-1`}>{label}</p>
+      <p className="text-3xl font-bold text-white">{value}</p>
+    </div>
+  );
+}
+
+function BotonPestana({ activa, children, color, onClick }) {
+  return (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={activa}
+      onClick={onClick}
+      className={`px-6 py-3 font-semibold transition-all ${activa ? `${CLASES_PESTANA[color]} border-b-2` : 'text-gray-400 hover:text-gray-300'}`}
+    >
+      {children}
+    </button>
+  );
+}
+
 function GestionNutriologos() {
   const [pestanaActiva, setPestanaActiva] = useState('clientes');
   const {
@@ -26,10 +75,11 @@ function GestionNutriologos() {
     setModalExito,
     manejarDesvincularCliente,
     ejecutarDesvincularCliente,
-    manejarDesactivarNutriologodescrip,
-    manejarReactivarNutriologodescrip,
+    manejarDesactivarNutriologo,
+    manejarReactivarNutriologo,
     manejarConfirmarAccionPendiente,
-    setDesvinculacionPendiente,
+    cerrarAccionPendiente,
+    cerrarDesvinculacionPendiente,
   } = useGestionNutriologos();
 
   if (cargando) {
@@ -51,41 +101,32 @@ function GestionNutriologos() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="bg-linear-to-br from-cyan-900/50 to-cyan-800/30 p-6 rounded-xl border border-cyan-700/50 shadow-xl">
-            <p className="text-cyan-300 text-sm font-medium mb-1">Clientes con Servicio</p>
-            <p className="text-3xl font-bold text-white">{estadisticas.totalClients}</p>
-          </div>
-          <div className="bg-linear-to-br from-emerald-900/50 to-emerald-800/30 p-6 rounded-xl border border-emerald-700/50 shadow-xl">
-            <p className="text-emerald-300 text-sm font-medium mb-1">Servicios Activos</p>
-            <p className="text-3xl font-bold text-white">{estadisticas.activeServices}</p>
-          </div>
-          <div className="bg-linear-to-br from-blue-900/50 to-blue-800/30 p-6 rounded-xl border border-blue-700/50 shadow-xl">
-            <p className="text-blue-300 text-sm font-medium mb-1">Nutriólogos Contratados</p>
-            <p className="text-3xl font-bold text-white">{estadisticas.totalNutritionists}</p>
-          </div>
+          {ESTADISTICAS.map(({ key, label, cardClass, labelClass }) => (
+            <TarjetaEstadistica
+              key={key}
+              label={label}
+              value={estadisticas[key]}
+              cardClass={cardClass}
+              labelClass={labelClass}
+            />
+          ))}
         </div>
 
-        <div className="flex gap-2 border-b border-gray-700">
-          <button
+        <div className="flex gap-2 border-b border-gray-700" role="tablist" aria-label="Secciones de gestión">
+          <BotonPestana
+            activa={pestanaActiva === 'clientes'}
+            color="cyan"
             onClick={() => setPestanaActiva('clientes')}
-            className={`px-6 py-3 font-semibold transition-all ${
-              pestanaActiva === 'clientes'
-                ? 'text-cyan-400 border-b-2 border-cyan-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
           >
             👥 Clientes con Servicio
-          </button>
-          <button
+          </BotonPestana>
+          <BotonPestana
+            activa={pestanaActiva === 'nutriologos'}
+            color="blue"
             onClick={() => setPestanaActiva('nutriologos')}
-            className={`px-6 py-3 font-semibold transition-all ${
-              pestanaActiva === 'nutriologos'
-                ? 'text-blue-400 border-b-2 border-blue-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
           >
             🥗 Nutriólogos
-          </button>
+          </BotonPestana>
         </div>
 
         {pestanaActiva === 'clientes' && (
@@ -102,19 +143,15 @@ function GestionNutriologos() {
             nutriologosInactivos={nutriologosInactivos}
             idNutriologoDesactivando={idNutriologoDesactivando}
             idNutriologoReactivando={idNutriologoReactivando}
-            onDesactivarNutriologodescrip={manejarDesactivarNutriologodescrip}
-            onReactivarNutriologodescrip={manejarReactivarNutriologodescrip}
+            onDesactivarNutriologo={manejarDesactivarNutriologo}
+            onReactivarNutriologo={manejarReactivarNutriologo}
           />
         )}
       </div>
 
       <ModalConfirmacion
         isOpen={Boolean(accionPendiente)}
-        onClose={() => {
-          if (!idNutriologoDesactivando && !idNutriologoReactivando) {
-            setAccionPendiente(null);
-          }
-        }}
+        onClose={cerrarAccionPendiente}
         onConfirm={manejarConfirmarAccionPendiente}
         title={accionPendiente?.type === 'deactivate' ? 'Confirmar descontratación' : 'Confirmar recontratación'}
         message={accionPendiente?.nutritionist
@@ -125,11 +162,7 @@ function GestionNutriologos() {
 
       <ModalConfirmacion
         isOpen={Boolean(desvinculacionPendiente)}
-        onClose={() => {
-          if (!idClienteDesvinculando) {
-            setDesvinculacionPendiente(null);
-          }
-        }}
+        onClose={cerrarDesvinculacionPendiente}
         onConfirm={() => ejecutarDesvincularCliente(desvinculacionPendiente)}
         title="Confirmar desvinculación"
         message={desvinculacionPendiente

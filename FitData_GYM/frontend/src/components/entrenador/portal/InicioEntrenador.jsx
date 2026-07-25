@@ -1,4 +1,21 @@
-import React from 'react';
+import TarjetaInformativaEntrenador from './TarjetaInformativaEntrenador';
+
+const tarjetasInformativas = [
+  {
+    etiqueta: 'Misión',
+    titulo: 'Nuestro Propósito',
+    descripcion: 'Acompañar a cada alumno con planes de entrenamiento personalizados, seguimiento constante y una atención profesional que impulse resultados reales de forma segura.',
+    claseBorde: 'border-cyan-800/40',
+    claseSombra: 'hover:shadow-cyan-900/20',
+  },
+  {
+    etiqueta: 'Visión',
+    titulo: 'Nuestra Meta',
+    descripcion: 'Ser el equipo de entrenamiento referente en FitData GYM, destacando por disciplina, innovación y transformación integral de nuestros alumnos.',
+    claseBorde: 'border-blue-800/40',
+    claseSombra: 'hover:shadow-blue-900/20',
+  },
+];
 
 function InicioEntrenador() {
   return (
@@ -12,21 +29,9 @@ function InicioEntrenador() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-10 max-w-5xl w-full">
-        <div className="bg-slate-800 p-8 rounded-xl shadow-xl border border-cyan-800/40 hover:shadow-2xl hover:shadow-cyan-900/20 transition-all duration-300 transform hover:-translate-y-1">
-          <p className="text-sm uppercase tracking-[0.2em] text-cyan-300 font-bold mb-2">Misión</p>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Nuestro Propósito</h2>
-          <p className="text-gray-300 leading-relaxed text-lg">
-            Acompañar a cada alumno con planes de entrenamiento personalizados, seguimiento constante y una atención profesional que impulse resultados reales de forma segura.
-          </p>
-        </div>
-
-        <div className="bg-slate-800 p-8 rounded-xl shadow-xl border border-blue-800/40 hover:shadow-2xl hover:shadow-blue-900/20 transition-all duration-300 transform hover:-translate-y-1">
-          <p className="text-sm uppercase tracking-[0.2em] text-cyan-300 font-bold mb-2">Visión</p>
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Nuestra Meta</h2>
-          <p className="text-gray-300 leading-relaxed text-lg">
-            Ser el equipo de entrenamiento referente en FitData GYM, destacando por disciplina, innovación y transformación integral de nuestros alumnos.
-          </p>
-        </div>
+        {tarjetasInformativas.map((tarjeta) => (
+          <TarjetaInformativaEntrenador key={tarjeta.etiqueta} {...tarjeta} />
+        ))}
       </div>
     </div>
   );

@@ -1,56 +1,19 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Mail, Lock, LogIn, ArrowLeft, Eye, EyeOff } from 'lucide-react';
-import { loginUser } from '../../../firebase';
+import { useSesionCliente } from '../../../hooks/useSesionCliente';
 
 function Sesion() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    try {
-      const result = await loginUser(email, password);
-      
-      if (result.success) {
-        // Forzar refresh del token para asegurar que la sesión Firestore esté lista
-        try {
-          await result.user.getIdToken(true);
-        } catch (tokenError) {
-          console.warn('No se pudo refrescar el token después del login:', tokenError);
-        }
-
-        // Guardar info del usuario en localStorage (compatible con el resto del código)
-        localStorage.setItem('firebaseUser', JSON.stringify(result.user));
-        
-        // Redirigir al portal de cliente
-        navigate('/cliente');
-      } else {
-        throw new Error(result.error || 'Email o contraseña incorrectos');
-      }
-    } catch (err) {
-      const msg = err.message || '';
-      const errorMessage =
-        msg.includes('auth/invalid-credential') ||
-        msg.includes('auth/user-not-found') ||
-        msg.includes('auth/wrong-password')
-          ? 'Correo o contraseña incorrectos'
-          : msg.includes('auth/invalid-email')
-          ? 'Correo electrónico inválido'
-          : msg.includes('auth/too-many-requests')
-          ? 'Demasiados intentos fallidos. Intenta más tarde'
-          : 'Correo o contraseña incorrectos';
-      setError(errorMessage);
-      setIsLoading(false);
-    }
-  };
+  const {
+    email,
+    password,
+    error,
+    isLoading,
+    showPassword,
+    setEmail,
+    setPassword,
+    setShowPassword,
+    handleSubmit,
+  } = useSesionCliente();
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4">
@@ -67,15 +30,17 @@ function Sesion() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                 Correo Electrónico
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-3.5 text-slate-500" size={18} />
                 <input
+                  id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
                   className="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 pl-10 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   placeholder="tu@email.com"
                   required
@@ -85,15 +50,17 @@ function Sesion() {
 
             {/* Contraseña */}
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
                 Contraseña
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3.5 text-slate-500" size={18} />
                 <input
+                  id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
                   className="w-full bg-slate-950 border border-slate-700 rounded-lg p-3 pl-10 pr-12 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   placeholder="••••••••"
                   required
@@ -111,7 +78,7 @@ function Sesion() {
 
             {/* Error */}
             {error && (
-              <div className="bg-red-900/20 border border-red-500 rounded-lg p-3">
+              <div role="alert" className="bg-red-900/20 border border-red-500 rounded-lg p-3">
                 <p className="text-red-400 text-sm text-center">{error}</p>
               </div>
             )}
@@ -120,6 +87,7 @@ function Sesion() {
             <button
               type="submit"
               disabled={isLoading}
+              aria-busy={isLoading}
               className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
@@ -138,13 +106,13 @@ function Sesion() {
 
           {/* Enlace de regreso */}
           <div className="mt-6 text-center">
-            <a
-              href="/"
+            <Link
+              to="/"
               className="text-slate-400 hover:text-white transition-colors text-sm flex items-center justify-center gap-2"
             >
               <ArrowLeft size={16} />
               Volver al inicio
-            </a>
+            </Link>
           </div>
         </div>
 

@@ -9,8 +9,8 @@ import RegisterUser from './components/administrador/registros/RegistrarUsuario'
 import AssignMembership from './components/administrador/AsignarMembresia';
 import UserMembershipList from './components/administrador/ListaMembresiasUsuario';
 import MembershipAdmin from './components/administrador/AdministrarMembresias';
-import PuntoDeVenta from './components/administrador/PuntoDeVenta';
-import Inventario from './components/administrador/Inventario';
+import PuntoDeVenta from './components/administrador/Venta/PuntoDeVenta';
+import Inventario from './components/administrador/Inventario/Inventario';
 import CheckInOut from './components/administrador/CheckInOut';
 import HealthProfilesAdmin from './components/administrador/PerfilesSaludAdmin';
 import BitacoraEntrenador from './components/entrenador/seguimiento/BitacoraEntrenador';

@@ -1,10 +1,11 @@
+
 import {
   CalendarClock,
   X,
   Zap,
 } from 'lucide-react';
 
-import DialogoSistemaNutri from '../../nutriologo/DialogoSistemaNutri';
+import DialogoSistemaNutri from '../../nutriologo/ui/DialogoSistemaNutri';
 
 import AccionesDetalleEntrenamiento from './modal-detalle-entrenador/AccionesDetalleEntrenamiento';
 import EditorRutinaEntrenamiento from './modal-detalle-entrenador/EditorRutinaEntrenamiento';
