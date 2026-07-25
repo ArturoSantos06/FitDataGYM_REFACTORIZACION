@@ -1,23 +1,22 @@
-import React from 'react';
 import { BookOpen } from 'lucide-react';
-import { traducirEtiqueta, traducirTextoEjercicio } from '../../../backend/utilidadesRutinaEntrenador';
+import TarjetaEjercicioCatalogo from './componentes/TarjetaEjercicioCatalogo';
 
 function CatalogoEjerciciosRutina({
-  activeDay,
-  bodyParts = [],
-  catalogBodyPart,
-  isCatalogLoading,
-  catalogExercises = [],
-  onFetchCatalog,
-  onAddExercise,
+  activeDay: diaActivoProp,
+  bodyParts: partesCuerpoProp = [],
+  catalogBodyPart: parteCuerpoProp,
+  isCatalogLoading: cargandoCatalogoProp,
+  catalogExercises: ejerciciosCatalogoProp = [],
+  onFetchCatalog: alSeleccionarParte,
+  onAddExercise: alAgregarEjercicio,
 }) {
-  const diaActivo = activeDay || 'dia';
-  const partesCuerpo = Array.isArray(bodyParts) ? bodyParts : [];
-  const parteCuerpoSeleccionada = catalogBodyPart || '';
-  const cargandoCatalogo = Boolean(isCatalogLoading);
-  const ejercicios = Array.isArray(catalogExercises) ? catalogExercises : [];
-  const seleccionarParte = typeof onFetchCatalog === 'function' ? onFetchCatalog : () => {};
-  const agregarEjercicio = typeof onAddExercise === 'function' ? onAddExercise : () => {};
+  const diaActivo = diaActivoProp || 'dia';
+  const partesCuerpo = Array.isArray(partesCuerpoProp) ? partesCuerpoProp : [];
+  const parteCuerpoSeleccionada = parteCuerpoProp || '';
+  const cargandoCatalogo = Boolean(cargandoCatalogoProp);
+  const ejercicios = Array.isArray(ejerciciosCatalogoProp) ? ejerciciosCatalogoProp : [];
+  const seleccionarParte = typeof alSeleccionarParte === 'function' ? alSeleccionarParte : () => {};
+  const agregarEjercicio = typeof alAgregarEjercicio === 'function' ? alAgregarEjercicio : () => {};
 
   return (
     <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col">
@@ -57,31 +56,8 @@ function CatalogoEjerciciosRutina({
 
         {!cargandoCatalogo && ejercicios.length > 0 && (
           <div className="grid grid-cols-2 gap-3">
-            {ejercicios.map((ex) => (
-              <button
-                key={ex.id}
-                type="button"
-                onClick={() => agregarEjercicio(ex)}
-                className="flex flex-col bg-slate-950 border border-slate-800 rounded-xl overflow-hidden hover:border-blue-600 hover:shadow-lg hover:shadow-blue-900/20 transition-all text-left group"
-              >
-                {ex.gifUrl ? (
-                  <img src={ex.gifUrl} alt={traducirTextoEjercicio(ex.name)} className="w-full h-28 object-cover bg-slate-900 group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                ) : (
-                  <div className="w-full h-28 bg-slate-800 flex items-center justify-center text-3xl">🏋️</div>
-                )}
-
-                <div className="p-2.5">
-                  <p className="text-white text-xs font-semibold capitalize leading-tight line-clamp-2 group-hover:text-blue-300 transition-colors">
-                    {traducirTextoEjercicio(ex.name)}
-                  </p>
-                  <div className="flex flex-wrap gap-1 mt-1.5">
-                    {ex.primaryMuscle && <span className="text-xs px-1.5 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400 capitalize">{traducirEtiqueta(ex.primaryMuscle)}</span>}
-                    {ex.tags?.[0] && <span className="text-xs px-1.5 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-400 capitalize">{traducirEtiqueta(ex.tags[0])}</span>}
-                  </div>
-                  <p className="text-blue-400 text-xs mt-1.5 font-semibold opacity-0 group-hover:opacity-100 transition-opacity">+ Agregar a {diaActivo}</p>
-                </div>
-              </button>
-            ))}
+            {ejercicios.map((ejercicio) => <TarjetaEjercicioCatalogo key={ejercicio.id}
+              ejercicio={ejercicio} diaActivo={diaActivo} alAgregar={agregarEjercicio} />)}
           </div>
         )}
       </div>
