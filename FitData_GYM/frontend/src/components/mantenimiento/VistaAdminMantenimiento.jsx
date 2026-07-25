@@ -4,7 +4,7 @@ import {
     marcarReporteResuelto,
     subirFotoMaquina,
 } from '../../backend/mantenimiento';
-import TarjetaReporteMantenimiento from './TarjetaReporteMantenimiento';
+import TarjetaReporteMantenimiento from './TarjetaReporteMantenimiento/TarjetaReporteMantenimiento';
 
 function VistaAdminMantenimiento({ reportes = [] }) {
     const [nombreMaquina, setNombreMaquina] = useState('');

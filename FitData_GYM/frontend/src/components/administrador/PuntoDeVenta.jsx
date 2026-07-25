@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { collection, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/config';
-import TarjetaProducto from './TarjetaProducto';
+import TarjetaProducto from './partes/TarjetaProducto/TarjetaProducto';
 import ModalNuevoProducto from '../modales/ModalNuevoProducto';
 import ModalEditarProducto from '../modales/ModalEditarProducto';
 import HistorialVentas from './HistorialVentas';

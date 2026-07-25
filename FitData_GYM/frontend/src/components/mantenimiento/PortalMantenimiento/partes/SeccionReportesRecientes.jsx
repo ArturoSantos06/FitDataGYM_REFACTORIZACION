@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { ShieldCheck } from 'lucide-react';
-import TarjetaReporteMantenimiento from '../../TarjetaReporteMantenimiento';
+import TarjetaReporteMantenimiento from '../../TarjetaReporteMantenimiento/TarjetaReporteMantenimiento';
 
 function SeccionReportesRecientes({ reportesPendientes }) {
   return (
