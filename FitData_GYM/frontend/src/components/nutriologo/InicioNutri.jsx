@@ -1,43 +1,35 @@
-import React from 'react';
-import TarjetaInformativa from './ui/TarjetaInformativa';
+import TarjetaInformativa from './inicio/TarjetaInformativa';
 
-function InicioNutri() {
+export default function InicioNutri() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] text-center p-6 text-gray-100 animate-fade-in">
-      
-      {/* Logo y Bienvenida */}
+    <div className="flex min-h-[80vh] flex-col items-center justify-center p-6 text-center text-gray-100 animate-fade-in">
       <div className="mb-10 mt-4">
-        <img 
-          src="/fitdata-logo.png" 
-          alt="FitData Nutrition Logo" 
-          className="mx-auto h-24 md:h-32 mb-6 drop-shadow-lg" 
+        <img
+          src="/fitdata-logo.png"
+          alt="Logotipo de FitData Nutrición"
+          className="mx-auto mb-6 h-24 drop-shadow-lg md:h-32"
         />
-        <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 tracking-tight leading-tight mb-2">
+        <h1 className="mb-2 bg-linear-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-5xl font-extrabold leading-tight tracking-tight text-transparent md:text-6xl">
           Portal del Nutriólogo
         </h1>
-        <p className="text-xl md:text-2xl text-gray-400 mt-3 tracking-wide uppercase font-medium">
+        <p className="mt-3 text-xl font-medium uppercase tracking-wide text-gray-400 md:text-2xl">
           Transforma vidas a través de la nutrición
         </p>
       </div>
-
-      {/* Tarjetas de Misión y Visión */}
-      <div className="grid md:grid-cols-2 gap-10 max-w-5xl w-full">
-        <TarjetaInformativa 
+      <div className="grid w-full max-w-5xl gap-10 md:grid-cols-2">
+        <TarjetaInformativa
           tema="esmeralda"
           etiqueta="Misión"
           titulo="Nuestro Propósito"
           descripcion="Guiar a cada paciente hacia sus objetivos de bienestar mediante planes de alimentación personalizados, basados en evidencia científica y adaptados a su estilo de vida."
         />
-        <TarjetaInformativa 
+        <TarjetaInformativa
           tema="teal"
           etiqueta="Visión"
           titulo="Nuestra Meta"
           descripcion="Ser el laboratorio de nutrición referente en FitData GYM, destacando por la educación nutricional, el seguimiento preciso y la salud integral a largo plazo."
         />
       </div>
-      
     </div>
   );
 }
-
-export default InicioNutri;

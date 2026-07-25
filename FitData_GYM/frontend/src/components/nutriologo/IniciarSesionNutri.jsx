@@ -1,100 +1,96 @@
-import React from 'react';
+import { ArrowLeft, Eye, EyeOff, Lock, LogIn, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, LogIn, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import BotonAcceso from './acceso/BotonAcceso';
+import EncabezadoAcceso from './acceso/EncabezadoAcceso';
 import { useNutriSesion } from './hooks/useNutriSesion';
-import { EncabezadoLogo } from './ui/EncabezadoLogo';
 import { EntradaTexto } from './ui/EntradaTexto';
-import { BotonPrincipal } from './ui/BotonPrincipal';
 
-function IniciarSesionNutri({ onLogin }) {
-  const navigate = useNavigate();
+export default function IniciarSesionNutri({ onLogin: alIniciarSesion }) {
+  const navegar = useNavigate();
   const {
-    email, setEmail,
-    password, setPassword,
-    error, isLoading,
-    showPassword, togglePassword,
-    handleLogin
-  } = useNutriSesion(onLogin);
+    correo,
+    contrasena,
+    error,
+    cargando,
+    mostrarContrasena,
+    manejarCorreo,
+    manejarContrasena,
+    alternarContrasena,
+    manejarInicioSesion,
+  } = useNutriSesion(alIniciarSesion);
 
   return (
-    <div className="min-h-screen w-full bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4">
+    <div className="flex min-h-screen w-full items-center justify-center bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 p-4">
       <div className="w-full max-w-md">
-        
-        {/* Usamos tu nuevo componente modular */}
-        <EncabezadoLogo 
-          titulo="Portal de Nutriólogos" 
-          subtitulo="Ingresa con tu cuenta profesional" 
+        <EncabezadoAcceso
+          titulo="Portal de Nutriólogos"
+          subtitulo="Ingresa con tu cuenta profesional"
         />
-
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
-          <form onSubmit={handleLogin} className="space-y-6">
-            
-            {/* Input Modular de Email */}
+        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
+          <form onSubmit={manejarInicioSesion} className="space-y-6">
             <EntradaTexto
-              label="Correo Electrónico"
+              etiqueta="Correo electrónico"
               icono={Mail}
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={correo}
+              onChange={manejarCorreo}
               placeholder="tu@email.com"
+              autoComplete="email"
               required
             />
-
-            {/* Input Modular de Contraseña con elemento derecho */}
             <EntradaTexto
-              label="Contraseña"
+              etiqueta="Contraseña"
               icono={Lock}
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              type={mostrarContrasena ? 'text' : 'password'}
+              value={contrasena}
+              onChange={manejarContrasena}
               placeholder="••••••••"
+              autoComplete="current-password"
               required
               elementoDerecha={
                 <button
                   type="button"
-                  aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-                  onClick={togglePassword}
-                  className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                  aria-label={
+                    mostrarContrasena
+                      ? 'Ocultar contraseña'
+                      : 'Mostrar contraseña'
+                  }
+                  onClick={alternarContrasena}
+                  className="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {mostrarContrasena
+                    ? <EyeOff size={18} />
+                    : <Eye size={18} />}
                 </button>
               }
             />
-
-            {/* Error */}
             {error && (
-              <div className="bg-red-900/20 border border-red-500 rounded-lg p-3">
-                <p className="text-red-400 text-sm">{error}</p>
+              <div className="rounded-lg border border-red-500 bg-red-900/20 p-3">
+                <p className="text-sm text-red-400">{error}</p>
               </div>
             )}
-
-            {/* Botón Modular */}
-            <BotonPrincipal
+            <BotonAcceso
               type="submit"
-              estaCargando={isLoading}
+              cargando={cargando}
               textoCarga="Ingresando..."
               icono={LogIn}
             >
-              Iniciar Sesión
-            </BotonPrincipal>
-
+              Iniciar sesión
+            </BotonAcceso>
           </form>
-
-          {/* Volver */}
           <div className="mt-6 text-center">
             <button
-              onClick={() => navigate('/')}
-              className="text-slate-400 hover:text-white flex items-center justify-center gap-2 mx-auto transition-colors"
+              type="button"
+              onClick={() => navegar('/')}
+              className="mx-auto flex items-center justify-center gap-2 text-slate-400 transition-colors hover:text-white"
             >
               <ArrowLeft size={16} />
               Volver al inicio
             </button>
           </div>
         </div>
-
-        {/* Nota informativa */}
         <div className="mt-6 text-center">
-          <p className="text-slate-500 text-sm">
+          <p className="text-sm text-slate-500">
             ¿No tienes cuenta? Regístrate en recepción del gimnasio
           </p>
         </div>
@@ -102,5 +98,3 @@ function IniciarSesionNutri({ onLogin }) {
     </div>
   );
 }
-
-export default IniciarSesionNutri;

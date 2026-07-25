@@ -1,10 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../../firebase';
+import { cerrarSesionNutriologo } from '../servicios/sesionNutriologo';
 
 export default function usePortalNutriologo() {
   const [pestanaActiva, setPestanaActiva] = useState('inicio');
   const [cerrandoSesion, setCerrandoSesion] = useState(false);
+  const cierreEnCurso = useRef(false);
   const navegar = useNavigate();
 
   const cambiarPestana = useCallback((nuevaPestana) => {
@@ -12,19 +13,16 @@ export default function usePortalNutriologo() {
   }, []);
 
   const cerrarSesion = useCallback(async () => {
-    if (cerrandoSesion) return;
+    if (cierreEnCurso.current) return;
 
+    cierreEnCurso.current = true;
     setCerrandoSesion(true);
     try {
-      await logoutUser();
-    } catch {
-      // La sesión local se limpia incluso si Firebase ya no responde.
+      await cerrarSesionNutriologo();
     } finally {
-      localStorage.removeItem('nutritionist_token');
-      localStorage.removeItem('nutritionist_username');
       navegar('/nutriologo/login');
     }
-  }, [cerrandoSesion, navegar]);
+  }, [navegar]);
 
   return {
     pestanaActiva,
