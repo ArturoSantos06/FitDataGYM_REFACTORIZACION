@@ -36,7 +36,7 @@ const obtenerRolEntrenador = async (usuario) => {
   return usuarioPorCorreo.success ? usuarioPorCorreo.data?.role : null;
 };
 
-function useInicioSesionEntrenador() {
+function usarInicioSesionEntrenador() {
   const navegar = useNavigate();
   const [correo, establecerCorreo] = useState('');
   const [contrasena, establecerContrasena] = useState('');
@@ -79,4 +79,4 @@ function useInicioSesionEntrenador() {
   };
 }
 
-export default useInicioSesionEntrenador;
+export default usarInicioSesionEntrenador;

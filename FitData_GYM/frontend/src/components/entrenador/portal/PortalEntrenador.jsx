@@ -4,10 +4,10 @@ import PerfilEntrenador from '../perfil/PerfilEntrenador';
 import GestionEntrenador from '../gestion/GestionEntrenador';
 import BarraNavegacionEntrenador from './BarraNavegacionEntrenador';
 import InicioEntrenador from './InicioEntrenador';
-import usePortalEntrenador from './hooks/usePortalEntrenador';
+import usarPortalEntrenador from './hooks/usarPortalEntrenador';
 
 function PortalEntrenador() {
-  const { pestañaActiva, cambiarPestaña, cerrarSesion } = usePortalEntrenador();
+  const { pestañaActiva, cambiarPestaña, cerrarSesion } = usarPortalEntrenador();
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 text-white p-4 md:p-8">

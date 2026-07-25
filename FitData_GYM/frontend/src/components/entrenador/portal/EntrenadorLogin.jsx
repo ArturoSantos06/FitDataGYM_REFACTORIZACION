@@ -1,8 +1,8 @@
 import FormularioInicioSesionEntrenador from './FormularioInicioSesionEntrenador';
-import useInicioSesionEntrenador from './hooks/useInicioSesionEntrenador';
+import usarInicioSesionEntrenador from './hooks/usarInicioSesionEntrenador';
 
 function InicioSesionEntrenador() {
-  const estadoInicioSesion = useInicioSesionEntrenador();
+  const estadoInicioSesion = usarInicioSesionEntrenador();
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center p-4">

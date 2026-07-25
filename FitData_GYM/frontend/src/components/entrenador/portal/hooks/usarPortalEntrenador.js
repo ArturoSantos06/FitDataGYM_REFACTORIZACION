@@ -7,7 +7,7 @@ const limpiarSesionEntrenador = () => {
   localStorage.removeItem('trainer_username');
 };
 
-function usePortalEntrenador() {
+function usarPortalEntrenador() {
   const navegar = useNavigate();
   const [pestañaActiva, establecerPestañaActiva] = useState('inicio');
 
@@ -27,4 +27,4 @@ function usePortalEntrenador() {
   return { pestañaActiva, cambiarPestaña, cerrarSesion };
 }
 
-export default usePortalEntrenador;
+export default usarPortalEntrenador;
