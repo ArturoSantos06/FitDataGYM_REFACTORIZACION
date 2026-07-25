@@ -1,22 +1,20 @@
-import React from 'react';
 import ModalExito from '../modales/ModalExito';
-import MenuPerfil from './ui/MenuPerfil';
-import FormularioDatosPersonales from './ui/FormularioDatosPersonales';
-import FormularioCambioContrasena from './ui/FormularioCambioContrasena';
 import usePerfilNutriologo from './hooks/usePerfilNutriologo';
+import FormularioCambioContrasena from './perfil/FormularioCambioContrasena';
+import FormularioDatosPersonales from './perfil/FormularioDatosPersonales';
+import MenuPerfil from './perfil/MenuPerfil';
 
 export default function PerfilNutriologo() {
   const {
     vistaActual,
-    setVistaActual,
+    navegar,
     usuario,
     codigoNutriologo,
     cargando,
     error,
-    mostrarModalExito,
-    setMostrarModalExito,
     mensajeExito,
-    manejarActualizacionUsuario
+    cerrarExito,
+    manejarActualizacionUsuario,
   } = usePerfilNutriologo();
 
   if (cargando) {
@@ -48,8 +46,8 @@ export default function PerfilNutriologo() {
   return (
     <div className="w-full flex justify-center">
       <ModalExito
-        isOpen={mostrarModalExito}
-        onClose={() => setMostrarModalExito(false)}
+        isOpen={Boolean(mensajeExito)}
+        onClose={cerrarExito}
         title="Éxito"
         message={mensajeExito}
       />
@@ -57,22 +55,22 @@ export default function PerfilNutriologo() {
       {vistaActual === 'menu' && (
         <MenuPerfil 
           usuario={usuario} 
-          alNavegar={setVistaActual} 
+          alNavegar={navegar}
         />
       )}
 
-      {vistaActual === 'edit-personal' && (
+      {vistaActual === 'datos' && (
         <FormularioDatosPersonales
           usuario={usuario}
           codigoNutriologo={codigoNutriologo}
           alGuardar={manejarActualizacionUsuario}
-          alRegresar={() => setVistaActual('menu')}
+          alRegresar={() => navegar('menu')}
         />
       )}
 
-      {vistaActual === 'change-password' && (
-        <FormularioCambioContrasena 
-          alRegresar={() => setVistaActual('menu')} 
+      {vistaActual === 'contrasena' && (
+        <FormularioCambioContrasena
+          alRegresar={() => navegar('menu')}
         />
       )}
     </div>

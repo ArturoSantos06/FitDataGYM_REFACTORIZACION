@@ -1,19 +1,33 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import { cambiarContrasenaNutriologo } from '../servicios/perfilNutriologo';
 
-export default function useCambioContrasena(alCompletar) {
-  const [contrasenaActual, setContrasenaActual] = useState('');
-  const [nuevaContrasena, setNuevaContrasena] = useState('');
-  const [confirmar, setConfirmar] = useState('');
+const FORMULARIO_INICIAL = {
+  contrasenaActual: '',
+  nuevaContrasena: '',
+  confirmacion: '',
+};
+
+export default function useCambioContrasena() {
+  const [formulario, setFormulario] = useState(FORMULARIO_INICIAL);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState('');
   const [exito, setExito] = useState('');
 
-  const manejarEnvio = async (e) => {
-    e.preventDefault();
+  const manejarCambio = useCallback((evento) => {
+    const { name: nombre, value: valor } = evento.target;
+    setFormulario((actual) => ({ ...actual, [nombre]: valor }));
     setError('');
     setExito('');
+  }, []);
 
-    if (!contrasenaActual || !nuevaContrasena) {
+  const manejarEnvio = useCallback(async (evento) => {
+    evento.preventDefault();
+    if (cargando) return;
+    setError('');
+    setExito('');
+    const { contrasenaActual, nuevaContrasena, confirmacion } = formulario;
+
+    if (!contrasenaActual || !nuevaContrasena || !confirmacion) {
       setError('Completa los campos requeridos');
       return;
     }
@@ -21,42 +35,29 @@ export default function useCambioContrasena(alCompletar) {
       setError('La nueva contraseña debe tener al menos 6 caracteres');
       return;
     }
-    if (nuevaContrasena !== confirmar) {
+    if (nuevaContrasena !== confirmacion) {
       setError('La confirmación no coincide');
       return;
     }
 
+    setCargando(true);
     try {
-      setCargando(true);
-      const { updatePassword, reauthenticateWithCredential, EmailAuthProvider } = await import('firebase/auth');
-      const { auth } = await import('../../../firebase/config');
-      const firebaseUser = auth.currentUser;
-
-      if (!firebaseUser?.email) {
-        throw new Error('No se pudo identificar la sesión actual');
-      }
-
-      const credential = EmailAuthProvider.credential(firebaseUser.email, contrasenaActual);
-      await reauthenticateWithCredential(firebaseUser, credential);
-      await updatePassword(firebaseUser, nuevaContrasena);
-
+      await cambiarContrasenaNutriologo(contrasenaActual, nuevaContrasena);
+      setFormulario(FORMULARIO_INICIAL);
       setExito('Contraseña actualizada correctamente');
-      setContrasenaActual('');
-      setNuevaContrasena('');
-      setConfirmar('');
-      if (alCompletar) alCompletar();
-    } catch (err) {
-      setError(err.message || 'Error al cambiar contraseña');
+    } catch (errorCambio) {
+      setError(errorCambio.message || 'No se pudo cambiar la contraseña');
     } finally {
       setCargando(false);
     }
-  };
+  }, [cargando, formulario]);
 
   return {
-    contrasenaActual, setContrasenaActual,
-    nuevaContrasena, setNuevaContrasena,
-    confirmar, setConfirmar,
-    cargando, error, exito,
-    manejarEnvio
+    formulario,
+    cargando,
+    error,
+    exito,
+    manejarCambio,
+    manejarEnvio,
   };
 }
