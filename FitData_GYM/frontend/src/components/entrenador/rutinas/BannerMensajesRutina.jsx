@@ -1,4 +1,4 @@
-import MensajeRutina from './componentes/MensajeRutina';
+import MensajeRutina from './MensajeRutina';
 
 function BannerMensajesRutina({ formSuccessMessage: mensajeExito, formWarningMessage: mensajeAdvertencia,
   formErrors: erroresFormulario = {}, isLoadingRoutine: cargandoRutina }) {

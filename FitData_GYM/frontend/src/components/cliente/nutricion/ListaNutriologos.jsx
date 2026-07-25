@@ -1,7 +1,7 @@
 import { User } from 'lucide-react';
-import usarListaNutriologos from './hooks/usarListaNutriologos';
-import TarjetaNutriologoCliente from './componentes/TarjetaNutriologoCliente';
-import ModalesNutriologosCliente from './componentes/ModalesNutriologosCliente';
+import usarListaNutriologos from '../../../hooks/usarListaNutriologos';
+import TarjetaNutriologoCliente from './TarjetaNutriologoCliente';
+import ModalesNutriologosCliente from './ModalesNutriologosCliente';
 
 function ListaNutriologos() {
   const estado = usarListaNutriologos();

@@ -1,4 +1,4 @@
-import BotonDiaEntrenamiento from './componentes/BotonDiaEntrenamiento';
+import BotonDiaEntrenamiento from './BotonDiaEntrenamiento';
 
 function SelectorDiasRutina({ diasSemana, activeDays: diasActivos, toggleDay: alAlternarDia, errorDias }) {
   const dias = Array.isArray(diasSemana) ? diasSemana : [];

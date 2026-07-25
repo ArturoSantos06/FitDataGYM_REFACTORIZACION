@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { db } from '../../../../firebase/config';
+import { db } from '../firebase/config';
 import { collection, getDocs } from 'firebase/firestore';
-import { addNutritionistReview as agregarReseña, assignNutritionistToClient as asignarNutriologo, getClientNutritionistAssignment as obtenerAsignacion, getCurrentUser as obtenerUsuarioActual, getNutritionistReviews as obtenerReseñas, waitForAuthReady as esperarAutenticacion } from '../../../../firebase';
+import { addNutritionistReview as agregarReseña, assignNutritionistToClient as asignarNutriologo, getClientNutritionistAssignment as obtenerAsignacion, getCurrentUser as obtenerUsuarioActual, getNutritionistReviews as obtenerReseñas, waitForAuthReady as esperarAutenticacion } from '../firebase';
 
 const esNutriologoActivo = (usuario = {}) => { const rol = String(usuario.role || usuario.user_type || '').toLowerCase(); const estado = String(usuario.nutritionistStatus || usuario.contractStatus || '').toLowerCase(); return usuario.isActive !== false && estado !== 'inactive' && ['nutritionist', 'nutriologo', 'nutriologa', 'nutriologo/a', 'nutricionista', 'nutri'].includes(rol); };
 

@@ -1,8 +1,8 @@
 import { AlertCircle, Calendar } from 'lucide-react';
 import ModalReprogramar from '../../modales/ModalReprogramar';
-import usarCitasNutricion from './hooks/usarCitasNutricion';
-import TarjetaCitaNutricion from './componentes/TarjetaCitaNutricion';
-import ModalCancelarCitaNutricion from './componentes/ModalCancelarCitaNutricion';
+import usarCitasNutricion from '../../../hooks/usarCitasNutricion';
+import TarjetaCitaNutricion from './TarjetaCitaNutricion';
+import ModalCancelarCitaNutricion from './ModalCancelarCitaNutricion';
 
 function CitasNutricion() {
   const estado = usarCitasNutricion();

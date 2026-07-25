@@ -1,6 +1,6 @@
 import { Home, Calendar, Users, User, MessageCircle } from 'lucide-react';
-import BotonSalidaEntrenador from './componentes/BotonSalidaEntrenador';
-import PestanaNavegacionEntrenador from './componentes/PestanaNavegacionEntrenador';
+import BotonSalidaEntrenador from './BotonSalidaEntrenador';
+import PestanaNavegacionEntrenador from './PestanaNavegacionEntrenador';
 
 const pestañasPortal = [
   { id: 'inicio', etiqueta: 'Inicio', icono: Home },

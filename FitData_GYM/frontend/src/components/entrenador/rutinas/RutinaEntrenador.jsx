@@ -3,10 +3,10 @@ import CatalogoEjerciciosRutina from './CatalogoEjerciciosRutina';
 import SeccionArchivosRutina from './SeccionArchivosRutina';
 import SelectorDiasRutina from './SelectorDiasRutina';
 import SeccionListaEjercicios from './SeccionListaEjercicios';
-import EncabezadoRutinaEntrenador from './componentes/EncabezadoRutinaEntrenador';
-import CampoNombreRutina from './componentes/CampoNombreRutina';
-import AccionesRutinaEntrenador from './componentes/AccionesRutinaEntrenador';
-import usarRutinaEntrenador from './hooks/usarRutinaEntrenador';
+import EncabezadoRutinaEntrenador from './EncabezadoRutinaEntrenador';
+import CampoNombreRutina from './CampoNombreRutina';
+import AccionesRutinaEntrenador from './AccionesRutinaEntrenador';
+import usarRutinaEntrenador from '../../../hooks/usarRutinaEntrenador';
 
 function RutinaEntrenador() {
   const estado = usarRutinaEntrenador();

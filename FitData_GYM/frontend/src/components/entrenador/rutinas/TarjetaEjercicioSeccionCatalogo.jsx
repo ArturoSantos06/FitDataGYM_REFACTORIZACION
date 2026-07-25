@@ -1,4 +1,4 @@
-import { traducirEtiqueta } from '../../../../backend/utilidadesRutinaEntrenador';
+import { traducirEtiqueta } from '../../../backend/utilidadesRutinaEntrenador';
 
 function TarjetaEjercicioSeccionCatalogo({ ejercicio, traduccionesEtiquetas, alAgregar }) {
   return <button type="button" onClick={() => alAgregar(ejercicio)}

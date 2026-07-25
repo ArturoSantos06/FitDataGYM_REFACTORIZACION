@@ -1,7 +1,7 @@
 import { Dumbbell } from 'lucide-react';
-import usarListaEntrenadores from './hooks/usarListaEntrenadores';
-import TarjetaEntrenadorCliente from './componentes/TarjetaEntrenadorCliente';
-import ModalesEntrenadoresCliente from './componentes/ModalesEntrenadoresCliente';
+import usarListaEntrenadores from '../../../hooks/usarListaEntrenadores';
+import TarjetaEntrenadorCliente from './TarjetaEntrenadorCliente';
+import ModalesEntrenadoresCliente from './ModalesEntrenadoresCliente';
 
 function ListaEntrenadores() {
   const estado = usarListaEntrenadores();

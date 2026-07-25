@@ -1,6 +1,6 @@
 import { BookOpen } from 'lucide-react';
-import SelectorPartesCuerpoCatalogo from './componentes/SelectorPartesCuerpoCatalogo';
-import TarjetaEjercicioSeccionCatalogo from './componentes/TarjetaEjercicioSeccionCatalogo';
+import SelectorPartesCuerpoCatalogo from './SelectorPartesCuerpoCatalogo';
+import TarjetaEjercicioSeccionCatalogo from './TarjetaEjercicioSeccionCatalogo';
 
 const partesCuerpo = [
   { key: 'chest', label: 'Pecho' }, { key: 'back', label: 'Espalda' },

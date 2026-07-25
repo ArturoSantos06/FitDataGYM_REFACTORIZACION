@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import usarGuardadoRutinaExistente from '../../../../backend/useGuardadoRutina';
-import usarCargaRutinaExistente from '../../../../backend/useRutinaCargaYEdicion';
-import { DIAS_SEMANA, PARTES_CUERPO, TRADUCCIONES_ETIQUETAS } from '../../../../backend/utilidadesRutinaEntrenador';
+import usarGuardadoRutinaExistente from '../backend/useGuardadoRutina';
+import usarCargaRutinaExistente from '../backend/useRutinaCargaYEdicion';
+import { DIAS_SEMANA, PARTES_CUERPO, TRADUCCIONES_ETIQUETAS } from '../backend/utilidadesRutinaEntrenador';
 
 function usarRutinaEntrenador() {
   const navegar = useNavigate();

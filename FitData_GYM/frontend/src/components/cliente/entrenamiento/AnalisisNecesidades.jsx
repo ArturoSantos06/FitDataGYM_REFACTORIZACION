@@ -1,6 +1,6 @@
-import usarAnalisisNecesidades from './hooks/usarAnalisisNecesidades';
-import PreguntaAnalisisNecesidades from './componentes/PreguntaAnalisisNecesidades';
-import ResultadoAnalisisNecesidades from './componentes/ResultadoAnalisisNecesidades';
+import usarAnalisisNecesidades from '../../../hooks/usarAnalisisNecesidades';
+import PreguntaAnalisisNecesidades from './PreguntaAnalisisNecesidades';
+import ResultadoAnalisisNecesidades from './ResultadoAnalisisNecesidades';
 
 function AnalisisNecesidades() {
   const estado = usarAnalisisNecesidades();

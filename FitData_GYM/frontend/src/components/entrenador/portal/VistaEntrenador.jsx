@@ -1,8 +1,8 @@
 import { Search } from 'lucide-react';
-import EncabezadoVistaEntrenador from './componentes/EncabezadoVistaEntrenador';
-import TarjetasAccionesEntrenador from './componentes/TarjetasAccionesEntrenador';
-import ListaAlumnosEntrenador from './componentes/ListaAlumnosEntrenador';
-import usarVistaEntrenador from './hooks/usarVistaEntrenador';
+import EncabezadoVistaEntrenador from './EncabezadoVistaEntrenador';
+import TarjetasAccionesEntrenador from './TarjetasAccionesEntrenador';
+import ListaAlumnosEntrenador from './ListaAlumnosEntrenador';
+import usarVistaEntrenador from '../../../hooks/usarVistaEntrenador';
 
 function VistaEntrenador() {
   const estado = usarVistaEntrenador();

@@ -1,5 +1,5 @@
 import { BookOpen } from 'lucide-react';
-import TarjetaEjercicioCatalogo from './componentes/TarjetaEjercicioCatalogo';
+import TarjetaEjercicioCatalogo from './TarjetaEjercicioCatalogo';
 
 function CatalogoEjerciciosRutina({
   activeDay: diaActivoProp,

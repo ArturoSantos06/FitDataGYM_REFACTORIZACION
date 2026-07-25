@@ -1,4 +1,4 @@
-import PestanaDiaRutina from './componentes/PestanaDiaRutina';
+import PestanaDiaRutina from './PestanaDiaRutina';
 
 function PestanasDiasRutina({ diaActivo, diasActivos, ejerciciosPorDia, onCambiarDia }) {
   const dias = Array.isArray(diasActivos) ? diasActivos : [];

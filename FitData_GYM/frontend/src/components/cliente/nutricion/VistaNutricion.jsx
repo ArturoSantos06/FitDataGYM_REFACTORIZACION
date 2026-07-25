@@ -1,7 +1,7 @@
 import { AlertTriangle } from 'lucide-react';
-import usarGestionServicioNutricion from './hooks/usarGestionServicioNutricion';
-import EstadoServicioNutricion from './componentes/EstadoServicioNutricion';
-import ModalCancelacionNutricion from './componentes/ModalCancelacionNutricion';
+import usarGestionServicioNutricion from '../../../hooks/usarGestionServicioNutricion';
+import EstadoServicioNutricion from './EstadoServicioNutricion';
+import ModalCancelacionNutricion from './ModalCancelacionNutricion';
 
 function VistaNutricion() {
   const estado = usarGestionServicioNutricion();

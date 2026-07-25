@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getClientTrainerAssignment as obtenerAsignacionEntrenador, removeTrainerFromClient as quitarEntrenadorCliente, waitForAuthReady as esperarAutenticacion } from '../../../../firebase';
+import { getClientTrainerAssignment as obtenerAsignacionEntrenador, removeTrainerFromClient as quitarEntrenadorCliente, waitForAuthReady as esperarAutenticacion } from '../firebase';
 
 function usarGestionServicioEntrenador() {
   const [cargando, establecerCargando] = useState(true);

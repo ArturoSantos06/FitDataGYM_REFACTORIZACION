@@ -1,5 +1,5 @@
 import { Upload } from 'lucide-react';
-import FilaArchivoRutina from './componentes/FilaArchivoRutina';
+import FilaArchivoRutina from './FilaArchivoRutina';
 
 function SeccionArchivosRutina({ files: archivosProp = [], onFileChange: alCambiarArchivo, onRemoveFile: alQuitarArchivo }) {
   const archivos = Array.isArray(archivosProp) ? archivosProp : [];

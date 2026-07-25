@@ -1,5 +1,5 @@
-import ModalConfirmacion from '../../../modales/ModalConfirmacion';
-import ModalExito from '../../../modales/ModalExito';
+import ModalConfirmacion from '../../modales/ModalConfirmacion';
+import ModalExito from '../../modales/ModalExito';
 
 function ModalesNutriologosCliente(estado) {
   const nombre = estado.nutriologoPendiente?.displayName || estado.nutriologoPendiente?.nombre || 'este nutriólogo';

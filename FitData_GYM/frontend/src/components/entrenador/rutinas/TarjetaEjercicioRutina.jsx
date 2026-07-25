@@ -1,5 +1,5 @@
-import ControlesEjercicioRutina from './componentes/ControlesEjercicioRutina';
-import EtiquetasEjercicioRutina from './componentes/EtiquetasEjercicioRutina';
+import ControlesEjercicioRutina from './ControlesEjercicioRutina';
+import EtiquetasEjercicioRutina from './EtiquetasEjercicioRutina';
 
 function TarjetaEjercicioRutina({
   ejercicio,

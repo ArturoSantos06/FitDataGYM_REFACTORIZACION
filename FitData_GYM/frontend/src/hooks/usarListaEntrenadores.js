@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { db } from '../../../../firebase/config';
+import { db } from '../firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import { getCurrentUser as obtenerUsuarioActual, waitForAuthReady as esperarAutenticacion, createTrainerServiceSale as crearVentaServicio, assignTrainerToClient as asignarEntrenador, getClientTrainerAssignment as obtenerAsignacion, getTrainerReviews as obtenerReseñas, addTrainerReview as agregarReseña } from '../../../../firebase';
+import { getCurrentUser as obtenerUsuarioActual, waitForAuthReady as esperarAutenticacion, createTrainerServiceSale as crearVentaServicio, assignTrainerToClient as asignarEntrenador, getClientTrainerAssignment as obtenerAsignacion, getTrainerReviews as obtenerReseñas, addTrainerReview as agregarReseña } from '../firebase';
 
 const ETIQUETAS_SERVICIO = { PERSONAL: 'Personal', GRUPAL: 'Grupal' };
 const normalizarTipoServicio = (valor) => { const texto = String(valor || '').trim().toLowerCase(); return texto.includes('grup') ? 'GRUPAL' : texto.includes('personal') || texto.includes('individual') || texto.includes('uno a uno') || texto.includes('1 a 1') ? 'PERSONAL' : ''; };

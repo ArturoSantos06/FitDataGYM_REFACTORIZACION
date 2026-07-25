@@ -1,5 +1,5 @@
 import { Award, CheckCircle, Dumbbell, Star } from 'lucide-react';
-import { formatearMonto } from '../hooks/usarListaEntrenadores';
+import { formatearMonto } from '../../../hooks/usarListaEntrenadores';
 
 function TarjetaEntrenadorCliente({ entrenador, seleccionado, asignado, asignando, reseñas, estrellasSobre, idCliente, promedio, alSeleccionar, alCalificar, alPasarEstrella, alSalirEstrella, alMostrarPrecio, alObtenerConfiguracion }) {
   const configuracion = alObtenerConfiguracion(entrenador);

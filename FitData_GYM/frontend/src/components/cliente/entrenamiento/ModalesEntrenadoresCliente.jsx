@@ -1,8 +1,8 @@
-import ModalConfirmacion from '../../../modales/ModalConfirmacion';
-import ModalExito from '../../../modales/ModalExito';
-import ErrorModal from '../../../modales/ErrorModal';
-import ModalPagoServicioEntrenador from '../../../modales/ModalPagoServicioEntrenador';
-import { ETIQUETAS_SERVICIO } from '../hooks/usarListaEntrenadores';
+import ModalConfirmacion from '../../modales/ModalConfirmacion';
+import ModalExito from '../../modales/ModalExito';
+import ErrorModal from '../../modales/ErrorModal';
+import ModalPagoServicioEntrenador from '../../modales/ModalPagoServicioEntrenador';
+import { ETIQUETAS_SERVICIO } from '../../../hooks/usarListaEntrenadores';
 
 function ModalesEntrenadoresCliente(estado) {
   const nombrePendiente = estado.entrenadorPendiente?.displayName || estado.entrenadorPendiente?.nombre || 'este entrenador';

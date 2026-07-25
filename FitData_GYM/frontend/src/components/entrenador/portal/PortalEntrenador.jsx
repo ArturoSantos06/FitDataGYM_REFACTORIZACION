@@ -4,7 +4,7 @@ import PerfilEntrenador from '../perfil/PerfilEntrenador';
 import GestionEntrenador from '../gestion/GestionEntrenador';
 import BarraNavegacionEntrenador from './BarraNavegacionEntrenador';
 import InicioEntrenador from './InicioEntrenador';
-import usarPortalEntrenador from './hooks/usarPortalEntrenador';
+import usarPortalEntrenador from '../../../hooks/usarPortalEntrenador';
 
 function PortalEntrenador() {
   const { pestañaActiva, cambiarPestaña, cerrarSesion } = usarPortalEntrenador();

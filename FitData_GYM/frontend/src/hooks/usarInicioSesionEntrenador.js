@@ -5,7 +5,7 @@ import {
   getUserByEmail as obtenerUsuarioPorCorreo,
   loginUser as iniciarSesionFirebase,
   logoutUser as cerrarSesionFirebase,
-} from '../../../../firebase';
+} from '../firebase';
 
 const CLAVES_SESION = ['trainer_token', 'trainer_username'];
 

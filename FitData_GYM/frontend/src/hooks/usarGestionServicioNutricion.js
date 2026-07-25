@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getClientNutritionistAssignment as obtenerAsignacionNutriologo, removeNutritionistFromClient as quitarNutriologoCliente, waitForAuthReady as esperarAutenticacion } from '../../../../firebase';
+import { getClientNutritionistAssignment as obtenerAsignacionNutriologo, removeNutritionistFromClient as quitarNutriologoCliente, waitForAuthReady as esperarAutenticacion } from '../firebase';
 
 function usarGestionServicioNutricion() {
   const [cargando, establecerCargando] = useState(true); const [idCliente, establecerIdCliente] = useState(null); const [estadoServicio, establecerEstadoServicio] = useState('active'); const [modalAbierto, establecerModalAbierto] = useState(false);

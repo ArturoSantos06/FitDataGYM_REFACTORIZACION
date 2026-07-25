@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import {
   ensureUserClaim as asegurarReclamoUsuario,
   getAllMembers as obtenerTodosAlumnos,
   logoutUser as cerrarSesionFirebase,
-} from '../../../../firebase';
+} from '../firebase';
 
 const limpiarSesionEntrenador = () => {
   localStorage.removeItem('trainer_token');

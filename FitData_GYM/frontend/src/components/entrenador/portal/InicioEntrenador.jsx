@@ -1,4 +1,4 @@
-import TarjetaInformativaEntrenador from './componentes/TarjetaInformativaEntrenador';
+import TarjetaInformativaEntrenador from './TarjetaInformativaEntrenador';
 
 const tarjetasInformativas = [
   {

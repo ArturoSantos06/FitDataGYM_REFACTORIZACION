@@ -1,4 +1,4 @@
-import { traducirEtiqueta, traducirTextoEjercicio } from '../../../../backend/utilidadesRutinaEntrenador';
+import { traducirEtiqueta, traducirTextoEjercicio } from '../../../backend/utilidadesRutinaEntrenador';
 
 function TarjetaEjercicioCatalogo({ ejercicio, diaActivo, alAgregar }) {
   const nombreEjercicio = traducirTextoEjercicio(ejercicio.name);

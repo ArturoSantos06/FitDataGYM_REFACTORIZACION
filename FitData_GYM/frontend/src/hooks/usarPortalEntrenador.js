@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logoutUser as cerrarSesionFirebase } from '../../../../firebase';
+import { logoutUser as cerrarSesionFirebase } from '../firebase';
 
 const limpiarSesionEntrenador = () => {
   localStorage.removeItem('trainer_token');

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { auth as autenticacion, getMemberByAuthUid as obtenerMiembroPorAuthUid, getMemberByUserId as obtenerMiembroPorUsuario, getUser as obtenerUsuario, getUserByAuthUid as obtenerUsuarioPorAuthUid, storage, subscribeTrainerRoutineByMember as suscribirRutinaEntrenador } from '../../../../firebase';
+import { auth as autenticacion, getMemberByAuthUid as obtenerMiembroPorAuthUid, getMemberByUserId as obtenerMiembroPorUsuario, getUser as obtenerUsuario, getUserByAuthUid as obtenerUsuarioPorAuthUid, storage, subscribeTrainerRoutineByMember as suscribirRutinaEntrenador } from '../firebase';
 import { getBlob, getDownloadURL, listAll, ref } from 'firebase/storage';
 
 function extraerRutaAlmacenamiento(url) {

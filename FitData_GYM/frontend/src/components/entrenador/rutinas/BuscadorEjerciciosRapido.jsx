@@ -1,5 +1,5 @@
 import { Search, X } from 'lucide-react';
-import ResultadoEjercicioRapido from './componentes/ResultadoEjercicioRapido';
+import ResultadoEjercicioRapido from './ResultadoEjercicioRapido';
 
 function BuscadorEjerciciosRapido({
   terminoBusqueda: textoBusqueda,

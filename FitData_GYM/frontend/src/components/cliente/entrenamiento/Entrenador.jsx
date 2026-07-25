@@ -1,7 +1,7 @@
 import * as Iconos from 'lucide-react';
-import usarGestionServicioEntrenador from './hooks/usarGestionServicioEntrenador';
-import EstadoServicioEntrenador from './componentes/EstadoServicioEntrenador';
-import ModalCancelacionServicio from './componentes/ModalCancelacionServicio';
+import usarGestionServicioEntrenador from '../../../hooks/usarGestionServicioEntrenador';
+import EstadoServicioEntrenador from './EstadoServicioEntrenador';
+import ModalCancelacionServicio from './ModalCancelacionServicio';
 
 const { AlertTriangle } = Iconos;
 

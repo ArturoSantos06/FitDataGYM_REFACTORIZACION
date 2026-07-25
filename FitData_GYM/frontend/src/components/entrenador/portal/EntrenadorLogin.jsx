@@ -1,5 +1,5 @@
 import FormularioInicioSesionEntrenador from './FormularioInicioSesionEntrenador';
-import usarInicioSesionEntrenador from './hooks/usarInicioSesionEntrenador';
+import usarInicioSesionEntrenador from '../../../hooks/usarInicioSesionEntrenador';
 
 function InicioSesionEntrenador() {
   const estadoInicioSesion = usarInicioSesionEntrenador();

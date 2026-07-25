@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CitasNutri as usarCitasNutri } from '../../../../backend/CitasNutri';
+import { CitasNutri as usarCitasNutri } from '../backend/CitasNutri';
 
 function usarCitasNutricion() {
   const [idCliente, establecerIdCliente] = useState(null); const [modalCancelacion, establecerModalCancelacion] = useState({ abierto: false, id: null }); const [modalReprogramacion, establecerModalReprogramacion] = useState({ abierto: false, cita: null });

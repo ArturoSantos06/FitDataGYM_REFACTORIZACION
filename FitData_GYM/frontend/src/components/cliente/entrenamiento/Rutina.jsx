@@ -1,8 +1,8 @@
-import usarRutinaCliente from './hooks/usarRutinaCliente';
-import EstadosRutinaCliente from './componentes/EstadosRutinaCliente';
-import EncabezadoRutinaCliente from './componentes/EncabezadoRutinaCliente';
-import PlanRutinaCliente from './componentes/PlanRutinaCliente';
-import ArchivosRutinaCliente from './componentes/ArchivosRutinaCliente';
+import usarRutinaCliente from '../../../hooks/usarRutinaCliente';
+import EstadosRutinaCliente from './EstadosRutinaCliente';
+import EncabezadoRutinaCliente from './EncabezadoRutinaCliente';
+import PlanRutinaCliente from './PlanRutinaCliente';
+import ArchivosRutinaCliente from './ArchivosRutinaCliente';
 
 function Rutina() {
   const estado = usarRutinaCliente();
