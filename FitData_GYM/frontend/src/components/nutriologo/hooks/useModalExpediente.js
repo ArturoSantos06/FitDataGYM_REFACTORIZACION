@@ -1,37 +1,44 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export const useModalExpediente = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [viewingCita, setViewingCita] = useState(null);
-  const [dialog, setDialog] = useState(null);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(null);
+  const [citaVista, setCitaVista] = useState(null);
   const [notaPrevia, setNotaPrevia] = useState('');
-  const [showPastDateModal, setShowPastDateModal] = useState(false);
+  const [mostrarAlertaPasado, setMostrarAlertaPasado] = useState(false);
 
-  const handleDateClick = (arg) => {
-    const date = new Date(arg.date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+  const manejarClicFecha = useCallback((informacion) => {
+    const fecha = new Date(informacion.date);
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
 
-    // Bloquear fechas pasadas
-    if (date < today) {
-      setShowPastDateModal(true);
+    if (fecha < hoy) {
+      setMostrarAlertaPasado(true);
       return;
     }
+    if (fecha.getDay() === 0) return;
+    setFechaSeleccionada(informacion.dateStr);
+  }, []);
 
-    // Bloquear domingos (día 0)
-    if (date.getDay() === 0) {
-      return;
-    }
-    
-    setSelectedDate(arg.dateStr);
-  };
+  const cerrarAgenda = useCallback(() => setFechaSeleccionada(null), []);
+  const completarAgenda = useCallback(() => {
+    setFechaSeleccionada(null);
+    setNotaPrevia('');
+  }, []);
+  const abrirDetalle = useCallback((cita) => setCitaVista(cita), []);
+  const cerrarDetalle = useCallback(() => setCitaVista(null), []);
+  const cerrarAlertaPasado = useCallback(() => setMostrarAlertaPasado(false), []);
 
   return {
-    selectedDate, setSelectedDate,
-    viewingCita, setViewingCita,
-    dialog, setDialog,
-    notaPrevia, setNotaPrevia,
-    showPastDateModal, setShowPastDateModal,
-    handleDateClick
+    abrirDetalle,
+    cerrarAgenda,
+    cerrarAlertaPasado,
+    cerrarDetalle,
+    citaVista,
+    completarAgenda,
+    fechaSeleccionada,
+    manejarClicFecha,
+    mostrarAlertaPasado,
+    notaPrevia,
+    setNotaPrevia,
   };
 };

@@ -1,59 +1,81 @@
-import { useState } from 'react';
-import { db } from "../../../firebase/config"; // Ajusta la ruta a tu config de Firebase
-import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { useCallback, useState } from 'react';
+import {
+  actualizarNotaCita,
+  eliminarCitaNutriologo,
+} from '../servicios/citasNutri';
 
-export const useModalDetalleNutri = (cita, onClose) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(cita.nota || '');
-  const [dialogConfig, setDialogConfig] = useState(null);
+const LIMITE_NOTA_CITA = 2000;
 
-  const handleUpdate = async () => {
-    try {
-      const citaRef = doc(db, "citas", cita.id);
-      await updateDoc(citaRef, { nota: editContent });
-      setIsEditing(false);
-    } catch (err) {
-      console.error(err);
-      setDialogConfig({ 
-        type: 'danger', 
-        title: 'Error', 
-        message: 'No se pudo actualizar la nota.', 
-        onConfirm: () => setDialogConfig(null) 
-      });
-    }
-  };
+export const useModalDetalleNutri = (cita, alCerrar) => {
+  const [editando, setEditando] = useState(false);
+  const [contenidoEditado, setContenidoEditado] = useState(cita.nota || '');
+  const [notaVisible, setNotaVisible] = useState(cita.nota || '');
+  const [dialogo, setDialogo] = useState(null);
+  const [procesando, setProcesando] = useState(false);
 
-  const confirmDelete = () => {
-    setDialogConfig({
-      type: 'danger',
-      title: 'Eliminar Cita',
-      message: '¿Estás seguro de que deseas borrar este registro? Esta acción no se puede deshacer.',
-      onConfirm: async () => {
-        try {
-            await deleteDoc(doc(db, "citas", cita.id));
-            setDialogConfig(null);
-            onClose();
-        } catch (err) {
-             console.error(err);
-             setDialogConfig({ 
-                 type: 'danger', 
-                 title: 'Error', 
-                 message: 'No se pudo eliminar la cita.', 
-                 onConfirm: () => setDialogConfig(null) 
-               });
-        }
-      },
-      onCancel: () => setDialogConfig(null)
+  const cerrarDialogo = useCallback(() => setDialogo(null), []);
+  const mostrarError = useCallback((mensaje) => {
+    setDialogo({
+      tipo: 'peligro',
+      titulo: 'Error',
+      mensaje,
+      alConfirmar: cerrarDialogo,
     });
-  };
+  }, [cerrarDialogo]);
+
+  const actualizarNota = useCallback(async () => {
+    if (procesando) return;
+    setProcesando(true);
+    try {
+      const nota = contenidoEditado.slice(0, LIMITE_NOTA_CITA);
+      await actualizarNotaCita(cita.id, nota);
+      setNotaVisible(nota);
+      setEditando(false);
+    } catch {
+      mostrarError('No se pudo actualizar la nota.');
+    } finally {
+      setProcesando(false);
+    }
+  }, [cita.id, contenidoEditado, mostrarError, procesando]);
+
+  const confirmarEliminacion = useCallback(async () => {
+    if (procesando) return;
+    setProcesando(true);
+    try {
+      await eliminarCitaNutriologo(cita.id);
+      setDialogo(null);
+      alCerrar();
+    } catch {
+      mostrarError('No se pudo eliminar la cita.');
+    } finally {
+      setProcesando(false);
+    }
+  }, [alCerrar, cita.id, mostrarError, procesando]);
+
+  const solicitarEliminacion = useCallback(() => {
+    setDialogo({
+      tipo: 'peligro',
+      titulo: 'Eliminar cita',
+      mensaje: '¿Estás seguro de que deseas borrar este registro? Esta acción no se puede deshacer.',
+      alConfirmar: confirmarEliminacion,
+      alCancelar: cerrarDialogo,
+    });
+  }, [cerrarDialogo, confirmarEliminacion]);
+
+  const cambiarContenido = useCallback((valor) => {
+    setContenidoEditado(valor.slice(0, LIMITE_NOTA_CITA));
+  }, []);
+  const iniciarEdicion = useCallback(() => setEditando(true), []);
 
   return {
-    isEditing,
-    setIsEditing,
-    editContent,
-    setEditContent,
-    dialogConfig,
-    handleUpdate,
-    confirmDelete
+    actualizarNota,
+    cambiarContenido,
+    contenidoEditado,
+    dialogo,
+    editando,
+    iniciarEdicion,
+    notaVisible,
+    procesando,
+    solicitarEliminacion,
   };
 };

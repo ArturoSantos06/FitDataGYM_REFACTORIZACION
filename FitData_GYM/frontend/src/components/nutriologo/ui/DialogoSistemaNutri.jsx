@@ -1,10 +1,15 @@
-import React from 'react';
 import { AlertTriangle, CheckCircle, Info } from 'lucide-react';
 
-export default function DialogoSistemaNutri({ type, title, message, onConfirm, onCancel }) {
-  // Traducción de variables internas al español
-  const esPeligro = type === 'danger';
-  const esExito = type === 'success';
+export default function DialogoSistemaNutri({
+  tipo,
+  titulo,
+  mensaje,
+  alConfirmar,
+  alCancelar,
+  procesando,
+}) {
+  const esPeligro = tipo === 'peligro';
+  const esExito = tipo === 'exito';
   
   const obtenerColores = () => {
     if (esExito) return { borde: 'border-emerald-500/40', fondo: 'bg-emerald-500/10', texto: 'text-emerald-500', boton: 'bg-emerald-600', icono: <CheckCircle size={32} /> };
@@ -21,26 +26,30 @@ export default function DialogoSistemaNutri({ type, title, message, onConfirm, o
           {colores.icono}
         </div>
         <h3 className="text-xl font-black uppercase italic mb-2 text-white tracking-tighter">
-          {title}
+          {titulo}
         </h3>
         <p className="text-slate-400 text-sm mb-8 font-medium leading-relaxed">
-          {message}
+          {mensaje}
         </p>
         
         <div className="flex gap-3">
-          {onCancel && (
+          {alCancelar && (
             <button 
-              onClick={onCancel} 
-              className="flex-1 py-3 rounded-xl bg-slate-800 text-white font-black text-[10px] uppercase border border-slate-700"
+              type="button"
+              onClick={alCancelar}
+              disabled={procesando}
+              className="flex-1 rounded-xl border border-slate-700 bg-slate-800 py-3 text-[10px] font-black text-white uppercase disabled:opacity-60"
             >
               Cancelar
             </button>
           )}
           <button 
-            onClick={onConfirm} 
-            className={`flex-1 py-4 rounded-xl font-black text-[10px] uppercase text-white shadow-lg ${colores.boton}`}
+            type="button"
+            onClick={alConfirmar}
+            disabled={procesando}
+            className={`flex-1 rounded-xl py-4 text-[10px] font-black text-white uppercase shadow-lg disabled:cursor-wait disabled:opacity-60 ${colores.boton}`}
           >
-            Continuar
+            {procesando ? 'Procesando...' : 'Continuar'}
           </button>
         </div>
       </div>

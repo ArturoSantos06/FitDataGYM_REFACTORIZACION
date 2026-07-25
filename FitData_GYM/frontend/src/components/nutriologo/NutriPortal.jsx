@@ -30,7 +30,7 @@ export default function NutriPortal() {
 
       <main className="mx-auto max-w-7xl animate-fade-in pt-2 pb-20 md:pt-4 md:pb-0">
         {pestanaActiva === 'inicio' && <InicioNutri />}
-        {pestanaActiva === 'citas' && <CitasNutri embedded />}
+        {pestanaActiva === 'citas' && <CitasNutri integrado />}
         {pestanaActiva === 'calculadora' && <FormularioMacros />}
         {pestanaActiva === 'dietas' && <DietaRepositorio />}
         {pestanaActiva === 'financiero' && <PanelFinanzas />}
