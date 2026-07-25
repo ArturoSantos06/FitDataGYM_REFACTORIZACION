@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { crearReporteMantenimiento, subirFotoReporte } from '../../../../backend/mantenimiento';
+import { crearReporteMantenimiento, subirFotoReporte } from '../../../backend/mantenimiento';
 
 export default function useFormularioReporte(maquinas, onSuccess) {
   const [maquinaId, setMaquinaId] = useState('');
@@ -58,6 +58,7 @@ export default function useFormularioReporte(maquinas, onSuccess) {
   return {
     maquinaId,
     setMaquinaId,
+    maquinaSeleccionada,
     descripcion,
     setDescripcion,
     setArchivo,

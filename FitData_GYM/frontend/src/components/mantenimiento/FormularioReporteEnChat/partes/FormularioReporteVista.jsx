@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { TIPOS_IMAGEN_ACEPTADOS } from '../contenido';
+import { TIPOS_IMAGEN_ACEPTADOS } from '../../contenido';
 
 function FormularioReporteVista({
   maquinas,

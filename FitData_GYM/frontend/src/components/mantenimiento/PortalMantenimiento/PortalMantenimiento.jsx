@@ -2,8 +2,8 @@ import { useState } from 'react';
 import useDatosMantenimiento from './hooks/useDatosMantenimiento';
 import EncabezadoPortal from './partes/EncabezadoPortal';
 import SeccionReportesRecientes from './partes/SeccionReportesRecientes';
-import VistaAdminMantenimiento from '../VistaAdminMantenimiento';
-import VistaUsuarioMantenimiento from '../VistaUsuarioMantenimiento';
+import VistaAdminMantenimiento from '../VistaAdminMantenimiento/VistaAdminMantenimiento';
+import VistaUsuarioMantenimiento from '../VistaUsuarioMantenimiento/VistaUsuarioMantenimiento';
 
 function PortalMantenimiento({ vistaInicial = 'usuario', modoSoloAdmin = false }) {
   const [vista, setVista] = useState(modoSoloAdmin ? 'admin' : vistaInicial);

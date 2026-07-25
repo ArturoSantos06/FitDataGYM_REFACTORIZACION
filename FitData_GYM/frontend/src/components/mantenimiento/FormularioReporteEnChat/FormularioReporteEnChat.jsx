@@ -1,4 +1,4 @@
-import useFormularioReporte from './hooks/useFormularioReporte';
+import useFormularioReporte from '../hooks/useFormularioReporte';
 import FormularioReporteVista from './partes/FormularioReporteVista';
 
 function FormularioReporteEnChat({ maquinas = [], onCancel, onSuccess }) {
