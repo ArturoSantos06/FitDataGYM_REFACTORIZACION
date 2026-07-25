@@ -1,7 +1,7 @@
 import { CalendarClock, ClipboardList, X } from 'lucide-react';
 import DialogoSistemaNutri from '../ui/DialogoSistemaNutri';
 import { useModalDetalleNutri } from '../hooks/useModalDetalleNutri';
-import { BotonAccionModal } from '../ui/BotonAccionModal';
+import { BotonAccionModal } from './BotonAccionModal';
 
 export default function ModalDetalleNutri({ cita, alCerrar }) {
   const {

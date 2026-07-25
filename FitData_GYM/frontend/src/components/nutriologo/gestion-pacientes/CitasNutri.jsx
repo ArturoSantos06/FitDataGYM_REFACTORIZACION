@@ -2,7 +2,7 @@ import { ArrowLeft } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useAgendaNutri from '../hooks/useAgendaNutri';
 import ModalExpedienteNutri from './ModalExpedienteNutri';
-import TarjetaPacienteAgenda from './componentes/TarjetaPacienteAgenda';
+import TarjetaPacienteAgenda from './TarjetaPacienteAgenda';
 import { MensajeEstadoLista } from '../ui/MensajeEstadoLista';
 import { MensajeVacio } from '../ui/MensajeVacio';
 

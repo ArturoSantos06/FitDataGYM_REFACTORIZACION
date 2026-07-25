@@ -1,6 +1,6 @@
 import { ChefHat } from 'lucide-react';
-import ResumenNutricionalDiario from '../ui/ResumenNutricionalDiario';
-import TarjetaComidaSugerida from '../ui/TarjetaComidaSugerida';
+import ResumenNutricionalDiario from './ResumenNutricionalDiario';
+import TarjetaComidaSugerida from './TarjetaComidaSugerida';
 
 export default function ResultadosMenuAsistente({ nutrientes, comidas, cargando }) {
   return (

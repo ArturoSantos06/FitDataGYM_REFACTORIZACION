@@ -1,4 +1,4 @@
-import { BarraMensual } from '../ui/BarraMensual';
+import { BarraMensual } from './BarraMensual';
 import { MensajeVacio } from '../ui/MensajeVacio';
 
 export default function GraficaMensual({ datosMensuales = [] }) {

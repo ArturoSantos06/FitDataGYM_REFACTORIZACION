@@ -1,5 +1,5 @@
 import useTablaOperaciones from '../hooks/useTablaOperaciones';
-import FilaTablaOperaciones from '../ui/FilaTablaOperaciones';
+import FilaTablaOperaciones from './FilaTablaOperaciones';
 
 export default function TablaOperaciones({ ventasPlanes = [] }) {
   const { filas, formatearMoneda, formatearFecha } = useTablaOperaciones(ventasPlanes);

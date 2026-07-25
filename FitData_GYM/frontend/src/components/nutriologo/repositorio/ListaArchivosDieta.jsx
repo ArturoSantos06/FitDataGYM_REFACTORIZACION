@@ -1,4 +1,4 @@
-import { TarjetaArchivo } from '../ui/TarjetaArchivo';
+import { TarjetaArchivo } from './TarjetaArchivo';
 import { MensajeEstadoLista } from '../ui/MensajeEstadoLista';
 import {
   esRolNutriologo,

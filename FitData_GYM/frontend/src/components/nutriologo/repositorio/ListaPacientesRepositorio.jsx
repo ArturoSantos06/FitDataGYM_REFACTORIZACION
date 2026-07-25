@@ -1,4 +1,4 @@
-import TarjetaPacienteLista from '../ui/TarjetaPacienteLista';
+import TarjetaPacienteLista from './TarjetaPacienteLista';
 import { EntradaTexto } from '../ui/EntradaTexto';
 import { MensajeEstadoLista } from '../ui/MensajeEstadoLista';
 import { MensajeVacio } from '../ui/MensajeVacio';

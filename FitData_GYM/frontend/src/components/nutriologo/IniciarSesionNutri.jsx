@@ -1,8 +1,8 @@
 import { ArrowLeft, Eye, EyeOff, Lock, LogIn, Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import BotonAcceso from './acceso/BotonAcceso';
-import EncabezadoAcceso from './acceso/EncabezadoAcceso';
 import { useNutriSesion } from './hooks/useNutriSesion';
+import BotonAcceso from './ui/BotonAcceso';
+import EncabezadoAcceso from './ui/EncabezadoAcceso';
 import { EntradaTexto } from './ui/EntradaTexto';
 
 export default function IniciarSesionNutri({ onLogin: alIniciarSesion }) {

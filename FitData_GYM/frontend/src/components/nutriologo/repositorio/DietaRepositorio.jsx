@@ -1,5 +1,5 @@
 import useRepositorioDietas from '../hooks/useRepositorioDietas';
-import EncabezadoRepositorio from '../ui/EncabezadoRepositorio';
+import EncabezadoRepositorio from './EncabezadoRepositorio';
 import FormularioArchivoDieta from './FormularioArchivoDieta';
 import ListaArchivosDieta from './ListaArchivosDieta';
 import ListaPacientesRepositorio from './ListaPacientesRepositorio';

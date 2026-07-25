@@ -6,9 +6,9 @@ import ModalAgendarNutri from '../../modales/ModalAgendarNutri';
 import ModalDetalleNutri from './ModalDetalleNutri';
 import { useModalExpediente } from '../hooks/useModalExpediente';
 import { crearEventosCalendario } from '../utils/agendaNutri';
-import ContenedorCalendario from './componentes/ContenedorCalendario';
-import ModalAlertaPasado from './componentes/ModalAlertaPasado';
-import PanelLateralPaciente from './componentes/PanelLateralPaciente';
+import ContenedorCalendario from './ContenedorCalendario';
+import ModalAlertaPasado from './ModalAlertaPasado';
+import PanelLateralPaciente from './PanelLateralPaciente';
 
 export default function ModalExpedienteNutri({
   miembro,

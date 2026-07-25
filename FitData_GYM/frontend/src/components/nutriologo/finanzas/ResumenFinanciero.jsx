@@ -1,5 +1,5 @@
 import { DollarSign, CalendarDays, ClipboardList } from 'lucide-react';
-import { TarjetaResumen } from '../ui/TarjetaResumen';
+import { TarjetaResumen } from './TarjetaResumen';
 import { crearResumenFinanciero } from '../utils/finanzas';
 
 export default function ResumenFinanciero({
