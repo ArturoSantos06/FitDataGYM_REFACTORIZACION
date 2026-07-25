@@ -1,11 +1,10 @@
-import React from 'react';
 import { FilaNutriente } from './ui/FilaNutriente';
 import { MensajeVacio } from './ui/MensajeVacio';
 
-function TarjetaResultadosMacros({ result }) {
-  if (!result) {
+function TarjetaResultadosMacros({ resultado }) {
+  if (!resultado) {
     return (
-      <MensajeVacio 
+      <MensajeVacio
         titulo="Resultados del paciente"
         descripcion="Completa los datos y ejecuta el cálculo para obtener los requerimientos exactos de carbohidratos, proteína y grasas."
       />
@@ -18,33 +17,40 @@ function TarjetaResultadosMacros({ result }) {
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
         <FilaNutriente
           etiqueta="Carbohidratos"
-          gramos={result.carbGrams}
-          porcentaje={result.split.carbsPercent}
+          gramos={resultado.carbohidratosGramos}
+          porcentaje={resultado.distribucion.carbohidratos}
           claseColor="text-amber-300"
         />
         <FilaNutriente
           etiqueta="Proteína"
-          gramos={result.proteinGrams}
-          porcentaje={result.split.proteinPercent}
+          gramos={resultado.proteinaGramos}
+          porcentaje={resultado.distribucion.proteina}
           claseColor="text-emerald-300"
         />
         <FilaNutriente
           etiqueta="Grasas"
-          gramos={result.fatGrams}
-          porcentaje={result.split.fatPercent}
+          gramos={resultado.grasaGramos}
+          porcentaje={resultado.distribucion.grasa}
           claseColor="text-fuchsia-300"
         />
       </div>
 
       <div className="mt-5 rounded-xl border border-slate-700 bg-slate-950/70 p-4 text-sm text-slate-300">
         <p>
-          Calorías objetivo: <span className="font-bold text-white">{result.kcal} kcal</span>
+          Calorías objetivo:{' '}
+          <span className="font-bold text-white">{resultado.calorias} kcal</span>
         </p>
         <p>
-          Tasa metabólica basal (BMR): <span className="font-bold text-white">{result.bmr} kcal</span>
+          Tasa metabólica basal:{' '}
+          <span className="font-bold text-white">
+            {resultado.tasaMetabolicaBasal} kcal
+          </span>
         </p>
         <p>
-          Calorías de mantenimiento: <span className="font-bold text-white">{result.maintenanceKcal} kcal</span>
+          Calorías de mantenimiento:{' '}
+          <span className="font-bold text-white">
+            {resultado.caloriasMantenimiento} kcal
+          </span>
         </p>
       </div>
     </div>

@@ -1,64 +1,43 @@
-import { useState, useMemo } from 'react';
-import { calculateMacroTargets } from '../utils/nutritionCalculations';
-const defaultForm = {
-  sex: 'hombre',
-  age: '',
-  weightKg: '',
-  heightCm: '',
-  activityLevel: 'moderado',
-  goal: 'mantener'
+import { useCallback, useState } from 'react';
+import { calcularObjetivosMacronutrientes } from '../utils/calculosNutricionales';
+
+const FORMULARIO_INICIAL = {
+  sexo: 'hombre',
+  edad: '',
+  pesoKg: '',
+  alturaCm: '',
+  nivelActividad: 'moderado',
+  objetivo: 'mantener',
 };
 
 export const useFormularioMacros = () => {
-  const [form, setForm] = useState(defaultForm);
-  const [result, setResult] = useState(null);
+  const [formulario, setFormulario] = useState(FORMULARIO_INICIAL);
+  const [resultado, setResultado] = useState(null);
   const [error, setError] = useState('');
 
-  const activityOptions = useMemo(
-    () => [
-      { value: 'sedentario', label: 'Sedentario' },
-      { value: 'ligero', label: 'Ligero (1-3 días/semana)' },
-      { value: 'moderado', label: 'Moderado (3-5 días/semana)' },
-      { value: 'intenso', label: 'Intenso (6-7 días/semana)' },
-      { value: 'atleta', label: 'Atleta / doble sesión' }
-    ],
-    []
-  );
+  const manejarCambio = useCallback((evento) => {
+    const { name: nombre, value: valor } = evento.target;
+    setFormulario((actual) => ({ ...actual, [nombre]: valor }));
+    setError('');
+  }, []);
 
-  const goalOptions = useMemo(
-    () => [
-      { value: 'perder_grasa', label: 'Perder grasa' },
-      { value: 'mantener', label: 'Mantener peso' },
-      { value: 'ganar_musculo', label: 'Ganar músculo' }
-    ],
-    []
-  );
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setForm((current) => ({ ...current, [name]: value }));
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const manejarEnvio = useCallback((evento) => {
+    evento.preventDefault();
     setError('');
 
     try {
-      const calculatedResult = calculateMacroTargets(form);
-      setResult(calculatedResult);
-    } catch (submitError) {
-      setResult(null);
-      setError(submitError.message || 'No se pudo ejecutar el cálculo');
+      setResultado(calcularObjetivosMacronutrientes(formulario));
+    } catch (errorCalculo) {
+      setResultado(null);
+      setError(errorCalculo.message || 'No se pudo ejecutar el cálculo');
     }
-  };
+  }, [formulario]);
 
   return {
-    form,
-    result,
+    formulario,
+    resultado,
     error,
-    activityOptions,
-    goalOptions,
-    handleChange,
-    handleSubmit
+    manejarCambio,
+    manejarEnvio,
   };
 };
