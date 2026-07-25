@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function ResumenNutricionalDiario({ calorias, proteina, carbohidratos, grasas }) {
   return (
     <div className="mb-4 rounded-xl border border-slate-700 bg-slate-800/50 p-3">
@@ -16,7 +14,7 @@ export default function ResumenNutricionalDiario({ calorias, proteina, carbohidr
           <span className="font-bold text-white">{proteina}g</span>
         </div>
         <div className="rounded border border-slate-700 bg-slate-800 p-2">
-          <span className="block text-slate-400">Carbs</span>
+          <span className="block text-slate-400">Carbohidratos</span>
           <span className="font-bold text-white">{carbohidratos}g</span>
         </div>
         <div className="rounded border border-slate-700 bg-slate-800 p-2">

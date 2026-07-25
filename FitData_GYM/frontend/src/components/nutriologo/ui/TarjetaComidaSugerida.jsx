@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function TarjetaComidaSugerida({ tipo, titulo, minutos, porciones }) {
   return (
     <div className="block rounded-lg border border-slate-700 bg-slate-800 p-3 hover:border-cyan-500/50 transition-colors group cursor-default">
