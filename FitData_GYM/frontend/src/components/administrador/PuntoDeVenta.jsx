@@ -4,7 +4,7 @@ import { db } from '../../firebase/config';
 import TarjetaProducto from './partes/TarjetaProducto/TarjetaProducto';
 import ModalNuevoProducto from '../modales/ModalNuevoProducto';
 import ModalEditarProducto from '../modales/ModalEditarProducto';
-import HistorialVentas from './HistorialVentas';
+import HistorialVentas from './HistorialVentas/HistorialVentas';
 import ModalConfirmacion from '../modales/ModalConfirmacion';
 import ModalExito from '../modales/ModalExito';
 import ErrorModal from '../modales/ErrorModal';
