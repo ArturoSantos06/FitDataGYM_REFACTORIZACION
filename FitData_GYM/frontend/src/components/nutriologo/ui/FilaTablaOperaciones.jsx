@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function FilaTablaOperaciones({ tipo, concepto, fechaFormateada, montoFormateado }) {
   return (
     <tr className="border-b border-slate-800/60 text-sm text-slate-200">

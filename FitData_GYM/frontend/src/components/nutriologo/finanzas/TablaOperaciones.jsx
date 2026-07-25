@@ -1,9 +1,8 @@
-import React from 'react';
 import useTablaOperaciones from '../hooks/useTablaOperaciones';
 import FilaTablaOperaciones from '../ui/FilaTablaOperaciones';
 
-export default function TablaOperaciones({ appointments = [], planSales = [] }) {
-  const { filas, formatearMoneda, formatearFecha } = useTablaOperaciones(planSales);
+export default function TablaOperaciones({ ventasPlanes = [] }) {
+  const { filas, formatearMoneda, formatearFecha } = useTablaOperaciones(ventasPlanes);
 
   return (
     <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5">

@@ -1,17 +1,25 @@
-import React from 'react';
 import { DollarSign, CalendarDays, ClipboardList } from 'lucide-react';
-import useResumenFinanciero from '../hooks/useResumenFinanciero';
 import { TarjetaResumen } from '../ui/TarjetaResumen';
+import { crearResumenFinanciero } from '../utils/finanzas';
 
-export default function ResumenFinanciero(props) {
+export default function ResumenFinanciero({
+  cantidadConsultas,
+  cantidadPlanes,
+  totalGeneral,
+  totalPlanes,
+}) {
   const {
     totalIngresos,
     operacionesTotales,
     totalCobros,
     cantidadCobros,
+    cantidadPlanesVendidos,
+  } = crearResumenFinanciero({
+    cantidadConsultas,
+    cantidadPlanes,
+    totalGeneral,
     totalPlanes,
-    cantidadPlanes
-  } = useResumenFinanciero(props);
+  });
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -33,8 +41,8 @@ export default function ResumenFinanciero(props) {
 
       <TarjetaResumen
         titulo="Planes Vendidos"
-        valor={totalPlanes}
-        subtitulo={`${cantidadPlanes} ventas con etiqueta de plan`}
+        valor={cantidadPlanesVendidos}
+        subtitulo="Ventas con etiqueta de plan"
         tonoClases="border-indigo-500/40 bg-indigo-500/10"
         icono={<ClipboardList className="text-indigo-300" size={18} />}
       />

@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function TarjetaResumen({ icono, titulo, valor, subtitulo, tonoClases }) {
   return (
     <article className={`rounded-2xl border p-5 shadow-lg ${tonoClases}`}>
