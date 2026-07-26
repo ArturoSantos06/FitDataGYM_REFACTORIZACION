@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import TarjetaProducto from '../TarjetaProducto';
+import TarjetaProducto from '../partes/TarjetaProducto/TarjetaProducto';
 import TicketVenta from './TicketVenta';
 import { usePuntoDeVenta } from '../hooks/usePuntoDeVenta';
 import ModalNuevoProducto from '../../modales/ModalNuevoProducto';
 import ModalEditarProducto from '../../modales/ModalEditarProducto';
-import HistorialVentas from '../HistorialVentas';
+import HistorialVentas from '../HistorialVentas/HistorialVentas';
 import ModalConfirmacion from '../../modales/ModalConfirmacion';
 import ModalExito from '../../modales/ModalExito';
 import ErrorModal from '../../modales/ErrorModal';

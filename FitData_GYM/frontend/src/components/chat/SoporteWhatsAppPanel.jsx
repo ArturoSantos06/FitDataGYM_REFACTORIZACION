@@ -3,7 +3,7 @@ import { Bot, Dumbbell, Loader2, MessageCircle, Send, Sparkles, Wrench, User, St
 
 import VentanaChat from './VentanaChat';
 import CentroNotificaciones from './CentroNotificaciones';
-import FormularioReporteEnChat from '../mantenimiento/FormularioReporteEnChat';
+import FormularioReporteEnChat from '../mantenimiento/FormularioReporteEnChat/FormularioReporteEnChat';
 import {
     GOAL_OPTIONS,
     LEVEL_OPTIONS,

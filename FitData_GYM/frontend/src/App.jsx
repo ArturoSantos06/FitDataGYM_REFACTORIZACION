@@ -3,31 +3,31 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // Componentes existentes (Admin)
 import Login from './components/administrador/IniciarSesion';
-import Navbar from './components/administrador/Navbar';
-import Home from './components/administrador/Inicio'; // El Dashboard del Admin
-import RegisterUser from './components/administrador/registros/RegistrarUsuario';
-import AssignMembership from './components/administrador/AsignarMembresia';
-import UserMembershipList from './components/administrador/ListaMembresiasUsuario';
-import MembershipAdmin from './components/administrador/AdministrarMembresias';
+import Navbar from './components/administrador/Navegacion/BarraNavegacion';
+import Home from './components/administrador/Inicio/Inicio'; // El Dashboard del Admin
+import RegisterUser from './components/administrador/registros/Registro/Registro';
+import AssignMembership from './components/administrador/Membresias/AsignarMembresia/AsignarMembresia';
+import UserMembershipList from './components/administrador/Membresias/ListaMembresiasUsuario/ListaMembresiasUsuario';
+import MembershipAdmin from './components/administrador/Membresias/AdministrarMembresias/AdministrarMembresias';
 import PuntoDeVenta from './components/administrador/Venta/PuntoDeVenta';
 import Inventario from './components/administrador/Inventario/Inventario';
-import CheckInOut from './components/administrador/CheckInOut';
-import HealthProfilesAdmin from './components/administrador/PerfilesSaludAdmin';
+import CheckInOut from './components/administrador/CheckInOut/CheckInOut';
+import HealthProfilesAdmin from './components/administrador/PerfilesSaludAdmin/PerfilesSaludAdmin';
 import BitacoraEntrenador from './components/entrenador/seguimiento/BitacoraEntrenador';
 import GestionEntrenadores from './components/administrador/gestion-entrenadores/GestionEntrenadores';
 import GestionNutriologos from './components/administrador/gestion-nutriologos/GestionNutriologos';
 import CitasEntrenador from './components/entrenador/gestion/CitasEntrenador';
 // Nuevos Componentes Públicos
-import LandingPage from './components/pagina principal/InicioPublico';
+import LandingPage from './components/pagina principal/InicioPublico/InicioPublico';
 import Portal from './components/cliente/principal/Portal';
 import Sesion from './components/cliente/principal/Sesion';
-import AboutTeam from './components/pagina principal/SobreEquipo';
+import AboutTeam from './components/pagina principal/SobreEquipo/SobreEquipo';
 import RutinaEntrenador from './components/entrenador/rutinas/RutinaEntrenador';
 import EntrenadorLogin from './components/entrenador/portal/EntrenadorLogin';
 import IniciarSesionNutri from './components/nutriologo/IniciarSesionNutri';
 import NutriPortal from './components/nutriologo/NutriPortal';
-import ReportesFacturacion from './components/administrador/ReportesFacturacion';
-import PortalMantenimiento from './components/mantenimiento/PortalMantenimiento';
+import ReportesFacturacion from './components/administrador/ReportesFacturacion/ReportesFacturacion';
+import PortalMantenimiento from './components/mantenimiento/PortalMantenimiento/PortalMantenimiento';
 import { logoutUser, getCurrentUser, onAuthChanged, getUserByAuthUid, getUserByEmail } from './firebase';
 import { AssistantProvider } from './components/asistente/ContextoAsistente';
 import AssistantAdminConfig from './components/asistente/ConfiguracionAsistenteAdmin';
